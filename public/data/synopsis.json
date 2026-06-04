@@ -1,0 +1,21 @@
+{
+  "day": {
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 90.1,
+    "change": 0.3
+  },
+  "week": {
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 90.6,
+    "change": 1.2
+  },
+  "month": {
+    "modelId": "gpt-5-5",
+    "name": "GPT-5.5",
+    "score": 89.5,
+    "change": -0.5
+  },
+  "updatedAt": "2026-06-04T02:45:00.000Z"
+}

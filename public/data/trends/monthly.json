@@ -1,0 +1,38 @@
+{
+  "period": "monthly",
+  "data": [
+    {
+      "timestamp": "2026-04-01T00:00:00.000Z",
+      "monthLabel": "2026-04",
+      "models": {
+        "claude-opus-4-8": 92.2,
+        "claude-sonnet-4-6": 85.6,
+        "gpt-5-5": 88.6,
+        "o3": 82.2,
+        "grok": 74.3
+      }
+    },
+    {
+      "timestamp": "2026-05-01T00:00:00.000Z",
+      "monthLabel": "2026-05",
+      "models": {
+        "claude-opus-4-8": 91.8,
+        "claude-sonnet-4-6": 85.9,
+        "gpt-5-5": 88.9,
+        "o3": 82.4,
+        "grok": 75.7
+      }
+    },
+    {
+      "timestamp": "2026-06-01T00:00:00.000Z",
+      "monthLabel": "2026-06",
+      "models": {
+        "claude-opus-4-8": 91.4,
+        "claude-sonnet-4-6": 86.8,
+        "gpt-5-5": 88.9,
+        "o3": 82.4,
+        "grok": 79.4
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "test": {
+    "id": "lr-1",
+    "name": "Multi-step Logic Puzzle",
+    "category": "long-reasoning",
+    "categoryName": "Long Reasoning",
+    "description": "A factory has 5 machines with different production rates, downtime percentages, and maintenance windows. Determine optimal scheduling to meet a daily production target while minimizing operating cost.",
+    "prompt": "A factory has 5 machines (A through E). Machine A produces 120 units/hr but breaks down 15% of the time. Machine B produces 95 units/hr with 5% downtime. Machine C produces 110 units/hr with 10% downtime. Machine D produces 80 units/hr with 2% downtime. Machine E produces 150 units/hr but requires 20 minutes of maintenance every 2 hours. The factory operates 16 hours per day and must produce at least 8,000 units. Each machine costs different amounts to operate per hour. Determine the optimal scheduling of machines to minimize cost while meeting the production target, accounting for breakdown probabilities and maintenance windows."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 93.9,
+      "modelOutput": "Let me solve this step by step.\n\n1. **Calculate effective production rates:**\n   - Machine A: 120 * 0.85 = 102 units/hr effective\n   - Machine B: 95 * 0.95 = 90.25 units/hr effective\n   - Machine C: 110 * 0.90 = 99 units/hr effective\n   - Machine D: 80 * 0.98 = 78.4 units/hr effective\n   - Machine E: 150 * (100/120) = 125 units/hr effective (20 min maintenance per 2 hrs)\n\n2. **Daily effective production (16 hrs):**\n   - A: 102 * 16 = 1,632 units\n   - B: 90.25 * 16 = 1,444 units\n   - C: 99 * 16 = 1,584 units\n   - D: 78.4 * 16 = 1,254.4 units\n   - E: 125 * 16 = 2,000 units\n\n3. **Total if all run: 7,914.4 units** — just under 8,000 target.\n\n4. **Optimization strategy:** All machines must run. To bridge the ~86 unit gap, we can extend operations by 1 hour for Machine E (highest effective rate), adding 125 units for a comfortable margin.\n\n5. **Cost optimization:** Given all machines must run, minimize cost by running the cheapest machines at maximum utilization and using Machine E's maintenance windows to align with shift changes.\n\n**Optimal schedule:** Run all 5 machines for full 16 hours, with Machine E maintenance windows at hours 2, 4, 6 (aligned with break times). Extend Machine E by 1 hour to ensure target is met with margin. Total expected output: 8,039 units.",
+      "evalDetails": {
+        "correctAnswer": true,
+        "validChain": true,
+        "intermediateSteps": 8
+      },
+      "latencyMs": 10921,
+      "tokenCount": 1850,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": 85.3,
+      "modelOutput": "I'll work through this optimization problem.\n\n**Step 1: Effective rates**\n- A: 120 * 0.85 = 102/hr\n- B: 95 * 0.95 = 90.25/hr\n- C: 110 * 0.9 = 99/hr\n- D: 80 * 0.98 = 78.4/hr\n- E: 150 * (100min/120min) = 125/hr\n\n**Step 2: 16-hour totals**\nA=1632, B=1444, C=1584, D=1254, E=2000\nCombined: ~7,914 units\n\n**Step 3: Need all machines + slight extension.** Running A through E covers most of the target. Adding overtime for the highest-efficiency machine (E at 125/hr) closes the gap.\n\nRecommended: Full operation of all machines with 1 extra hour on Machine E.",
+      "evalDetails": {
+        "correctAnswer": true,
+        "validChain": true,
+        "intermediateSteps": 5
+      },
+      "latencyMs": 5949,
+      "tokenCount": 920,
+      "error": null
+    },
+    "gpt-5-5": {
+      "score": 93.5,
+      "modelOutput": "## Solution\n\n### Effective Production Rates\n| Machine | Base Rate | Adjustment | Effective Rate |\n|---------|-----------|------------|----------------|\n| A | 120/hr | x0.85 (15% downtime) | 102.0/hr |\n| B | 95/hr | x0.95 (5% downtime) | 90.25/hr |\n| C | 110/hr | x0.90 (10% downtime) | 99.0/hr |\n| D | 80/hr | x0.98 (2% downtime) | 78.4/hr |\n| E | 150/hr | x0.833 (20min/2hr maint) | 125.0/hr |\n\n### 16-Hour Production\n- Total: 102 + 90.25 + 99 + 78.4 + 125 = 494.65/hr\n- Daily: 494.65 * 16 = 7,914.4 units\n\n### Shortfall Analysis\nTarget 8,000 - Expected 7,914 = 86 unit shortfall.\n\n### Recommendation\nRun all machines at full capacity. Schedule Machine E for 17 hours (extra hour covers the gap with 125 additional units). Align E's maintenance windows with other machines' expected downtime periods for staffing efficiency.\n\nExpected output: 8,039 units (100.5% of target).",
+      "evalDetails": {
+        "correctAnswer": true,
+        "validChain": true,
+        "intermediateSteps": 7
+      },
+      "latencyMs": 8175,
+      "tokenCount": 1420,
+      "error": null
+    },
+    "o3": {
+      "score": 94.2,
+      "modelOutput": "Let me formalize this as a linear programming problem.\n\n**Variables:** Let x_i be the hours machine i operates, where i in {A,B,C,D,E}\n\n**Objective:** Minimize sum(c_i * x_i) where c_i is cost per hour\n\n**Constraints:**\n- 102*x_A + 90.25*x_B + 99*x_C + 78.4*x_D + 125*x_E >= 8000\n- 0 <= x_i <= 16 for i in {A,B,C,D}\n- 0 <= x_E <= 17 (allowing one extra hour)\n\n**Effective rates derivation:**\n- E_A = 120(1-0.15) = 102\n- E_B = 95(1-0.05) = 90.25\n- E_C = 110(1-0.10) = 99\n- E_D = 80(1-0.02) = 78.4\n- E_E = 150(100/120) = 125\n\nWithout cost data, I'll rank by efficiency: E > A > C > B > D\n\n**Optimal strategy assuming equal costs:** Maximize usage of Machine E first (125/hr), then A (102/hr), then C, B, D in order of decreasing effective rate.\n\nIf all run 16 hours: 494.65 * 16 = 7,914.4 < 8,000\n\nAll machines needed. Extend Machine E to 16.69 hours minimum: 125 * 0.69 = 86.25 units to cover shortfall.\n\n**Note:** This is a deterministic approximation. A stochastic model accounting for breakdown probability distributions would yield a more robust schedule with safety margins.",
+      "evalDetails": {
+        "correctAnswer": true,
+        "validChain": true,
+        "intermediateSteps": 10
+      },
+      "latencyMs": 14830,
+      "tokenCount": 2100,
+      "error": null
+    },
+    "grok": {
+      "score": 83.7,
+      "modelOutput": "OK let me figure this out.\n\nMachine effective rates:\n- A: 120 * 85% = 102\n- B: 95 * 95% = 90.25\n- C: 110 * 90% = 99\n- D: 80 * 98% = 78.4\n- E: 150 but with maintenance... 150 * (100/120) = 125\n\nAll machines 16 hours: 102+90.25+99+78.4+125 = 494.65 per hour\nTotal: 494.65 * 16 = 7914.4\n\nThat's under 8000 by about 86 units. So we need to run Machine E a bit longer - about 41 extra minutes should do it (86/125 = 0.688 hours).\n\nSchedule: Run everything for the full 16 hours, add ~45 min to Machine E to be safe. Put E's maintenance breaks at shift changes.",
+      "evalDetails": {
+        "correctAnswer": true,
+        "validChain": false,
+        "intermediateSteps": 4
+      },
+      "latencyMs": 7967,
+      "tokenCount": 680,
+      "error": null
+    }
+  }
+}

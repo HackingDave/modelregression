@@ -1,0 +1,44 @@
+{
+  "current": [],
+  "history": [
+    {
+      "id": "out-1",
+      "provider": "xai",
+      "modelId": "grok",
+      "startedAt": "2026-06-01T14:30:00Z",
+      "endedAt": "2026-06-01T15:15:00Z",
+      "errorType": "500",
+      "errorMessage": "Internal Server Error",
+      "httpStatus": 500,
+      "checkCount": 6
+    },
+    {
+      "id": "out-2",
+      "provider": "openai",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-05-22T09:10:00Z",
+      "endedAt": "2026-05-22T09:35:00Z",
+      "errorType": "429",
+      "errorMessage": "Rate limit exceeded",
+      "httpStatus": 429,
+      "checkCount": 4
+    }
+  ],
+  "uptime": {
+    "anthropic": {
+      "7d": 100,
+      "30d": 99.95,
+      "90d": 99.9
+    },
+    "openai": {
+      "7d": 99.8,
+      "30d": 99.7,
+      "90d": 99.5
+    },
+    "xai": {
+      "7d": 98.5,
+      "30d": 97.8,
+      "90d": 97
+    }
+  }
+}
