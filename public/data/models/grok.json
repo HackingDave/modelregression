@@ -8,96 +8,240 @@
     "icon": "flame"
   },
   "current": {
-    "compositeScore": 96.2,
+    "compositeScore": 92.6,
     "rank": 1,
     "categories": {
       "bug-fixes": {
-        "avgScore": 100,
-        "testCount": 1,
+        "avgScore": 96.3,
+        "testCount": 3,
         "tests": [
+          {
+            "testId": "bf-2",
+            "name": "Memory Leak Fix",
+            "score": 100,
+            "latencyMs": 43436
+          },
+          {
+            "testId": "bf-1",
+            "name": "Race Condition Detection",
+            "score": 88.8,
+            "latencyMs": 56875
+          },
           {
             "testId": "bf-3",
             "name": "Off-by-One Boundary Fix",
             "score": 100,
-            "latencyMs": 43505
+            "latencyMs": 79692
+          }
+        ]
+      },
+      "bug-introduction-rate": {
+        "avgScore": 97,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "bi-1",
+            "name": "Refactor Without Regression",
+            "score": 100,
+            "latencyMs": 137721
+          },
+          {
+            "testId": "bi-2",
+            "name": "Merge Conflict Resolution",
+            "score": 97,
+            "latencyMs": 93319
+          },
+          {
+            "testId": "bi-3",
+            "name": "Dependency Upgrade Safety",
+            "score": 94,
+            "latencyMs": 91824
+          }
+        ]
+      },
+      "code-quality": {
+        "avgScore": 94.3,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "cq-1",
+            "name": "Idiomatic Python",
+            "score": 98,
+            "latencyMs": 137456
+          },
+          {
+            "testId": "cq-2",
+            "name": "TypeScript Best Practices",
+            "score": 87,
+            "latencyMs": 286230
+          },
+          {
+            "testId": "cq-3",
+            "name": "Clean Architecture Patterns",
+            "score": 98,
+            "latencyMs": 168843
+          }
+        ]
+      },
+      "code-thoroughness": {
+        "avgScore": 92,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "th-3",
+            "name": "Test Suite Completeness",
+            "score": 85,
+            "latencyMs": 196698
+          },
+          {
+            "testId": "th-1",
+            "name": "Edge Case Coverage",
+            "score": 99,
+            "latencyMs": 297521
+          }
+        ]
+      },
+      "coding-tasks": {
+        "avgScore": 98.7,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "ct-1",
+            "name": "Graph Algorithm Implementation",
+            "score": 97,
+            "latencyMs": 83296
+          },
+          {
+            "testId": "ct-2",
+            "name": "REST API Design",
+            "score": 100,
+            "latencyMs": 82751
+          },
+          {
+            "testId": "ct-3",
+            "name": "Concurrent Data Pipeline",
+            "score": 99,
+            "latencyMs": 32134
           }
         ]
       },
       "feature-implementation": {
-        "avgScore": 97.5,
-        "testCount": 2,
+        "avgScore": 99,
+        "testCount": 3,
         "tests": [
           {
             "testId": "fi-3",
             "name": "Webhook System",
-            "score": 98,
-            "latencyMs": 45423
+            "score": 100,
+            "latencyMs": 25070
           },
           {
             "testId": "fi-1",
             "name": "OAuth2 Integration",
             "score": 97,
-            "latencyMs": 67925
+            "latencyMs": 80582
+          },
+          {
+            "testId": "fi-2",
+            "name": "Search Autocomplete",
+            "score": 100,
+            "latencyMs": 127103
           }
         ]
       },
       "instruction-following": {
         "avgScore": 100,
-        "testCount": 2,
+        "testCount": 3,
         "tests": [
           {
             "testId": "if-1",
             "name": "Structured Output Compliance",
             "score": 100,
-            "latencyMs": 44562
+            "latencyMs": 44960
           },
           {
             "testId": "if-3",
             "name": "Multi-step Instruction Chain",
             "score": 100,
-            "latencyMs": 33470
+            "latencyMs": 23546
+          },
+          {
+            "testId": "if-2",
+            "name": "Constraint Adherence",
+            "score": 100,
+            "latencyMs": 20439
           }
         ]
       },
       "long-reasoning": {
-        "avgScore": 90,
-        "testCount": 2,
+        "avgScore": 70.1,
+        "testCount": 3,
         "tests": [
           {
             "testId": "lr-3",
             "name": "Mathematical Proof",
-            "score": 92,
-            "latencyMs": 19412
+            "score": 78.1,
+            "latencyMs": 16756
           },
           {
             "testId": "lr-2",
             "name": "Legal Reasoning Chain",
-            "score": 88,
-            "latencyMs": 59934
+            "score": 89,
+            "latencyMs": 115152
+          },
+          {
+            "testId": "lr-1",
+            "name": "Multi-step Logic Puzzle",
+            "score": 43.2,
+            "latencyMs": 217145
           }
         ]
       },
       "performance-efficiency": {
-        "avgScore": 90,
-        "testCount": 1,
+        "avgScore": 94.7,
+        "testCount": 3,
         "tests": [
+          {
+            "testId": "pe-1",
+            "name": "Algorithm Complexity",
+            "score": 98,
+            "latencyMs": 73392
+          },
+          {
+            "testId": "pe-2",
+            "name": "Memory-efficient Processing",
+            "score": 98,
+            "latencyMs": 144628
+          },
           {
             "testId": "pe-3",
             "name": "Query Optimization",
-            "score": 90,
-            "latencyMs": 151379
+            "score": 88,
+            "latencyMs": 98089
           }
         ]
       },
       "security-awareness": {
-        "avgScore": 100,
-        "testCount": 1,
+        "avgScore": 84.3,
+        "testCount": 3,
         "tests": [
           {
             "testId": "sa-2",
             "name": "XSS Mitigation",
             "score": 100,
-            "latencyMs": 119965
+            "latencyMs": 108166
+          },
+          {
+            "testId": "sa-1",
+            "name": "SQL Injection Prevention",
+            "score": 88,
+            "latencyMs": 166300
+          },
+          {
+            "testId": "sa-3",
+            "name": "Secret Management",
+            "score": 64.8,
+            "latencyMs": 227094
           }
         ]
       }
@@ -137,9 +281,59 @@
         "performance-efficiency": 90,
         "security-awareness": 100
       }
+    },
+    {
+      "timestamp": "2026-06-05T20:40:18.000Z",
+      "compositeScore": 92.6,
+      "categories": {
+        "bug-fixes": 96.3,
+        "bug-introduction-rate": 97,
+        "code-quality": 94.3,
+        "code-thoroughness": 92,
+        "coding-tasks": 98.7,
+        "feature-implementation": 99,
+        "instruction-following": 100,
+        "long-reasoning": 70.1,
+        "performance-efficiency": 94.7,
+        "security-awareness": 84.3
+      }
     }
   ],
-  "regressions": [],
+  "regressions": [
+    {
+      "id": "90be6534-3b0d-40cb-92b9-0a2dd6ddd13c",
+      "categoryId": null,
+      "categoryName": null,
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 95.6,
+      "currentScore": 92.6,
+      "dropPct": -3.1,
+      "severity": "minor",
+      "resolvedAt": "2026-06-05T21:04:00.000Z"
+    },
+    {
+      "id": "52c3ceca-764a-42fd-9442-bf567adf0821",
+      "categoryId": "long-reasoning",
+      "categoryName": "Long Reasoning",
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 86.7,
+      "currentScore": 70.1,
+      "dropPct": -19.1,
+      "severity": "major",
+      "resolvedAt": null
+    },
+    {
+      "id": "b6592908-e340-4791-8a91-96069430c3af",
+      "categoryId": "bug-fixes",
+      "categoryName": "Bug Fixes",
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 100,
+      "currentScore": 96.3,
+      "dropPct": -3.7,
+      "severity": "minor",
+      "resolvedAt": "2026-06-05T21:04:00.000Z"
+    }
+  ],
   "outages": [
     {
       "id": "83ed64fe-4793-4bb7-be51-5ed777a92cd7",

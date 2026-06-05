@@ -65,7 +65,7 @@
       ]
     },
     "grok": {
-      "currentScore": 100,
+      "currentScore": 84.3,
       "history": [
         {
           "timestamp": "2026-06-05T16:17:31.000Z",
@@ -74,6 +74,10 @@
         {
           "timestamp": "2026-06-05T19:40:39.000Z",
           "score": 100
+        },
+        {
+          "timestamp": "2026-06-05T20:40:18.000Z",
+          "score": 84.3
         }
       ]
     }

@@ -188,33 +188,59 @@ def _call_grok(
     system_prompt: str | None,
 ) -> tuple[str | None, int, int | None, int | None, str | None]:
     """Call Grok via the agent CLI in single-shot mode."""
-    cmd = [
-        "agent",
-        "-p", prompt,
-        "-m", model_config["cli_model"],
-        "--output-format", "plain",
-    ]
-    if system_prompt:
-        cmd.extend(["--system-prompt", system_prompt])
-
-    start = time.monotonic()
-    result = subprocess.run(
-        cmd,
-        capture_output=True,
-        text=True,
-        timeout=config.CLI_TIMEOUT,
+    import tempfile
+    prompt_file = tempfile.NamedTemporaryFile(
+        mode="w", suffix=".txt", delete=False,
     )
-    elapsed = int((time.monotonic() - start) * 1000)
+    prompt_file.write(prompt)
+    prompt_file.close()
 
-    if result.returncode != 0:
-        stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
-        return (None, elapsed, None, None, f"agent exited {result.returncode}: {stderr}")
+    try:
+        cmd = [
+            "agent",
+            "--prompt-file", prompt_file.name,
+            "-m", model_config["cli_model"],
+            "--output-format", "json",
+            "--always-approve",
+        ]
+        if system_prompt:
+            cmd.extend(["--system-prompt", system_prompt])
 
-    text = result.stdout.strip()
-    if not text:
-        return (None, elapsed, None, None, "Empty response from agent")
+        start = time.monotonic()
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=config.CLI_TIMEOUT,
+        )
+        elapsed = int((time.monotonic() - start) * 1000)
 
-    return (text, elapsed, None, None, None)
+        if result.returncode != 0:
+            stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
+            return (None, elapsed, None, None, f"agent exited {result.returncode}: {stderr}")
+
+        output = result.stdout.strip()
+        if not output:
+            return (None, elapsed, None, None, "Empty response from agent")
+
+        text = output
+        try:
+            data = json.loads(output)
+            text = data.get("text", "")
+            if not text and data.get("thought"):
+                text = data["thought"]
+            if data.get("stopReason") == "Cancelled":
+                return (None, elapsed, None, None, "Agent run was cancelled (tool approval needed)")
+        except (json.JSONDecodeError, AttributeError):
+            pass
+
+        if not text.strip():
+            return (None, elapsed, None, None, "Empty response from agent")
+
+        return (text, elapsed, None, None, None)
+    finally:
+        import os
+        os.unlink(prompt_file.name)
 
 
 # ---------------------------------------------------------------------------

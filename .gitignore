@@ -46,6 +46,11 @@ benchmark/data/*.db-wal
 benchmark/data/*.db-shm
 benchmark/logs/
 benchmark/.venv/
+__pycache__/
+*.pyc
+benchmark/sandboxes/
+benchmark/*.db
+dogfood-output/
 
 # IDE
 .vscode/

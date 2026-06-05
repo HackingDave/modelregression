@@ -12,9 +12,9 @@
       "score": null,
       "modelOutput": "",
       "evalDetails": null,
-      "latencyMs": 31602,
+      "latencyMs": 300000,
       "tokenCount": null,
-      "error": "Empty response from agent"
+      "error": "CLI call timed out"
     }
   }
 }

@@ -2,20 +2,20 @@
   "day": {
     "modelId": "grok",
     "name": "Grok",
-    "score": 95.6,
+    "score": 94.8,
     "change": 0
   },
   "week": {
     "modelId": "grok",
     "name": "Grok",
-    "score": 95.6,
+    "score": 94.8,
     "change": 0
   },
   "month": {
     "modelId": "grok",
     "name": "Grok",
-    "score": 95.6,
+    "score": 94.8,
     "change": 0
   },
-  "updatedAt": "2026-06-05T20:02:05.000Z"
+  "updatedAt": "2026-06-05T21:04:00.000Z"
 }

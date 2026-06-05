@@ -1,4 +1,48 @@
 {
-  "active": [],
-  "recent": []
+  "active": [
+    {
+      "id": "52c3ceca-764a-42fd-9442-bf567adf0821",
+      "modelId": "grok",
+      "modelName": "Grok",
+      "categoryId": "long-reasoning",
+      "categoryName": "Long Reasoning",
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 86.7,
+      "currentScore": 70.1,
+      "dropPct": -19.1,
+      "severity": "major",
+      "windowDays": 7,
+      "resolvedAt": null
+    }
+  ],
+  "recent": [
+    {
+      "id": "90be6534-3b0d-40cb-92b9-0a2dd6ddd13c",
+      "modelId": "grok",
+      "modelName": "Grok",
+      "categoryId": null,
+      "categoryName": null,
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 95.6,
+      "currentScore": 92.6,
+      "dropPct": -3.1,
+      "severity": "minor",
+      "windowDays": 7,
+      "resolvedAt": "2026-06-05T21:04:00.000Z"
+    },
+    {
+      "id": "b6592908-e340-4791-8a91-96069430c3af",
+      "modelId": "grok",
+      "modelName": "Grok",
+      "categoryId": "bug-fixes",
+      "categoryName": "Bug Fixes",
+      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "previousAvg": 100,
+      "currentScore": 96.3,
+      "dropPct": -3.7,
+      "severity": "minor",
+      "windowDays": 7,
+      "resolvedAt": "2026-06-05T21:04:00.000Z"
+    }
+  ]
 }
