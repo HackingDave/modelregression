@@ -10,7 +10,7 @@ import {
   WifiOff,
 } from "lucide-react";
 
-const PROVIDERS = ["anthropic", "openai", "xai"] as const;
+const PROVIDERS = ["claude", "codex", "agent"] as const;
 
 function getStatusInfo(uptime: number) {
   if (uptime >= 99.9)

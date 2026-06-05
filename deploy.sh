@@ -137,8 +137,13 @@ ssh_cmd "
     mv '$REMOTE_RELEASE_PATH' '$REMOTE_PATH'
 "
 if [ $? -ne 0 ]; then
-    echo -e "${RED}Release swap failed.${NC}"
-    ssh_cmd "rm -rf '$REMOTE_RELEASE_PATH'"
+    echo -e "${RED}Release swap failed. Restoring backup...${NC}"
+    ssh_cmd "
+        rm -rf '$REMOTE_RELEASE_PATH'
+        if [ -d '$REMOTE_BACKUP_PATH' ]; then
+            mv '$REMOTE_BACKUP_PATH' '$REMOTE_PATH'
+        fi
+    "
     exit 1
 fi
 

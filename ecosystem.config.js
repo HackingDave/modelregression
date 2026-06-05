@@ -16,7 +16,7 @@ module.exports = {
         PORT: 3002,
       },
 
-      max_memory_restart: "400M",
+      max_memory_restart: "600M",
       kill_timeout: 10000,
       wait_ready: false,
       listen_timeout: 30000,

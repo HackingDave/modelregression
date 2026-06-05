@@ -182,7 +182,9 @@ export default async function EvidencePage({
                                 >
                                   {key}:{" "}
                                   <span className="text-foreground">
-                                    {String(value)}
+                                    {typeof value === "object"
+                                      ? JSON.stringify(value)
+                                      : String(value)}
                                   </span>
                                 </span>
                               )

@@ -56,6 +56,8 @@ Respond with ONLY a JSON object in this exact format:
 {{"score": <number 0-100>, "reasoning": "<brief explanation>", "breakdown": {{"criteria1": <score>, "criteria2": <score>}}}}"""
 
         judge_response = judge_fn(judge_prompt)
+        if judge_response is None:
+            return EvalResult(score=0.0, details={"error": "judge_call_failed"})
         try:
             result = json.loads(judge_response)
             return EvalResult(
@@ -63,11 +65,10 @@ Respond with ONLY a JSON object in this exact format:
                 details=result
             )
         except (json.JSONDecodeError, ValueError, TypeError):
-            # Try to extract score from text
             match = re.search(r'"score"\s*:\s*(\d+(?:\.\d+)?)', judge_response)
             if match:
                 return EvalResult(score=float(match.group(1)), details={"raw": judge_response[:500]})
-            return EvalResult(score=50.0, details={"error": "parse_failed", "raw": judge_response[:500]})
+            return EvalResult(score=0.0, details={"error": "parse_failed", "raw": judge_response[:500]})
 
     def _eval_composite(self, output: str, judge_fn) -> EvalResult:
         """Combine regex checks with LLM judge"""

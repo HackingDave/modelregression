@@ -496,8 +496,12 @@ export default async function ModelDetailPage({
                         <span>
                           Detected {formatDate(reg.detectedAt)}
                         </span>
-                        <span>&middot;</span>
-                        <span>{reg.windowDays}-day window</span>
+                        {reg.windowDays && (
+                          <>
+                            <span>&middot;</span>
+                            <span>{reg.windowDays}-day window</span>
+                          </>
+                        )}
                         {isResolved && reg.resolvedAt && (
                           <>
                             <span>&middot;</span>

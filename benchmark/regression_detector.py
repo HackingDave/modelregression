@@ -152,7 +152,7 @@ def _check_recovery(conn, run_id: str) -> None:
         category_id = reg["category_id"]
         previous_avg = reg["previous_avg"]
 
-        if previous_avg is None:
+        if not previous_avg:
             continue
 
         if category_id:

@@ -192,10 +192,9 @@ def _call_grok(
     prompt_file = tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", delete=False,
     )
-    prompt_file.write(prompt)
-    prompt_file.close()
-
     try:
+        prompt_file.write(prompt)
+        prompt_file.close()
         cmd = [
             "agent",
             "--prompt-file", prompt_file.name,
@@ -253,7 +252,7 @@ from tests import ALL_TESTS
 TEST_REGISTRY: dict = {t.id: t for t in ALL_TESTS}
 
 
-def _judge_fn(prompt: str) -> str:
+def _judge_fn(prompt: str) -> str | None:
     """LLM judge callback — uses Claude (via CLI) to evaluate model outputs."""
     cmd = ["claude", "-p", "--model", "sonnet"]
     try:
@@ -264,10 +263,13 @@ def _judge_fn(prompt: str) -> str:
             text=True,
             timeout=config.CLI_TIMEOUT,
         )
-        return result.stdout.strip() if result.returncode == 0 else ""
+        if result.returncode != 0:
+            logger.warning("Judge returned exit code %d", result.returncode)
+            return None
+        return result.stdout.strip() or None
     except Exception as e:
         logger.warning("Judge call failed: %s", e)
-        return ""
+        return None
 
 
 def evaluate_response(test_id: str, model_output: str) -> tuple[float, dict]:
@@ -439,53 +441,58 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
     passed_tests = 0
     all_errors = []
 
-    # Run all models in parallel — each uses a different CLI tool
-    with ThreadPoolExecutor(max_workers=len(active_models)) as model_pool:
-        model_futures = {}
-        for model_row in active_models:
-            model_id = model_row["id"]
-            model_cfg = config.get_model_by_id(model_id)
-            if not model_cfg:
-                logger.error("No config found for model %s", model_id)
-                continue
+    try:
+        # Run all models in parallel — each uses a different CLI tool
+        with ThreadPoolExecutor(max_workers=len(active_models)) as model_pool:
+            model_futures = {}
+            for model_row in active_models:
+                model_id = model_row["id"]
+                model_cfg = config.get_model_by_id(model_id)
+                if not model_cfg:
+                    logger.error("No config found for model %s", model_id)
+                    continue
 
-            open_outage = db.get_open_outage(conn, model_id)
-            if open_outage and open_outage["check_count"] >= 3:
-                logger.warning("Skipping model %s (in outage since %s)", model_id, open_outage["started_at"])
-                continue
+                open_outage = db.get_open_outage(conn, model_id)
+                if open_outage and open_outage["check_count"] >= 3:
+                    logger.warning("Skipping model %s (in outage since %s)", model_id, open_outage["started_at"])
+                    continue
 
-            future = model_pool.submit(_run_model_tests, model_cfg, active_tests, run_id, conn)
-            model_futures[future] = model_cfg["name"]
+                future = model_pool.submit(_run_model_tests, model_cfg, active_tests, run_id, conn)
+                model_futures[future] = model_cfg["name"]
 
-        for future in as_completed(model_futures):
-            name = model_futures[future]
-            try:
-                total, passed, errors = future.result()
-                total_tests += total
-                passed_tests += passed
-                all_errors.extend(errors)
-            except Exception as e:
-                logger.error("Model %s crashed: %s", name, e)
-                all_errors.append(f"{name}: {e}")
+            for future in as_completed(model_futures):
+                name = model_futures[future]
+                try:
+                    total, passed, errors = future.result()
+                    total_tests += total
+                    passed_tests += passed
+                    all_errors.extend(errors)
+                except Exception as e:
+                    logger.error("Model %s crashed: %s", name, e)
+                    all_errors.append(f"{name}: {e}")
 
-    logger.info("Aggregating scores...")
-    aggregate_run_scores(conn, run_id)
+        logger.info("Aggregating scores...")
+        aggregate_run_scores(conn, run_id)
 
-    logger.info("Computing composite scores...")
-    compute_composite_scores(conn, run_id)
+        logger.info("Computing composite scores...")
+        compute_composite_scores(conn, run_id)
 
-    logger.info("Running regression detection...")
-    detect_regressions(conn, run_id)
+        logger.info("Running regression detection...")
+        detect_regressions(conn, run_id)
 
-    error_log = "\n".join(all_errors) if all_errors else None
-    db.complete_run(conn, run_id, total_tests, passed_tests, error_log)
+        error_log = "\n".join(all_errors) if all_errors else None
+        db.complete_run(conn, run_id, total_tests, passed_tests, error_log)
 
-    logger.info(
-        "Benchmark run complete: %d/%d tests passed (%d errors)",
-        passed_tests, total_tests, len(all_errors),
-    )
-
-    conn.close()
+        logger.info(
+            "Benchmark run complete: %d/%d tests passed (%d errors)",
+            passed_tests, total_tests, len(all_errors),
+        )
+    except Exception as e:
+        logger.error("Benchmark run crashed: %s", e)
+        db.complete_run(conn, run_id, total_tests, passed_tests, str(e))
+        raise
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------------------

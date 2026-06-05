@@ -121,7 +121,7 @@ Deduct 10 points if print() is used instead of logging module."""
 _bi1 = AddCachingWithoutBreaking(
     id="bi-1",
     name="Add Caching Without Breaking Tests",
-    category_id="bug-introduction",
+    category_id="bug-introduction-rate",
     description="Add a caching layer to an existing function without causing any of the existing tests to fail.",
     eval_type="llm_judge",
     prompt="""Add a caching layer to the following Python function WITHOUT breaking any of the existing tests. The function looks up user data from a (simulated) database. After your change, repeated calls with the same user_id should return cached results instead of hitting the database every time.
@@ -218,7 +218,7 @@ Provide the complete modified code including the caching implementation.""",
 _bi2 = RefactorCallbacksToAsync(
     id="bi-2",
     name="Refactor Callbacks to Async/Await",
-    category_id="bug-introduction",
+    category_id="bug-introduction-rate",
     description="Convert callback-based code to async/await without altering its observable behavior.",
     eval_type="llm_judge",
     prompt="""Convert the following callback-based JavaScript code to use async/await. The converted code MUST produce the same results in the same order. Do not change the behavior — only the control flow pattern.
@@ -352,7 +352,7 @@ Provide the complete converted code.""",
 _bi3 = AddLoggingToLegacyCode(
     id="bi-3",
     name="Add Logging to Legacy Code",
-    category_id="bug-introduction",
+    category_id="bug-introduction-rate",
     description="Add comprehensive logging to messy legacy code without changing any observable behavior.",
     eval_type="llm_judge",
     prompt="""Add comprehensive logging to the following legacy Python code WITHOUT changing any of its observable behavior. The return values, exceptions, side effects, and execution order must remain identical.

@@ -48,6 +48,9 @@ export function getProviderName(provider: string): string {
     anthropic: "Anthropic",
     openai: "OpenAI",
     xai: "xAI",
+    claude: "Anthropic",
+    codex: "OpenAI",
+    agent: "xAI",
   };
   return names[provider] || provider;
 }

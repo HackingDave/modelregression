@@ -62,6 +62,7 @@ export function LatestRunTable({ run }: LatestRunTableProps) {
                 const catScores = Object.entries(result.categories).map(
                   ([catId, cat]) => ({ catId, score: cat.avgScore })
                 );
+                if (catScores.length === 0) return null;
                 const best = catScores.reduce((a, b) =>
                   a.score > b.score ? a : b
                 );
