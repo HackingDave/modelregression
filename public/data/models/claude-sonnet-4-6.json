@@ -44,13 +44,5 @@
     }
   ],
   "regressions": [],
-  "outages": [
-    {
-      "id": "f83f7ac5-295f-41d2-8ca4-960e76356650",
-      "startedAt": "2026-06-04T22:00:01.000Z",
-      "endedAt": "2026-06-05T16:16:10.000Z",
-      "errorType": "error",
-      "httpStatus": null
-    }
-  ]
+  "outages": []
 }

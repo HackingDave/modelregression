@@ -334,13 +334,5 @@
       "resolvedAt": "2026-06-05T21:04:00.000Z"
     }
   ],
-  "outages": [
-    {
-      "id": "83ed64fe-4793-4bb7-be51-5ed777a92cd7",
-      "startedAt": "2026-06-04T22:00:01.000Z",
-      "endedAt": "2026-06-05T16:17:31.000Z",
-      "errorType": "error",
-      "httpStatus": null
-    }
-  ]
+  "outages": []
 }
