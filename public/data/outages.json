@@ -2,43 +2,65 @@
   "current": [],
   "history": [
     {
-      "id": "out-1",
-      "provider": "xai",
+      "id": "83ed64fe-4793-4bb7-be51-5ed777a92cd7",
+      "provider": "agent",
       "modelId": "grok",
-      "startedAt": "2026-06-01T14:30:00Z",
-      "endedAt": "2026-06-01T15:15:00Z",
-      "errorType": "500",
-      "errorMessage": "Internal Server Error",
-      "httpStatus": 500,
-      "checkCount": 6
+      "startedAt": "2026-06-04T22:00:01.000Z",
+      "endedAt": "2026-06-05T16:17:31.000Z",
+      "errorType": "error",
+      "errorMessage": "CLI tool 'agent' not found",
+      "httpStatus": null,
+      "checkCount": 3
     },
     {
-      "id": "out-2",
-      "provider": "openai",
+      "id": "0ebd1ad8-c78b-437a-b568-f72ab706e76c",
+      "provider": "codex",
       "modelId": "gpt-5-5",
-      "startedAt": "2026-05-22T09:10:00Z",
-      "endedAt": "2026-05-22T09:35:00Z",
-      "errorType": "429",
-      "errorMessage": "Rate limit exceeded",
-      "httpStatus": 429,
-      "checkCount": 4
+      "startedAt": "2026-06-04T22:00:01.000Z",
+      "endedAt": "2026-06-05T16:16:24.000Z",
+      "errorType": "error",
+      "errorMessage": "CLI tool 'codex' not found",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "f83f7ac5-295f-41d2-8ca4-960e76356650",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-04T22:00:01.000Z",
+      "endedAt": "2026-06-05T16:16:10.000Z",
+      "errorType": "error",
+      "errorMessage": "CLI tool 'claude' not found",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "b184022b-307b-4778-9a8c-188a3f3a4459",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-04T22:00:01.000Z",
+      "endedAt": "2026-06-05T16:16:08.000Z",
+      "errorType": "error",
+      "errorMessage": "CLI tool 'claude' not found",
+      "httpStatus": null,
+      "checkCount": 3
     }
   ],
   "uptime": {
-    "anthropic": {
-      "7d": 100,
-      "30d": 99.95,
-      "90d": 99.9
+    "claude": {
+      "7d": 78.3,
+      "30d": 94.9,
+      "90d": 98.3
     },
-    "openai": {
-      "7d": 99.8,
-      "30d": 99.7,
-      "90d": 99.5
+    "codex": {
+      "7d": 89.1,
+      "30d": 97.5,
+      "90d": 99.2
     },
-    "xai": {
-      "7d": 98.5,
-      "30d": 97.8,
-      "90d": 97
+    "agent": {
+      "7d": 89.1,
+      "30d": 97.5,
+      "90d": 99.2
     }
   }
 }

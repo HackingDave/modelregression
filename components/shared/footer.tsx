@@ -19,7 +19,7 @@ export function Footer() {
             <p className="text-sm text-muted-foreground max-w-md">
               Independent automated benchmarking of frontier AI models. Tracking
               performance regressions so the community knows when models degrade
-              — updated 3 times daily.
+              — updated daily.
             </p>
             <div className="flex items-center gap-3 mt-4">
               <a
@@ -112,7 +112,7 @@ export function Footer() {
             &copy; 2026 ModelRegression.com — Built by David Kennedy
           </p>
           <p className="text-xs text-muted-foreground">
-            Benchmarks run 3x daily on DGX Sparks infrastructure
+            Benchmarks run daily on DGX Sparks infrastructure
           </p>
         </div>
       </div>

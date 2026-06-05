@@ -1,17 +1,12 @@
 """
 Configuration for ModelRegression benchmark engine.
 
-Defines all models, categories, tests, and API settings.
+Defines all models, categories, tests, and CLI tool settings.
+Models are tested via installed CLI tools (claude, codex, agent)
+rather than direct API integration.
 """
 
 import os
-
-# ---------------------------------------------------------------------------
-# API keys (loaded from environment)
-# ---------------------------------------------------------------------------
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
-XAI_API_KEY = os.environ.get("XAI_API_KEY", "")
 
 # ---------------------------------------------------------------------------
 # Database
@@ -19,64 +14,60 @@ XAI_API_KEY = os.environ.get("XAI_API_KEY", "")
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "benchmarks.db")
 
 # ---------------------------------------------------------------------------
-# Model definitions
+# CLI tool timeout (seconds) for benchmark calls and health checks
+# ---------------------------------------------------------------------------
+CLI_TIMEOUT = 300
+HEALTH_CHECK_TIMEOUT = 60
+PARALLEL_TESTS = 4
+MAX_RETRIES = 2
+RETRY_DELAY = 5
+
+# ---------------------------------------------------------------------------
+# Model definitions — each model specifies its CLI tool and model argument
+#
+#   cli:        executable name (claude, codex, agent)
+#   cli_model:  value passed to --model / -m flag
 # ---------------------------------------------------------------------------
 MODELS = [
     {
         "id": "claude-opus-4-8",
-        "provider": "anthropic",
+        "cli": "claude",
+        "cli_model": "opus",
         "name": "Claude Opus 4.8",
         "slug": "claude-opus-4-8",
-        "api_model": "claude-opus-4-8-20260401",
         "color": "#D97706",
         "icon": "brain",
         "is_active": True,
-        "extra_params": {},
     },
     {
         "id": "claude-sonnet-4-6",
-        "provider": "anthropic",
+        "cli": "claude",
+        "cli_model": "sonnet",
         "name": "Claude Sonnet 4.6",
         "slug": "claude-sonnet-4-6",
-        "api_model": "claude-sonnet-4-6-20260301",
         "color": "#8B5CF6",
         "icon": "zap",
         "is_active": True,
-        "extra_params": {},
     },
     {
         "id": "gpt-5-5",
-        "provider": "openai",
+        "cli": "codex",
+        "cli_model": "gpt-5.5",
         "name": "GPT-5.5",
         "slug": "gpt-5-5",
-        "api_model": "gpt-5.5",
         "color": "#10B981",
         "icon": "sparkles",
         "is_active": True,
-        "extra_params": {},
-    },
-    {
-        "id": "o3",
-        "provider": "openai",
-        "name": "O3",
-        "slug": "o3",
-        "api_model": "o3",
-        "color": "#3B82F6",
-        "icon": "cpu",
-        "is_active": True,
-        "extra_params": {"reasoning_effort": "high"},
     },
     {
         "id": "grok",
-        "provider": "xai",
+        "cli": "agent",
+        "cli_model": "grok-build",
         "name": "Grok",
         "slug": "grok",
-        "api_model": "grok-3",
         "color": "#EF4444",
         "icon": "flame",
         "is_active": True,
-        "extra_params": {},
-        "base_url": "https://api.x.ai/v1",
     },
 ]
 

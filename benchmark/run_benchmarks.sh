@@ -6,10 +6,8 @@
 # Next.js static site, and deploys it.  All output is logged to a timestamped
 # file under benchmark/logs/.
 #
-# Crontab example (three runs per day, Eastern Time):
-#   0  6 * * * /home/hackingdave/projects/modelregression/benchmark/run_benchmarks.sh
-#   0 12 * * * /home/hackingdave/projects/modelregression/benchmark/run_benchmarks.sh
-#   0 22 * * * /home/hackingdave/projects/modelregression/benchmark/run_benchmarks.sh
+# Crontab example (once daily at 3am ET):
+#   0  3 * * * /home/hackingdave/projects/modelregression/benchmark/run_benchmarks.sh
 # ---------------------------------------------------------------------------
 set -euo pipefail
 
@@ -35,20 +33,10 @@ echo "  Started: $(date '+%Y-%m-%d %H:%M:%S %Z')"
 echo "========================================"
 
 # ---------------------------------------------------------------------------
-# Determine schedule based on current Eastern Time hour
-#   morning   = 00:00 - 10:59 ET
-#   afternoon = 11:00 - 16:59 ET
-#   night     = 17:00 - 23:59 ET
+# Schedule label — single daily run
 # ---------------------------------------------------------------------------
-HOUR=$(TZ="America/New_York" date +%H)
-if [ "$HOUR" -lt 11 ]; then
-    SCHEDULE="morning"
-elif [ "$HOUR" -lt 17 ]; then
-    SCHEDULE="afternoon"
-else
-    SCHEDULE="night"
-fi
-echo "Schedule: $SCHEDULE  (ET hour: $HOUR)"
+SCHEDULE="daily"
+echo "Schedule: $SCHEDULE"
 
 # ---------------------------------------------------------------------------
 # Activate Python virtual environment
@@ -61,6 +49,42 @@ fi
 # shellcheck disable=SC1091
 source "$VENV_DIR/bin/activate"
 echo "Python: $(python --version)  ($(which python))"
+
+# ---------------------------------------------------------------------------
+# Step 0: Auto-update CLI tools (claude, codex, agent)
+# ---------------------------------------------------------------------------
+echo ""
+echo "--- Step 0: Updating CLI tools ---"
+
+if command -v claude &>/dev/null; then
+    echo "Updating Claude Code..."
+    claude update --yes 2>&1 || echo "  (claude update skipped or already latest)"
+else
+    echo "  WARNING: claude CLI not found"
+fi
+
+if command -v codex &>/dev/null; then
+    echo "Updating Codex..."
+    codex update 2>&1 || echo "  (codex update skipped or already latest)"
+else
+    echo "  WARNING: codex CLI not found"
+fi
+
+if command -v gemini &>/dev/null; then
+    echo "Updating Gemini..."
+    npm update -g @google/gemini-cli 2>&1 || echo "  (gemini update skipped or already latest)"
+else
+    echo "  WARNING: gemini CLI not found"
+fi
+
+if command -v agent &>/dev/null; then
+    echo "Updating Grok Agent..."
+    agent update 2>&1 || echo "  (agent update skipped or already latest)"
+else
+    echo "  WARNING: agent CLI not found"
+fi
+
+echo "CLI tools updated."
 
 # ---------------------------------------------------------------------------
 # Step 1: Run benchmarks

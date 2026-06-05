@@ -95,7 +95,7 @@ export default async function EvidencePage({
       {/* Model Results */}
       <div className="space-y-6">
         {Object.entries(evidence.results)
-          .sort((a, b) => b[1].score - a[1].score)
+          .sort((a, b) => (b[1].score ?? -1) - (a[1].score ?? -1))
           .map(([modelId, result]) => {
             const model = getModel(modelId);
             if (!model) return null;
@@ -123,18 +123,22 @@ export default async function EvidencePage({
                       </span>
                     </div>
                     <div className="flex items-center gap-4">
+                      {result.latencyMs != null && (
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Clock className="w-3.5 h-3.5" />
                         <span className="font-mono">
                           {(result.latencyMs / 1000).toFixed(1)}s
                         </span>
                       </div>
+                      )}
+                      {result.tokenCount != null && (
                       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                         <Hash className="w-3.5 h-3.5" />
                         <span className="font-mono">
                           {result.tokenCount.toLocaleString()} tokens
                         </span>
                       </div>
+                      )}
                       <span
                         className={cn(
                           "font-mono font-bold text-lg",

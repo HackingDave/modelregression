@@ -36,6 +36,10 @@ next-env.d.ts
 # deployment
 .deploy.env
 
+# ssl certs
+ssl.zip
+*.csr
+
 # benchmark data
 benchmark/data/*.db
 benchmark/data/*.db-wal

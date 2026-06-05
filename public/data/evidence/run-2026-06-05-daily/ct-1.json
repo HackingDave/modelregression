@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "ct-1",
+    "name": "Graph Algorithm Implementation",
+    "category": "coding-tasks",
+    "categoryName": "Coding Tasks",
+    "description": "Implement Dijkstra with priority queue and handle edge cases",
+    "prompt": "Implement a Trie (prefix tree) data structure in Python with the following requirements:\n\n1. Create a `TrieNode` class that stores children and an end-of-word marker.\n2. Create a `Trie` class with these methods:\n   - `insert(word: str) -> None` \u2014 Insert a word into the trie.\n   - `search(word: str) -> bool` \u2014 Return True only if the exact complete word exists in the trie (not just a prefix).\n   - `starts_with(prefix: str) -> bool` \u2014 Return True if any inserted word starts with the given prefix.\n   - `autocomplete(prefix: str, max_results: int = 5) -> List[str]` \u2014 Return up to `max_results` words that start with the given prefix, sorted alphabetically.\n\nRequirements:\n- Use proper Python type hints on ALL method signatures (parameters and return types).\n- Handle edge cases: inserting an empty string, searching for an empty string, a prefix longer than any word in the trie, and single-character words.\n- The autocomplete method must use DFS to collect completions efficiently, not brute-force iterate all words.\n- Include brief docstrings for each method.\n- Do NOT use any external libraries \u2014 only Python builtins.\n\nProvide the complete, runnable code. After the class definitions, include a short demonstration that inserts the words [\"apple\", \"app\", \"application\", \"apt\", \"bat\", \"batch\", \"bath\"] and shows the output of:\n- search(\"app\") => True\n- search(\"ap\") => False\n- starts_with(\"ap\") => True\n- autocomplete(\"app\") => [\"app\", \"apple\", \"application\"]\n- autocomplete(\"bat\") => [\"bat\", \"batch\", \"bath\"]\n- autocomplete(\"xyz\") => []"
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 12331,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "pe-1",
+    "name": "Algorithm Complexity",
+    "category": "performance-efficiency",
+    "categoryName": "Performance Efficiency",
+    "description": "Solve a problem in O(n log n) instead of naive O(n^2)",
+    "prompt": "The following Python function finds all unique triplets in a list that sum to a target value. It works correctly but is extremely slow for large inputs due to its O(n^3) time complexity. Optimize it to O(n^2) or better while producing IDENTICAL results.\n\nSlow O(n^3) solution:\n```python\nfrom typing import List, Tuple\n\ndef find_triplets(nums: List[int], target: int) -> List[Tuple[int, int, int]]:\n    \"\"\"Find all unique triplets that sum to target.\n    Returns sorted list of sorted triplets, no duplicates.\n    \"\"\"\n    n = len(nums)\n    result = set()\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                if nums[i] + nums[j] + nums[k] == target:\n                    triplet = tuple(sorted([nums[i], nums[j], nums[k]]))\n                    result.add(triplet)\n    return sorted(list(result))\n```\n\nTest cases (the optimized solution must produce the same output):\n```python\nassert find_triplets([1, 2, 3, 4, 5, 6], 10) == [(1, 3, 6), (1, 4, 5), (2, 3, 5)]\nassert find_triplets([0, 0, 0, 0], 0) == [(0, 0, 0)]\nassert find_triplets([-1, 0, 1, 2, -1, -4], 0) == [(-1, -1, 2), (-1, 0, 1)]\nassert find_triplets([1, 2], 3) == []  # Less than 3 elements\nassert find_triplets([], 0) == []\nassert find_triplets([1, 1, 1, 1], 3) == [(1, 1, 1)]\n```\n\nRequirements:\n1. Provide the optimized function with the SAME signature and return type.\n2. The optimized solution must produce IDENTICAL output for all inputs.\n3. Analyze the time complexity of BOTH solutions and explain why yours is faster.\n4. Analyze the space complexity of both solutions.\n5. Explain your optimization strategy step by step before the code.\n6. Handle all edge cases: empty array, less than 3 elements, all duplicates, negative numbers, large arrays.\n7. The target complexity should be O(n^2) using a sort + two-pointer approach.\n\nProvide the optimized code followed by the complexity analysis."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 20331,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

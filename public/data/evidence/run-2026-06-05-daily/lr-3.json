@@ -1,0 +1,36 @@
+{
+  "test": {
+    "id": "lr-3",
+    "name": "Mathematical Proof",
+    "category": "long-reasoning",
+    "categoryName": "Long Reasoning",
+    "description": "Prove divisibility properties using induction and modular arithmetic",
+    "prompt": "Provide a complete, rigorous mathematical proof of the following statement:\n\nFor any prime number p greater than 3, the quantity (p\u00b2 \u2212 1) is divisible by 24.\n\nYour proof must:\n1. Start by clearly stating what you are proving.\n2. Show the algebraic factorization of p\u00b2 \u2212 1.\n3. Prove that the factored form is divisible by 8 (i.e., contains at least three factors of 2).\n4. Prove that the factored form is divisible by 3.\n5. Combine these to conclude divisibility by 24.\n6. Be rigorous \u2014 every claim must be justified, not just asserted. For example, if you claim that \"one of two consecutive even numbers is divisible by 4,\" explain why.\n7. Verify your proof with at least two concrete examples (e.g., p = 5 and p = 7).\n\nWrite the proof in a clear, structured format suitable for an undergraduate mathematics course."
+  },
+  "results": {
+    "grok": {
+      "score": 92,
+      "modelOutput": "**Theorem.** Let \\( p \\) be a prime number such that \\( p > 3 \\). Then \\( 24 \\) divides \\( p^2 - 1 \\).\n\n**Proof.**\n\n**Step 1: Algebraic factorization.**  \nObserve that  \n\\[\np^2 - 1 = (p - 1)(p + 1).\n\\]  \nIt therefore suffices to prove that \\( (p - 1)(p + 1) \\) is divisible by both 8 and 3. Since 8 and 3 are coprime, their product 24 will then divide \\( (p - 1)(p + 1) \\).\n\n**Step 2: The factored form is divisible by 8.**  \nSince \\( p > 3 \\) is prime, \\( p \\neq 2 \\), so \\( p \\) is odd. Write \\( p = 2k + 1 \\) for some integer \\( k \\geq 2 \\) (as \\( p \\geq 5 \\)). Then  \n\\[\np - 1 = 2k, \\qquad p + 1 = 2(k + 1).\n\\]  \nThe product is therefore  \n\\[\n(p - 1)(p + 1) = (2k) \\cdot 2(k + 1) = 4 \\cdot k(k + 1).\n\\]  \nIt remains to show that \\( k(k + 1) \\) is even. The integers \\( k \\) and \\( k + 1 \\) are consecutive, so exactly one of them is even (if \\( k \\) is even then \\( k + 1 \\) is odd; if \\( k \\) is odd then \\( k + 1 \\) is even). In either case their product \\( k(k + 1) \\) contains a factor of 2, i.e., \\( 2 \\mid k(k + 1) \\).  \n\nHence  \n\\[\n4 \\cdot k(k + 1)\n\\]  \nis divisible by \\( 4 \\cdot 2 = 8 \\). (Equivalently: both \\( p - 1 \\) and \\( p + 1 \\) are divisible by 2, and because they are two consecutive even integers, one of them must be divisible by 4. The total power of 2 dividing the product is therefore at least \\( 2 \\cdot 2 \\cdot 2 = 8 \\).)  \n\nThus, \\( 8 \\mid (p^2 - 1) \\).\n\n**Step 3: The factored form is divisible by 3.**  \nSince \\( p > 3 \\) is prime, \\( p \\) is not divisible by 3, so \\( p \\not\\equiv 0 \\pmod{3} \\). The only remaining possibilities modulo 3 are \\( p \\equiv 1 \\pmod{3} \\) or \\( p \\equiv 2 \\pmod{3} \\).  \n\n- If \\( p \\equiv 1 \\pmod{3} \\), then \\( p - 1 \\equiv 0 \\pmod{3} \\), so \\( 3 \\mid (p - 1) \\).  \n- If \\( p \\equiv 2 \\pmod{3} \\), then \\( p + 1 \\equiv 3 \\equiv 0 \\pmod{3} \\), so \\( 3 \\mid (p + 1) \\).  \n\nIn either case, 3 divides one of the factors \\( p - 1 \\) or \\( p + 1 \\), and therefore \\( 3 \\mid (p - 1)(p + 1) \\). Hence \\( 3 \\mid (p^2 - 1) \\).\n\n**Step 4: Conclusion that 24 divides \\( p^2 - 1 \\).**  \nWe have established that \\( 8 \\mid (p^2 - 1) \\) and \\( 3 \\mid (p^2 - 1) \\). Write  \n\\[\np^2 - 1 = 8a\n\\]  \nfor some integer \\( a \\). Since \\( 3 \\mid (p^2 - 1) \\), it follows that \\( 3 \\mid (8a) \\). Because \\( \\gcd(8, 3) = 1 \\) and 3 divides \\( 8a \\), Euclid's lemma implies that \\( 3 \\mid a \\). Thus \\( a = 3b \\) for some integer \\( b \\), and  \n\\[\np^2 - 1 = 8 \\cdot (3b) = 24b.\n\\]  \nTherefore \\( 24 \\mid (p^2 - 1) \\).\n\n**Verification with concrete examples.**  \n\n- Let \\( p = 5 \\) (prime, \\( > 3 \\)). Then \\( p^2 - 1 = 25 - 1 = 24 \\), and \\( 24 \\div 24 = 1 \\), an integer.  \n- Let \\( p = 7 \\) (prime, \\( > 3 \\)). Then \\( p^2 - 1 = 49 - 1 = 48 \\), and \\( 48 \\div 24 = 2 \\), an integer.  \n\nFor additional verification, let \\( p = 11 \\): \\( 121 - 1 = 120 \\), and \\( 120 \\div 24 = 5 \\), an integer.  \n\nThis completes the proof.",
+      "evalDetails": {
+        "regex_score": 83.0,
+        "judge_score": 98.0,
+        "regex_details": {
+          "checks": {
+            "factorization": true,
+            "6k_form": false,
+            "divisible_by_8": true,
+            "divisible_by_3": true,
+            "consecutive_integers": true,
+            "mentions_24": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 98, \"reasoning\": \"This is a nearly flawless proof that satisfies all rubric criteria rigorously. Step 1 cleanly factors p\u00b2-1. Step 2 correctly identifies p as odd (since p>3 is prime, p\u22602), writes p=2k+1, and derives (p-1)(p+1)=4\u00b7k(k+1), then proves 2|k(k+1) by the consecutive-integer argument, concluding 8|(p\u00b2-1) with full justification. Step 3 uses modular arithmetic to handle the two non-zero residues of p mod 3 exhaustively. Step 4 invokes Euclid's lemma explicitly to combi"
+        }
+      },
+      "latencyMs": 19412,
+      "tokenCount": 0,
+      "error": null
+    }
+  }
+}

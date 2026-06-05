@@ -20,7 +20,7 @@ export function ModelOverviewCards({
   changes,
 }: ModelOverviewCardsProps) {
   return (
-    <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+    <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {MODELS.map((model) => {
         const result = latest.models[model.id];
         if (!result) return null;

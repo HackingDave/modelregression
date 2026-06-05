@@ -109,8 +109,26 @@ def _write_json(path: str, data) -> None:
 # latest.json
 # ---------------------------------------------------------------------------
 
+def _get_latest_run_for_model(conn, model_id: str) -> dict | None:
+    """Find the most recent completed run that has results for this model."""
+    row = conn.execute(
+        """SELECT br.* FROM benchmark_runs br
+           JOIN model_run_scores mrs ON mrs.run_id = br.id
+           WHERE mrs.model_id = ?
+             AND br.status IN ('completed', 'completed_with_errors')
+           ORDER BY br.started_at DESC LIMIT 1""",
+        (model_id,),
+    ).fetchone()
+    return dict(row) if row else None
+
+
 def export_latest(conn, output_dir: str) -> None:
-    """Most recent completed benchmark run with full per-model detail."""
+    """Most recent data per model, composited across runs.
+
+    When single-model runs exist (e.g. --model grok), each model's data
+    is pulled from its own most recent run so partial runs don't hide
+    other models from the dashboard.
+    """
     latest_run = database.get_latest_run(conn)
     if not latest_run:
         _write_json(os.path.join(output_dir, "latest.json"), {
@@ -119,51 +137,73 @@ def export_latest(conn, output_dir: str) -> None:
         })
         return
 
-    run_id = latest_run["id"]
+    models_data = {}
+    all_composites = []
 
-    # Composite scores + ranks per model
-    composites = database.get_model_run_scores_for_run(conn, run_id)
-    comp_by_slug = {mc["model_slug"]: mc for mc in composites}
+    for mcfg in config.MODELS:
+        mid = mcfg["id"]
+        slug = mcfg["slug"]
+        model_run = _get_latest_run_for_model(conn, mid)
+        if not model_run:
+            continue
 
-    # Category-level aggregates keyed by (model_slug, cat_slug)
-    run_scores = database.get_run_scores_for_run(conn, run_id)
-    cat_score_lkp = defaultdict(dict)
-    for rs in run_scores:
-        cat_score_lkp[rs["model_slug"]][rs["category_slug"]] = {
-            "avgScore": _round_score(rs["avg_score"]),
-            "testCount": rs["test_count"],
-        }
+        run_id = model_run["id"]
 
-    # Individual test results keyed by (model_slug, cat_slug)
-    results = database.get_test_results_for_run(conn, run_id)
-    test_lkp = defaultdict(lambda: defaultdict(list))
-    for r in results:
-        if r["score"] is not None:
-            test_lkp[r["model_slug"]][r["category_slug"]].append({
-                "testId": _display_test_id(r["test_id"]),
-                "name": r["test_name"],
-                "score": _round_score(r["score"]),
-                "latencyMs": r["latency_ms"],
+        mc = conn.execute(
+            "SELECT composite_score, rank FROM model_run_scores WHERE run_id = ? AND model_id = ?",
+            (run_id, mid),
+        ).fetchone()
+        if not mc:
+            continue
+
+        all_composites.append((slug, mc["composite_score"]))
+
+        cat_rows = conn.execute(
+            """SELECT rs.*, c.slug as category_slug
+               FROM run_scores rs
+               JOIN categories c ON rs.category_id = c.id
+               WHERE rs.run_id = ? AND rs.model_id = ?""",
+            (run_id, mid),
+        ).fetchall()
+
+        test_rows = conn.execute(
+            """SELECT tr.*, t.name as test_name, c.slug as category_slug
+               FROM test_results tr
+               JOIN tests t ON tr.test_id = t.id
+               JOIN categories c ON tr.category_id = c.id
+               WHERE tr.run_id = ? AND tr.model_id = ? AND tr.score IS NOT NULL""",
+            (run_id, mid),
+        ).fetchall()
+
+        tests_by_cat = defaultdict(list)
+        for tr in test_rows:
+            tests_by_cat[tr["category_slug"]].append({
+                "testId": _display_test_id(tr["test_id"]),
+                "name": tr["test_name"],
+                "score": _round_score(tr["score"]),
+                "latencyMs": tr["latency_ms"],
             })
 
-    # Assemble per-model payload
-    models_data = {}
-    for slug, mc in comp_by_slug.items():
         categories = {}
-        for cat in config.CATEGORIES:
-            cs = cat_score_lkp.get(slug, {}).get(cat["slug"])
-            tests = test_lkp.get(slug, {}).get(cat["slug"], [])
-            if cs:
-                categories[cat["slug"]] = {
-                    "avgScore": cs["avgScore"],
-                    "testCount": cs["testCount"],
-                    "tests": tests,
-                }
+        for cs in cat_rows:
+            cslug = cs["category_slug"]
+            categories[cslug] = {
+                "avgScore": _round_score(cs["avg_score"]),
+                "testCount": cs["test_count"],
+                "tests": tests_by_cat.get(cslug, []),
+            }
+
         models_data[slug] = {
             "compositeScore": _round_score(mc["composite_score"]),
             "rank": mc["rank"],
             "categories": categories,
         }
+
+    # Recompute ranks across all models for the composite view
+    all_composites.sort(key=lambda x: x[1] or 0, reverse=True)
+    for rank, (slug, _) in enumerate(all_composites, 1):
+        if slug in models_data:
+            models_data[slug]["rank"] = rank
 
     _write_json(os.path.join(output_dir, "latest.json"), {
         "runId": _run_label(latest_run),
@@ -246,7 +286,7 @@ def export_models(conn, output_dir: str) -> None:
 
         model_meta = {
             "id": mid,
-            "provider": mcfg["provider"],
+            "provider": mcfg["cli"],
             "name": mcfg["name"],
             "slug": slug,
             "color": mcfg["color"],
@@ -678,7 +718,7 @@ def _compute_uptime(conn) -> dict:
     """Per-provider uptime for 7d / 30d / 90d windows."""
     providers = {}
     for mcfg in config.MODELS:
-        p = mcfg["provider"]
+        p = mcfg["cli"]
         if p not in providers:
             providers[p] = {}
 
@@ -808,7 +848,7 @@ def _generate_empty_stubs(output_dir: str) -> None:
     for mcfg in config.MODELS:
         _write_json(os.path.join(output_dir, "models", f"{mcfg['slug']}.json"), {
             "model": {
-                "id": mcfg["id"], "provider": mcfg["provider"],
+                "id": mcfg["id"], "provider": mcfg["cli"],
                 "name": mcfg["name"], "slug": mcfg["slug"],
                 "color": mcfg["color"], "icon": mcfg.get("icon", "cpu"),
             },

@@ -30,14 +30,15 @@ export default function HomePage() {
   const modelHistory: Record<string, number[]> = {};
   const modelChanges: Record<string, number> = {};
   for (const model of MODELS) {
-    modelHistory[model.id] = trends.data
+    const allPoints = trends.data
       .slice(-21)
-      .map((d) => d.models[model.id] ?? 0);
+      .map((d) => d.models[model.id] ?? null);
+    modelHistory[model.id] = allPoints.map((v) => v ?? 0);
 
-    const hist = modelHistory[model.id];
-    if (hist.length >= 2) {
-      const recent = hist[hist.length - 1];
-      const old = hist[0];
+    const valid = allPoints.filter((v): v is number => v !== null && v > 0);
+    if (valid.length >= 2) {
+      const recent = valid[valid.length - 1];
+      const old = valid[0];
       modelChanges[model.id] = old > 0 ? ((recent - old) / old) * 100 : 0;
     } else {
       modelChanges[model.id] = 0;
@@ -54,22 +55,18 @@ export default function HomePage() {
         changes={modelChanges}
       />
 
-      {/* Performance Timeline + Regressions */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2">
-          <ScrollReveal>
-            <div className="rounded-xl border border-border/50 glass p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">
-                Performance Timeline
-              </h3>
-              <PerformanceTimeline trends={trends} />
-            </div>
-          </ScrollReveal>
+      {/* Performance Timeline */}
+      <ScrollReveal>
+        <div className="rounded-xl border border-border/50 glass p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">
+            Performance Timeline
+          </h3>
+          <PerformanceTimeline trends={trends} />
         </div>
-        <div className="xl:col-span-1">
-          <RegressionAlerts regressions={regressions.active} />
-        </div>
-      </div>
+      </ScrollReveal>
+
+      {/* Regression Alerts */}
+      <RegressionAlerts regressions={regressions.active} />
 
       {/* Category Heatmap */}
       <ScrollReveal>

@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "cq-3",
+    "name": "Clean Architecture Patterns",
+    "category": "code-quality",
+    "categoryName": "Code Quality",
+    "description": "Implement repository pattern with proper dependency inversion",
+    "prompt": "Design and implement a PriorityTaskQueue class in Python. This will be scored primarily on API DESIGN quality \u2014 how intuitive, consistent, complete, and well-typed the public interface is.\n\nThe queue manages tasks with different priority levels. Higher priority tasks are dequeued first. Tasks with equal priority are dequeued in FIFO order.\n\nRequired capabilities:\n1. Add a task with a payload and priority level\n2. Get the next highest-priority task (removes it from the queue)\n3. Peek at the next task without removing it\n4. Cancel/remove a specific task by ID\n5. Update the priority of an existing task\n6. Query the queue size and check if it's empty\n7. Clear all tasks\n8. Filter or list tasks by priority level\n9. Iterate over tasks in priority order (without removing them)\n\nDesign requirements:\n- Define a Task data structure (dataclass) with fields: id, payload, priority, created_at, status\n- Task IDs should be auto-generated (UUID or auto-increment)\n- Priority is an integer where HIGHER numbers = higher priority\n- Support Python protocols: len(queue), iter(queue), bool(queue), repr(queue)\n- Methods should have intuitive names that read like English\n- Consistent error handling: define custom exceptions (EmptyQueueError, TaskNotFoundError)\n- All methods must have type hints and docstrings\n- The queue should be usable as a context manager\n- Consider making it generic (PriorityTaskQueue[T] where T is the payload type)\n\nProvide the complete implementation including the Task dataclass, custom exceptions, and the PriorityTaskQueue class. Design the API as if it were a library that other developers will use \u2014 prioritize discoverability and consistency."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 83349,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

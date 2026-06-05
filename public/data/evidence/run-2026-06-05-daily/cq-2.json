@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "cq-2",
+    "name": "TypeScript Best Practices",
+    "category": "code-quality",
+    "categoryName": "Code Quality",
+    "description": "Use strict types, discriminated unions, and proper error narrowing",
+    "prompt": "Write a cron expression parser in Python that parses standard 5-field cron expressions and returns both the parsed schedule and a human-readable description. This will be scored on code READABILITY and DECOMPOSITION, not just correctness.\n\nCron format: \"minute hour day_of_month month day_of_week\"\n\nExamples:\n- \"* * * * *\" -> \"Every minute\"\n- \"0 12 * * 1-5\" -> \"At 12:00 on Monday through Friday\"\n- \"*/15 * * * *\" -> \"Every 15 minutes\"\n- \"0 0 1 * *\" -> \"At midnight on the 1st of every month\"\n- \"30 8 * * 1,3,5\" -> \"At 08:30 on Monday, Wednesday, and Friday\"\n- \"0 */2 * * *\" -> \"Every 2 hours, on the hour\"\n\nThe parser must handle:\n- Wildcards: * (any value)\n- Ranges: 1-5 (values 1 through 5)\n- Lists: 1,3,5 (values 1, 3, and 5)\n- Steps: */15 (every 15), 1-30/5 (1 through 30, every 5th)\n- Single values: 42 (exactly 42)\n\nField ranges:\n- minute: 0-59\n- hour: 0-23\n- day_of_month: 1-31\n- month: 1-12\n- day_of_week: 0-6 (0 = Sunday)\n\nDesign requirements:\n- Break the parser into clear, well-named helper functions. Do NOT write one monolithic parse function.\n- Parsing a single field (handling *, ranges, lists, steps) should be a shared function, not duplicated 5 times.\n- Return a structured result (dataclass or similar), not a raw dict.\n- Include a `describe()` method that generates a human-readable English description.\n- Validate inputs and raise clear errors for invalid expressions.\n- Include type hints on ALL functions and return types.\n- Code should be readable top-down without needing to jump around.\n\nProvide the complete implementation. Prioritize READABILITY over cleverness."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 134326,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

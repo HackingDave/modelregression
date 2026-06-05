@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "cq-1",
+    "name": "Idiomatic Python",
+    "category": "code-quality",
+    "categoryName": "Code Quality",
+    "description": "Write Pythonic code using generators, comprehensions, and context managers",
+    "prompt": "Implement a ShoppingCart class in Python. This will be scored primarily on CODE QUALITY \u2014 naming conventions, adherence to SOLID principles, DRY, type hints, and overall style \u2014 not just whether it works.\n\nThe cart should support:\n1. Adding items (product name, unit price, quantity)\n2. Removing items by product name\n3. Updating the quantity of an existing item\n4. Calculating the subtotal (before discounts)\n5. Applying a percentage discount or a flat discount\n6. Calculating the final total (after discounts)\n7. Listing all items with their details\n8. Clearing the cart\n\nDesign requirements:\n- Represent cart items as a proper data structure (dataclass, NamedTuple, or Pydantic model), NOT raw dicts or tuples.\n- Use type hints on ALL method parameters and return types.\n- Follow the Single Responsibility Principle: each method should do one thing.\n- Follow DRY: extract shared logic into helper methods.\n- Use descriptive names for everything \u2014 no single-letter variables, no abbreviations.\n- Include docstrings on the class and all public methods.\n- Handle edge cases with specific, descriptive exceptions (not generic Exception or ValueError(\"error\")).\n- NO print statements \u2014 methods should return values, not print them.\n- NO mutable default arguments.\n\nProvide the complete implementation. Write production-quality code as if it will be reviewed by a senior engineer who cares deeply about code quality."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 96670,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

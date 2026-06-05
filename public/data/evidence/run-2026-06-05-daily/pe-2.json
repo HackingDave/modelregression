@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "pe-2",
+    "name": "Memory-efficient Processing",
+    "category": "performance-efficiency",
+    "categoryName": "Performance Efficiency",
+    "description": "Process a large file using streaming instead of loading into memory",
+    "prompt": "Write a Python script that processes a CSV file that is too large to fit in memory (e.g., 50GB, hundreds of millions of rows). The script must compute summary statistics without ever loading the entire file into memory.\n\nThe CSV file format:\n```\ntransaction_id,customer_id,category,amount,currency,timestamp\nTXN001,CUST_42,electronics,299.99,USD,2024-01-15T10:30:00\nTXN002,CUST_17,groceries,45.50,USD,2024-01-15T10:31:00\n...\n```\n\nRequired output (computed in a streaming fashion):\n1. Total number of transactions\n2. Total amount across all transactions\n3. Average transaction amount\n4. Min and max transaction amounts\n5. Count and total amount per category (e.g., electronics: 15000 transactions, $2.3M total)\n6. Count and total amount per currency\n7. Top 10 customers by total spending\n8. Transactions per hour distribution (0-23)\n\nRequirements:\n1. NEVER load the entire file into memory. Process row-by-row or in small chunks.\n2. Memory usage must be O(1) relative to file size (proportional to the number of unique categories/currencies/customers, which is assumed to be much smaller than total rows).\n3. Use Python's csv module or pandas with chunksize \u2014 NOT pd.read_csv() without chunksize.\n4. Handle malformed rows gracefully: log a warning and skip, do not crash.\n5. Handle encoding issues (try utf-8, fall back to latin-1).\n6. Handle missing or empty amount fields (skip them for amount calculations).\n7. Show progress every 1 million rows (print rows processed so far).\n8. Use a context manager to ensure the file is properly closed.\n9. For the \"top 10 customers\" statistic, you may keep a dict of customer_id -> total_amount in memory since the number of unique customers is much smaller than total rows. If there could be millions of unique customers, discuss the tradeoff and suggest an approach (e.g., approximate top-k using a min-heap of size 10).\n10. Write the output summary to both stdout and an output file.\n\nProvide the complete, runnable Python script. Include type hints and docstrings. Add comments explaining why each design decision supports memory efficiency."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 90510,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

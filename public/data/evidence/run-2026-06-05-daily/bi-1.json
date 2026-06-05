@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "bi-1",
+    "name": "Refactor Without Regression",
+    "category": "bug-introduction-rate",
+    "categoryName": "Bug Introduction Rate",
+    "description": "Refactor a function without introducing new failures in existing tests",
+    "prompt": "Add a caching layer to the following Python function WITHOUT breaking any of the existing tests. The function looks up user data from a (simulated) database. After your change, repeated calls with the same user_id should return cached results instead of hitting the database every time.\n\nFunction to modify:\n```python\nimport time\nfrom typing import Optional\n\n# Simulated database\n_DATABASE = {\n    \"user_001\": {\"name\": \"Alice\", \"email\": \"alice@example.com\", \"role\": \"admin\"},\n    \"user_002\": {\"name\": \"Bob\", \"email\": \"bob@example.com\", \"role\": \"user\"},\n    \"user_003\": {\"name\": \"Charlie\", \"email\": \"charlie@example.com\", \"role\": \"user\"},\n}\n\n_call_count = 0  # Track DB calls for testing\n\ndef lookup_user(user_id: str) -> Optional[dict]:\n    \"\"\"Look up a user by ID. Returns user dict or None if not found.\n    Raises ValueError if user_id is empty.\n    Raises TypeError if user_id is not a string.\n    \"\"\"\n    global _call_count\n    if not isinstance(user_id, str):\n        raise TypeError(f\"user_id must be a string, got {type(user_id).__name__}\")\n    if not user_id.strip():\n        raise ValueError(\"user_id cannot be empty\")\n\n    _call_count += 1\n    time.sleep(0.1)  # Simulate DB latency\n\n    return _DATABASE.get(user_id)\n```\n\nExisting tests (ALL must continue to pass):\n```python\nimport pytest\nimport threading\n\ndef test_basic_lookup():\n    result = lookup_user(\"user_001\")\n    assert result is not None\n    assert result[\"name\"] == \"Alice\"\n    assert result[\"email\"] == \"alice@example.com\"\n\ndef test_not_found():\n    result = lookup_user(\"user_999\")\n    assert result is None\n\ndef test_case_sensitivity():\n    result = lookup_user(\"User_001\")  # Capital U\n    assert result is None  # Should NOT find \"user_001\"\n\ndef test_special_characters():\n    result = lookup_user(\"user-with-dashes\")\n    assert result is None\n\ndef test_empty_input():\n    with pytest.raises(ValueError):\n        lookup_user(\"\")\n    with pytest.raises(ValueError):\n        lookup_user(\"   \")\n    with pytest.raises(TypeError):\n        lookup_user(None)\n    with pytest.raises(TypeError):\n        lookup_user(123)\n\ndef test_concurrent_calls():\n    results = []\n    def call_lookup():\n        results.append(lookup_user(\"user_002\"))\n    threads = [threading.Thread(target=call_lookup) for _ in range(5)]\n    for t in threads:\n        t.start()\n    for t in threads:\n        t.join()\n    assert all(r is not None and r[\"name\"] == \"Bob\" for r in results)\n```\n\nRequirements:\n1. Add caching so that the second call to `lookup_user(\"user_001\")` returns instantly from cache.\n2. Cache must have a TTL (time-to-live) \u2014 cached entries expire after a configurable duration (default 60 seconds).\n3. Cache must have a maximum size to prevent unbounded memory growth.\n4. Include a `clear_cache()` function to manually invalidate the cache.\n5. ALL 6 existing tests must still pass without modification.\n6. The function signature must remain `lookup_user(user_id: str) -> Optional[dict]`.\n7. Cache must be thread-safe (test_concurrent_calls uses threads).\n8. None results (user not found) should also be cached to prevent repeated DB lookups for missing users.\n\nProvide the complete modified code including the caching implementation."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 58736,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

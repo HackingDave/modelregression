@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "th-2",
+    "name": "Error Path Completeness",
+    "category": "code-thoroughness",
+    "categoryName": "Code Thoroughness",
+    "description": "Ensure all failure modes have proper error handling and logging",
+    "prompt": "Implement a user registration endpoint in Python (Flask or FastAPI) with THOROUGH input validation. The endpoint accepts: email, username, password, and display_name.\n\nEndpoint: POST /api/register\n\nYour implementation will be scored on how many validation checks and security measures you include. Be as thorough as possible \u2014 think about every possible invalid input, attack vector, and edge case.\n\nConsider these areas:\n1. EMAIL: Format validation, normalization, domain checks, disposable email blocking, unicode/IDN handling.\n2. USERNAME: Length limits, character restrictions, reserved words, offensive content, homoglyph attacks.\n3. PASSWORD: Strength requirements, breached password checks, hashing (bcrypt/argon2), maximum length DoS prevention, no similarity to username/email.\n4. SECURITY: SQL injection, XSS, CSRF, rate limiting, account enumeration prevention, timing-safe comparisons.\n5. EDGE CASES: Duplicate registration, concurrent signups, input normalization (whitespace, unicode), proper error messages that don't leak information.\n\nRequirements:\n- Use parameterized queries (not string concatenation) for any database operations\n- Hash passwords with bcrypt or argon2 (NOT MD5, SHA-256, or plain text)\n- Return structured error responses that list ALL validation failures, not just the first one\n- Do not reveal whether an email is already registered (account enumeration prevention)\n- Include rate limiting logic or decorator\n- Sanitize all inputs before storage\n- Use proper HTTP status codes\n\nProvide the complete implementation. The more validation checks and security measures you include, the higher your score."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 31602,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

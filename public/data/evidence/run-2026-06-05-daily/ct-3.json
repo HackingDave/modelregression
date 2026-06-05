@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "ct-3",
+    "name": "Concurrent Data Pipeline",
+    "category": "coding-tasks",
+    "categoryName": "Coding Tasks",
+    "description": "Build a producer-consumer pipeline with backpressure handling",
+    "prompt": "Write a Python function that finds the area of the largest rectangle containing only 1s in a 2D binary matrix. The solution MUST run in O(rows * cols) time complexity.\n\nFunction signature:\n```python\ndef maximal_rectangle(matrix: List[List[int]]) -> int:\n```\n\nAlgorithm requirements:\n- You MUST use the histogram-based approach: for each row, build a histogram of heights (consecutive 1s going upward), then apply the \"largest rectangle in histogram\" algorithm.\n- The \"largest rectangle in histogram\" sub-problem MUST be solved using a stack-based O(n) approach, NOT a brute-force O(n^2) approach.\n- Overall time complexity must be O(rows * cols). State this in a comment.\n- Space complexity should be O(cols). State this in a comment.\n\nHandle these edge cases:\n- Empty matrix (return 0)\n- Matrix with a single row\n- Matrix with a single column\n- Matrix of all 0s (return 0)\n- Matrix of all 1s (return rows * cols)\n\nAfter the function, include test cases that verify:\n```python\nassert maximal_rectangle([[1,0,1,0,0],\n                           [1,0,1,1,1],\n                           [1,1,1,1,1],\n                           [1,0,0,1,0]]) == 6\n\nassert maximal_rectangle([[0]]) == 0\nassert maximal_rectangle([[1]]) == 1\nassert maximal_rectangle([]) == 0\nassert maximal_rectangle([[1,1],[1,1]]) == 4\n```\n\nProvide the complete code with the helper function, main function, and test cases. Include comments explaining each step of the algorithm."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 41754,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

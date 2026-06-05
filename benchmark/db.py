@@ -11,6 +11,9 @@ from datetime import datetime, timezone
 from typing import Any
 
 from config import CATEGORIES, DB_PATH, MODELS, TESTS
+from tests import ALL_TESTS
+
+_TEST_PROMPTS = {t.id: t.prompt for t in ALL_TESTS}
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +30,7 @@ def get_connection(db_path: str | None = None) -> sqlite3.Connection:
     """Return a connection to the benchmark database."""
     path = db_path or DB_PATH
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    conn = sqlite3.connect(path)
+    conn = sqlite3.connect(path, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA foreign_keys=ON")
@@ -42,7 +45,7 @@ CREATE TABLE IF NOT EXISTS models (
     provider TEXT NOT NULL,
     name TEXT NOT NULL,
     slug TEXT NOT NULL UNIQUE,
-    api_model TEXT NOT NULL,
+    cli_model TEXT NOT NULL,
     color TEXT NOT NULL,
     is_active INTEGER NOT NULL DEFAULT 1
 );
@@ -168,9 +171,9 @@ def seed_models_and_categories(conn: sqlite3.Connection) -> None:
     """Insert or update model and category metadata from config."""
     for m in MODELS:
         conn.execute(
-            """INSERT OR REPLACE INTO models (id, provider, name, slug, api_model, color, is_active)
+            """INSERT OR REPLACE INTO models (id, provider, name, slug, cli_model, color, is_active)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (m["id"], m["provider"], m["name"], m["slug"], m["api_model"], m["color"], int(m["is_active"])),
+            (m["id"], m["cli"], m["name"], m["slug"], m["cli_model"], m["color"], int(m["is_active"])),
         )
     for c in CATEGORIES:
         conn.execute(
@@ -179,10 +182,11 @@ def seed_models_and_categories(conn: sqlite3.Connection) -> None:
             (c["id"], c["name"], c["slug"], c["description"], c["weight"], c["sort_order"]),
         )
     for t in TESTS:
+        prompt = _TEST_PROMPTS.get(t["id"], "")
         conn.execute(
-            """INSERT OR REPLACE INTO tests (id, category_id, name, description, eval_type, max_score, version)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (t["id"], t["category_id"], t["name"], t["description"], t["eval_type"], t["max_score"], t["version"]),
+            """INSERT OR REPLACE INTO tests (id, category_id, name, description, prompt, eval_type, max_score, version)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (t["id"], t["category_id"], t["name"], t["description"], prompt, t["eval_type"], t["max_score"], t["version"]),
         )
     conn.commit()
     logger.info("Seeded %d models, %d categories, %d tests", len(MODELS), len(CATEGORIES), len(TESTS))

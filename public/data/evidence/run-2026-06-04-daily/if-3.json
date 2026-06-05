@@ -1,0 +1,95 @@
+{
+  "test": {
+    "id": "if-3",
+    "name": "Multi-step Instruction Chain",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Execute a 6-step instruction sequence without skipping or reordering",
+    "prompt": "Explain how a hash table works to a computer science student.\n\nYou must follow ALL of these rules:\n1. Do NOT use the word \"bucket\" anywhere in your explanation.\n2. Do NOT use the word \"collision\" anywhere in your explanation.\n3. Do NOT use the hyphenated term \"key-value\" anywhere in your explanation.\n4. Do NOT use bullet points, dashes as list markers, asterisks as list markers, or numbered lists. Write in paragraph form ONLY.\n5. Your explanation must be UNDER 200 words total.\n6. Despite these restrictions, your explanation must be accurate, clear, and cover: how data is stored, how the hash function maps data to positions, and how retrieval works.\n\nWrite your explanation as flowing prose paragraphs. Do not start with \"Sure,\" or \"Here's an explanation\" or any preamble \u2014 begin directly with the explanation content."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 100,
+      "modelOutput": "A hash table stores data in an underlying array, where each entry holds a piece of data along with the identifier used to locate it. When you want to insert something, you pass its identifier into a hash function, which deterministically converts that identifier into an integer. That integer is then reduced, typically using the modulo operator against the array's length, to produce a valid index. The data is placed at that computed position in the array.\n\nRetrieval works the same way. You take the identifier you are searching for, run it through the identical hash function, and reduce the result to an index. Because the function is deterministic, it points you straight to the position where the data was originally stored, letting you read it directly instead of scanning the entire structure.\n\nSometimes two different identifiers produce the same index. Hash tables resolve this through strategies such as storing multiple entries in a linked list at that position, or probing nearby positions until a free slot is found. When the hash function distributes identifiers evenly, insertion and lookup both run in roughly constant time on average, which is what makes this structure so widely used.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 196,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 7938,
+      "tokenCount": 2373,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 1015,
+      "tokenCount": null,
+      "error": "claude exited 1: unknown error"
+    },
+    "gpt-5-5": {
+      "score": 100,
+      "modelOutput": "A hash table stores records in an array. Each record has a key, such as a string or number, and an associated value. A hash function takes the key and computes an integer, then the table reduces that integer to a valid array index.\n\nTo insert data, the table places the record at the computed position. If more than one key leads to the same position, the implementation uses a rule such as keeping multiple records there or searching nearby positions.\n\nTo retrieve a value, the table hashes the requested key again, goes directly to the matching position, and checks stored keys until it finds the right one. With a good hash function and enough space, lookup, insertion, and deletion are usually close to constant time.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 126,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 12173,
+      "tokenCount": 0,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "A hash table organizes stored data within a fixed-size array so that any particular item can be located quickly. An identifier for the data is passed to a hash function, which applies arithmetic operations such as multiplication or bitwise shifts and then takes the result modulo the array length. This computation yields an index that designates the precise array position where the data and its identifier are placed together.\n\nRetrieval proceeds by feeding the same identifier into the hash function once more to obtain the identical index. The program then examines the entry at that array position. When several identifiers produce the same index, the position holds a short sequence of entries rather than a single one, and the matching identifier is located by sequential comparison within that sequence.\n\nThis approach delivers average constant-time performance for both storage and lookup operations because the hash function directly computes the location instead of requiring a search through all data.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 157,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 28949,
+      "tokenCount": 0,
+      "error": null
+    }
+  }
+}

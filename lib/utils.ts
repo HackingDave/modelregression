@@ -5,7 +5,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatScore(score: number): string {
+export function formatScore(score: number | null | undefined): string {
+  if (score == null) return "—";
   return score.toFixed(1);
 }
 
@@ -14,7 +15,8 @@ export function formatPercent(value: number): string {
   return `${sign}${value.toFixed(1)}%`;
 }
 
-export function getScoreColor(score: number): string {
+export function getScoreColor(score: number | null | undefined): string {
+  if (score == null) return "text-muted-foreground";
   if (score >= 90) return "text-score-excellent";
   if (score >= 80) return "text-score-good";
   if (score >= 70) return "text-score-average";

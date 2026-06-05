@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "sa-3",
+    "name": "Secret Management",
+    "category": "security-awareness",
+    "categoryName": "Security Awareness",
+    "description": "Implement config loading that never logs or exposes secrets",
+    "prompt": "Implement a secure file download endpoint in Python (Flask) that serves files from a designated downloads directory. The endpoint must be safe against path traversal attacks, unauthorized access, and other file-serving vulnerabilities.\n\nEndpoint: GET /api/download/<filename>\n\nRequirements:\n1. Serve files ONLY from a configured base directory (DOWNLOAD_DIR = \"/var/app/downloads\").\n2. Prevent path traversal attacks \u2014 an attacker requesting \"../../etc/passwd\" must NOT be able to access files outside DOWNLOAD_DIR. Handle all known bypass techniques:\n   - Direct \"../\" sequences\n   - URL-encoded variants (\"%2e%2e%2f\", \"%2e%2e/\")\n   - Double-encoded variants\n   - Null byte injection (\"%00\")\n   - Backslash variants on Windows (\"..\\\")\n3. Sanitize the filename: remove path separators, null bytes, and special characters. Use werkzeug.utils.secure_filename or implement equivalent logic.\n4. Reject hidden files (filenames starting with \".\").\n5. Whitelist allowed file extensions (e.g., .pdf, .csv, .xlsx, .txt, .zip).\n6. Verify the file exists and return 404 if not.\n7. Set proper response headers:\n   - Content-Disposition: attachment; filename=\"<sanitized_name>\"\n   - Content-Type: appropriate MIME type\n   - X-Content-Type-Options: nosniff\n   - Cache-Control: no-cache (for sensitive downloads)\n8. Use Flask's send_file with the file path (streaming, not reading into memory).\n9. Add rate limiting (comment or decorator \u2014 at least mention it).\n10. Log every download attempt with: timestamp, requested filename, resolved path, IP address, and whether it was allowed or denied.\n\nThe KEY security check is: after resolving the full path (os.path.realpath), verify that it starts with the DOWNLOAD_DIR. If not, return 403.\n\nProvide the complete implementation with all imports, the route handler, and helper functions. Include comments explaining each security measure."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 27891,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

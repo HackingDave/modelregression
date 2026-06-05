@@ -15,7 +15,7 @@ export const MODELS: ModelInfo[] = [
     name: "Claude Sonnet 4.6",
     slug: "claude-sonnet-4-6",
     color: "#8B5CF6",
-    icon: "sparkles",
+    icon: "zap",
   },
   {
     id: "gpt-5-5",
@@ -23,15 +23,7 @@ export const MODELS: ModelInfo[] = [
     name: "GPT-5.5",
     slug: "gpt-5-5",
     color: "#10B981",
-    icon: "cpu",
-  },
-  {
-    id: "o3",
-    provider: "openai",
-    name: "o3",
-    slug: "o3",
-    color: "#3B82F6",
-    icon: "atom",
+    icon: "sparkles",
   },
   {
     id: "grok",
@@ -39,7 +31,7 @@ export const MODELS: ModelInfo[] = [
     name: "Grok",
     slug: "grok",
     color: "#EF4444",
-    icon: "zap",
+    icon: "flame",
   },
 ];
 

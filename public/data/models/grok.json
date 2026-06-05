@@ -1,253 +1,103 @@
 {
   "model": {
     "id": "grok",
-    "provider": "xai",
+    "provider": "agent",
     "name": "Grok",
     "slug": "grok",
     "color": "#EF4444",
     "icon": "flame"
   },
   "current": {
-    "compositeScore": 81.1,
-    "rank": 5,
+    "compositeScore": 96.2,
+    "rank": 1,
     "categories": {
-      "long-reasoning": {
-        "avgScore": 82.1,
-        "testCount": 3,
-        "tests": [
-          {
-            "testId": "lr-1",
-            "name": "Multi-step Logic Puzzle",
-            "score": 83.7,
-            "latencyMs": 6280
-          },
-          {
-            "testId": "lr-2",
-            "name": "Legal Reasoning Chain",
-            "score": 83.4,
-            "latencyMs": 8072
-          },
-          {
-            "testId": "lr-3",
-            "name": "Mathematical Proof",
-            "score": 79.2,
-            "latencyMs": 6261
-          }
-        ]
-      },
-      "coding-tasks": {
-        "avgScore": 81.4,
-        "testCount": 3,
-        "tests": [
-          {
-            "testId": "ct-1",
-            "name": "Graph Algorithm Implementation",
-            "score": 82.1,
-            "latencyMs": 9448
-          },
-          {
-            "testId": "ct-2",
-            "name": "REST API Design",
-            "score": 84.3,
-            "latencyMs": 7035
-          },
-          {
-            "testId": "ct-3",
-            "name": "Concurrent Data Pipeline",
-            "score": 82.6,
-            "latencyMs": 6037
-          }
-        ]
-      },
       "bug-fixes": {
-        "avgScore": 80.2,
-        "testCount": 3,
+        "avgScore": 100,
+        "testCount": 1,
         "tests": [
-          {
-            "testId": "bf-1",
-            "name": "Race Condition Detection",
-            "score": 81.7,
-            "latencyMs": 7477
-          },
-          {
-            "testId": "bf-2",
-            "name": "Memory Leak Fix",
-            "score": 79.5,
-            "latencyMs": 8744
-          },
           {
             "testId": "bf-3",
             "name": "Off-by-One Boundary Fix",
-            "score": 80.6,
-            "latencyMs": 9442
+            "score": 100,
+            "latencyMs": 43505
           }
         ]
       },
       "feature-implementation": {
-        "avgScore": 81,
-        "testCount": 3,
+        "avgScore": 97.5,
+        "testCount": 2,
         "tests": [
-          {
-            "testId": "fi-1",
-            "name": "OAuth2 Integration",
-            "score": 79.9,
-            "latencyMs": 8622
-          },
-          {
-            "testId": "fi-2",
-            "name": "Search Autocomplete",
-            "score": 79,
-            "latencyMs": 5992
-          },
           {
             "testId": "fi-3",
             "name": "Webhook System",
-            "score": 83.1,
-            "latencyMs": 9224
-          }
-        ]
-      },
-      "code-thoroughness": {
-        "avgScore": 81.1,
-        "testCount": 3,
-        "tests": [
-          {
-            "testId": "th-1",
-            "name": "Edge Case Coverage",
-            "score": 79.1,
-            "latencyMs": 7259
+            "score": 98,
+            "latencyMs": 45423
           },
           {
-            "testId": "th-2",
-            "name": "Error Path Completeness",
-            "score": 80.3,
-            "latencyMs": 8066
-          },
-          {
-            "testId": "th-3",
-            "name": "Test Suite Completeness",
-            "score": 78.7,
-            "latencyMs": 7330
-          }
-        ]
-      },
-      "bug-introduction-rate": {
-        "avgScore": 79.9,
-        "testCount": 3,
-        "tests": [
-          {
-            "testId": "bi-1",
-            "name": "Refactor Without Regression",
-            "score": 81.7,
-            "latencyMs": 7899
-          },
-          {
-            "testId": "bi-2",
-            "name": "Merge Conflict Resolution",
-            "score": 81.5,
-            "latencyMs": 8469
-          },
-          {
-            "testId": "bi-3",
-            "name": "Dependency Upgrade Safety",
-            "score": 80.3,
-            "latencyMs": 8059
-          }
-        ]
-      },
-      "security-awareness": {
-        "avgScore": 78.3,
-        "testCount": 3,
-        "tests": [
-          {
-            "testId": "sa-1",
-            "name": "SQL Injection Prevention",
-            "score": 76.7,
-            "latencyMs": 8117
-          },
-          {
-            "testId": "sa-2",
-            "name": "XSS Mitigation",
-            "score": 77.8,
-            "latencyMs": 8821
-          },
-          {
-            "testId": "sa-3",
-            "name": "Secret Management",
-            "score": 80.7,
-            "latencyMs": 7323
+            "testId": "fi-1",
+            "name": "OAuth2 Integration",
+            "score": 97,
+            "latencyMs": 67925
           }
         ]
       },
       "instruction-following": {
-        "avgScore": 85.5,
-        "testCount": 3,
+        "avgScore": 100,
+        "testCount": 2,
         "tests": [
           {
             "testId": "if-1",
             "name": "Structured Output Compliance",
-            "score": 87.3,
-            "latencyMs": 8053
-          },
-          {
-            "testId": "if-2",
-            "name": "Constraint Adherence",
-            "score": 83.2,
-            "latencyMs": 6242
+            "score": 100,
+            "latencyMs": 44562
           },
           {
             "testId": "if-3",
             "name": "Multi-step Instruction Chain",
-            "score": 85.9,
-            "latencyMs": 8430
+            "score": 100,
+            "latencyMs": 33470
           }
         ]
       },
-      "code-quality": {
-        "avgScore": 83.4,
-        "testCount": 3,
+      "long-reasoning": {
+        "avgScore": 90,
+        "testCount": 2,
         "tests": [
           {
-            "testId": "cq-1",
-            "name": "Idiomatic Python",
-            "score": 85.6,
-            "latencyMs": 8040
+            "testId": "lr-3",
+            "name": "Mathematical Proof",
+            "score": 92,
+            "latencyMs": 19412
           },
           {
-            "testId": "cq-2",
-            "name": "TypeScript Best Practices",
-            "score": 80.4,
-            "latencyMs": 7886
-          },
-          {
-            "testId": "cq-3",
-            "name": "Clean Architecture Patterns",
-            "score": 83.7,
-            "latencyMs": 7797
+            "testId": "lr-2",
+            "name": "Legal Reasoning Chain",
+            "score": 88,
+            "latencyMs": 59934
           }
         ]
       },
       "performance-efficiency": {
-        "avgScore": 77.9,
-        "testCount": 3,
+        "avgScore": 90,
+        "testCount": 1,
         "tests": [
-          {
-            "testId": "pe-1",
-            "name": "Algorithm Complexity",
-            "score": 76.1,
-            "latencyMs": 6856
-          },
-          {
-            "testId": "pe-2",
-            "name": "Memory-efficient Processing",
-            "score": 79,
-            "latencyMs": 9288
-          },
           {
             "testId": "pe-3",
             "name": "Query Optimization",
-            "score": 76.4,
-            "latencyMs": 8085
+            "score": 90,
+            "latencyMs": 151379
+          }
+        ]
+      },
+      "security-awareness": {
+        "avgScore": 100,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "sa-2",
+            "name": "XSS Mitigation",
+            "score": 100,
+            "latencyMs": 119965
           }
         ]
       }
@@ -255,350 +105,48 @@
   },
   "history": [
     {
-      "timestamp": "2026-05-28T12:00:00.000Z",
-      "compositeScore": 77.9,
+      "timestamp": "2026-06-04T21:11:08.000Z",
+      "compositeScore": 94.2,
       "categories": {
-        "long-reasoning": 79.2,
-        "coding-tasks": 77,
-        "bug-fixes": 78.1,
-        "feature-implementation": 75.1,
-        "code-thoroughness": 77.6,
-        "bug-introduction-rate": 76.2,
-        "security-awareness": 80.2,
-        "instruction-following": 81.5,
-        "code-quality": 78.1,
-        "performance-efficiency": 75.7
+        "bug-fixes": 100,
+        "feature-implementation": 95,
+        "instruction-following": 100,
+        "long-reasoning": 82
       }
     },
     {
-      "timestamp": "2026-05-28T18:00:00.000Z",
-      "compositeScore": 78.1,
+      "timestamp": "2026-06-05T16:17:31.000Z",
+      "compositeScore": 96.3,
       "categories": {
-        "long-reasoning": 80.4,
-        "coding-tasks": 77.5,
-        "bug-fixes": 78.9,
-        "feature-implementation": 77,
-        "code-thoroughness": 76.6,
-        "bug-introduction-rate": 76.3,
-        "security-awareness": 77.5,
-        "instruction-following": 82.2,
-        "code-quality": 79.6,
-        "performance-efficiency": 75.1
+        "bug-fixes": 100,
+        "feature-implementation": 98.5,
+        "instruction-following": 100,
+        "long-reasoning": 88.1,
+        "performance-efficiency": 91,
+        "security-awareness": 100
       }
     },
     {
-      "timestamp": "2026-05-29T02:00:00.000Z",
-      "compositeScore": 78.9,
+      "timestamp": "2026-06-05T19:40:39.000Z",
+      "compositeScore": 96.2,
       "categories": {
-        "long-reasoning": 81.7,
-        "coding-tasks": 80.6,
-        "bug-fixes": 77.1,
-        "feature-implementation": 77.9,
-        "code-thoroughness": 81.1,
-        "bug-introduction-rate": 74.3,
-        "security-awareness": 77.5,
-        "instruction-following": 81.9,
-        "code-quality": 77.7,
-        "performance-efficiency": 79.4
-      }
-    },
-    {
-      "timestamp": "2026-05-29T12:00:00.000Z",
-      "compositeScore": 79,
-      "categories": {
-        "long-reasoning": 78.4,
-        "coding-tasks": 78,
-        "bug-fixes": 80.4,
-        "feature-implementation": 76.3,
-        "code-thoroughness": 79.6,
-        "bug-introduction-rate": 76.1,
-        "security-awareness": 77.7,
-        "instruction-following": 84.4,
-        "code-quality": 79.7,
-        "performance-efficiency": 79
-      }
-    },
-    {
-      "timestamp": "2026-05-29T18:00:00.000Z",
-      "compositeScore": 78.6,
-      "categories": {
-        "long-reasoning": 79.9,
-        "coding-tasks": 77.4,
-        "bug-fixes": 77.6,
-        "feature-implementation": 78.3,
-        "code-thoroughness": 77,
-        "bug-introduction-rate": 74,
-        "security-awareness": 78.6,
-        "instruction-following": 82.9,
-        "code-quality": 80.7,
-        "performance-efficiency": 79.5
-      }
-    },
-    {
-      "timestamp": "2026-05-30T02:00:00.000Z",
-      "compositeScore": 78.1,
-      "categories": {
-        "long-reasoning": 78,
-        "coding-tasks": 81.7,
-        "bug-fixes": 76.1,
-        "feature-implementation": 76.6,
-        "code-thoroughness": 79.7,
-        "bug-introduction-rate": 75.5,
-        "security-awareness": 76.3,
-        "instruction-following": 82.4,
-        "code-quality": 78.4,
-        "performance-efficiency": 75.9
-      }
-    },
-    {
-      "timestamp": "2026-05-30T12:00:00.000Z",
-      "compositeScore": 79,
-      "categories": {
-        "long-reasoning": 80,
-        "coding-tasks": 81.3,
-        "bug-fixes": 76.9,
-        "feature-implementation": 76.4,
-        "code-thoroughness": 81.5,
-        "bug-introduction-rate": 77,
-        "security-awareness": 77.1,
-        "instruction-following": 83.5,
-        "code-quality": 80.6,
-        "performance-efficiency": 75.2
-      }
-    },
-    {
-      "timestamp": "2026-05-30T18:00:00.000Z",
-      "compositeScore": 80.1,
-      "categories": {
-        "long-reasoning": 81,
-        "coding-tasks": 81.8,
-        "bug-fixes": 78.9,
-        "feature-implementation": 79.7,
-        "code-thoroughness": 78.1,
-        "bug-introduction-rate": 78.3,
-        "security-awareness": 80.2,
-        "instruction-following": 81.7,
-        "code-quality": 81.5,
-        "performance-efficiency": 79.7
-      }
-    },
-    {
-      "timestamp": "2026-05-31T02:00:00.000Z",
-      "compositeScore": 78.9,
-      "categories": {
-        "long-reasoning": 78.7,
-        "coding-tasks": 78.2,
-        "bug-fixes": 78.8,
-        "feature-implementation": 79.8,
-        "code-thoroughness": 79.1,
-        "bug-introduction-rate": 74.7,
-        "security-awareness": 77.3,
-        "instruction-following": 84.7,
-        "code-quality": 79.6,
-        "performance-efficiency": 77.9
-      }
-    },
-    {
-      "timestamp": "2026-05-31T12:00:00.000Z",
-      "compositeScore": 78.8,
-      "categories": {
-        "long-reasoning": 80.9,
-        "coding-tasks": 77.5,
-        "bug-fixes": 79.2,
-        "feature-implementation": 77.4,
-        "code-thoroughness": 80.1,
-        "bug-introduction-rate": 76.5,
-        "security-awareness": 77,
-        "instruction-following": 82.2,
-        "code-quality": 81.9,
-        "performance-efficiency": 75.6
-      }
-    },
-    {
-      "timestamp": "2026-05-31T18:00:00.000Z",
-      "compositeScore": 79.3,
-      "categories": {
-        "long-reasoning": 81.8,
-        "coding-tasks": 82,
-        "bug-fixes": 77.2,
-        "feature-implementation": 77.4,
-        "code-thoroughness": 79.8,
-        "bug-introduction-rate": 74.6,
-        "security-awareness": 81.3,
-        "instruction-following": 80.7,
-        "code-quality": 80.2,
-        "performance-efficiency": 78.3
-      }
-    },
-    {
-      "timestamp": "2026-06-01T02:00:00.000Z",
-      "compositeScore": 79.6,
-      "categories": {
-        "long-reasoning": 79.9,
-        "coding-tasks": 80.2,
-        "bug-fixes": 78.7,
-        "feature-implementation": 77.3,
-        "code-thoroughness": 82,
-        "bug-introduction-rate": 76.3,
-        "security-awareness": 80.6,
-        "instruction-following": 81.2,
-        "code-quality": 79.7,
-        "performance-efficiency": 79.8
-      }
-    },
-    {
-      "timestamp": "2026-06-01T12:00:00.000Z",
-      "compositeScore": 79.9,
-      "categories": {
-        "long-reasoning": 82.2,
-        "coding-tasks": 77.9,
-        "bug-fixes": 76.9,
-        "feature-implementation": 78.5,
-        "code-thoroughness": 80.8,
-        "bug-introduction-rate": 77.6,
-        "security-awareness": 81.4,
-        "instruction-following": 83.5,
-        "code-quality": 83.3,
-        "performance-efficiency": 76.7
-      }
-    },
-    {
-      "timestamp": "2026-06-01T18:00:00.000Z",
-      "compositeScore": 79.4,
-      "categories": {
-        "long-reasoning": 80.5,
-        "coding-tasks": 80.6,
-        "bug-fixes": 78.4,
-        "feature-implementation": 76.2,
-        "code-thoroughness": 80.3,
-        "bug-introduction-rate": 75.3,
-        "security-awareness": 77.8,
-        "instruction-following": 83.4,
-        "code-quality": 83.4,
-        "performance-efficiency": 77.7
-      }
-    },
-    {
-      "timestamp": "2026-06-02T02:00:00.000Z",
-      "compositeScore": 79.6,
-      "categories": {
-        "long-reasoning": 80,
-        "coding-tasks": 82.1,
-        "bug-fixes": 79.6,
-        "feature-implementation": 76.7,
-        "code-thoroughness": 81.1,
-        "bug-introduction-rate": 77.2,
-        "security-awareness": 76.8,
-        "instruction-following": 83.5,
-        "code-quality": 80.7,
-        "performance-efficiency": 78.4
-      }
-    },
-    {
-      "timestamp": "2026-06-02T12:00:00.000Z",
-      "compositeScore": 80.5,
-      "categories": {
-        "long-reasoning": 83.6,
-        "coding-tasks": 79,
-        "bug-fixes": 81.2,
-        "feature-implementation": 80.1,
-        "code-thoroughness": 79.6,
-        "bug-introduction-rate": 78.4,
-        "security-awareness": 81.6,
-        "instruction-following": 81.8,
-        "code-quality": 81,
-        "performance-efficiency": 78.4
-      }
-    },
-    {
-      "timestamp": "2026-06-02T18:00:00.000Z",
-      "compositeScore": 80.2,
-      "categories": {
-        "long-reasoning": 83.7,
-        "coding-tasks": 80,
-        "bug-fixes": 77.6,
-        "feature-implementation": 77.2,
-        "code-thoroughness": 82.6,
-        "bug-introduction-rate": 76.5,
-        "security-awareness": 79.8,
-        "instruction-following": 83.3,
-        "code-quality": 80.9,
-        "performance-efficiency": 80.6
-      }
-    },
-    {
-      "timestamp": "2026-06-03T02:00:00.000Z",
-      "compositeScore": 79.5,
-      "categories": {
-        "long-reasoning": 81,
-        "coding-tasks": 80.7,
-        "bug-fixes": 79.1,
-        "feature-implementation": 76.6,
-        "code-thoroughness": 79.8,
-        "bug-introduction-rate": 78.5,
-        "security-awareness": 77.2,
-        "instruction-following": 81.2,
-        "code-quality": 81.8,
-        "performance-efficiency": 79.1
-      }
-    },
-    {
-      "timestamp": "2026-06-03T12:00:00.000Z",
-      "compositeScore": 79.8,
-      "categories": {
-        "long-reasoning": 81.3,
-        "coding-tasks": 80.7,
-        "bug-fixes": 77.5,
-        "feature-implementation": 81.2,
-        "code-thoroughness": 78.6,
-        "bug-introduction-rate": 77.1,
-        "security-awareness": 80.2,
-        "instruction-following": 83,
-        "code-quality": 79.8,
-        "performance-efficiency": 78.9
-      }
-    },
-    {
-      "timestamp": "2026-06-03T18:00:00.000Z",
-      "compositeScore": 80.5,
-      "categories": {
-        "long-reasoning": 81.2,
-        "coding-tasks": 82.9,
-        "bug-fixes": 79.2,
-        "feature-implementation": 80.5,
-        "code-thoroughness": 79.1,
-        "bug-introduction-rate": 76.6,
-        "security-awareness": 81.7,
-        "instruction-following": 84.2,
-        "code-quality": 80.3,
-        "performance-efficiency": 79.7
-      }
-    },
-    {
-      "timestamp": "2026-06-04T02:00:00.000Z",
-      "compositeScore": 81.1,
-      "categories": {
-        "long-reasoning": 82.1,
-        "coding-tasks": 81.4,
-        "bug-fixes": 80.2,
-        "feature-implementation": 81,
-        "code-thoroughness": 81.1,
-        "bug-introduction-rate": 79.9,
-        "security-awareness": 78.3,
-        "instruction-following": 85.5,
-        "code-quality": 83.4,
-        "performance-efficiency": 77.9
+        "bug-fixes": 100,
+        "feature-implementation": 97.5,
+        "instruction-following": 100,
+        "long-reasoning": 90,
+        "performance-efficiency": 90,
+        "security-awareness": 100
       }
     }
   ],
   "regressions": [],
   "outages": [
     {
-      "id": "out-1",
-      "startedAt": "2026-06-01T14:30:00Z",
-      "endedAt": "2026-06-01T15:15:00Z",
-      "durationMin": 45,
-      "errorType": "500"
+      "id": "83ed64fe-4793-4bb7-be51-5ed777a92cd7",
+      "startedAt": "2026-06-04T22:00:01.000Z",
+      "endedAt": "2026-06-05T16:17:31.000Z",
+      "errorType": "error",
+      "httpStatus": null
     }
   ]
 }

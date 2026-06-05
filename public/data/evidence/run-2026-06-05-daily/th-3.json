@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "th-3",
+    "name": "Test Suite Completeness",
+    "category": "code-thoroughness",
+    "categoryName": "Code Thoroughness",
+    "description": "Generate tests covering happy path, edge cases, and integration",
+    "prompt": "Write a comprehensive test suite for the following Python utility function. Your score depends on how many distinct, meaningful test cases you write. Aim for maximum coverage of edge cases, boundary values, and error conditions.\n\n```python\ndef parse_duration(input_string: str) -> int:\n    \"\"\"Parse a human-readable duration string and return total seconds.\n\n    Supported formats:\n        \"30s\" or \"30 seconds\" -> 30\n        \"5m\" or \"5 minutes\" -> 300\n        \"2h\" or \"2 hours\" -> 7200\n        \"1d\" or \"1 day\" -> 86400\n        \"1h 30m\" or \"1 hour 30 minutes\" -> 5400\n        \"1d 2h 30m 15s\" -> 95415\n\n    Rules:\n        - Units can be abbreviated (s, m, h, d) or full words (seconds, minutes, hours, days)\n        - Singular and plural forms accepted (hour/hours, minute/minutes)\n        - Whitespace between number and unit is optional (\"5m\" == \"5 m\" == \"5 minutes\")\n        - Multiple components can be combined (\"1h 30m 15s\")\n        - Values must be non-negative integers\n        - Raises ValueError for invalid input (empty string, negative values, unknown units, non-numeric values)\n        - Raises TypeError if input is not a string\n        - Components can appear in any order (\"30m 1h\" == \"1h 30m\")\n        - Duplicate units are allowed and summed (\"1h 2h\" == \"3h\" == 10800)\n    \"\"\"\n    pass  # Implementation not shown\n```\n\nRequirements for your test suite:\n- Use pytest (not unittest)\n- Use `pytest.mark.parametrize` for related test groups\n- Each test should have a descriptive name starting with `test_`\n- Each test should test ONE specific behavior\n- Include tests for: happy path, edge cases, boundary values, error cases, type errors, special inputs\n- Tests must be independent (no shared mutable state)\n- Include at least 25 distinct test cases\n- Organize tests logically: basic cases first, then edge cases, then error cases\n\nProvide the complete test file with all imports."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 55976,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "ct-2",
+    "name": "REST API Design",
+    "category": "coding-tasks",
+    "categoryName": "Coding Tasks",
+    "description": "Design and implement a paginated REST API with filtering",
+    "prompt": "Write a Flask REST API endpoint `POST /api/transform` that accepts a JSON body and performs text transformations. The complete implementation should be a single runnable Python file.\n\nRequest body format:\n```json\n{\n    \"text\": \"Hello World\",\n    \"operation\": \"uppercase\"\n}\n```\n\nSupported operations and their expected responses:\n1. `\"uppercase\"` \u2014 Returns `{\"result\": \"HELLO WORLD\", \"operation\": \"uppercase\", \"original_length\": 11}`\n2. `\"reverse\"` \u2014 Returns `{\"result\": \"dlroW olleH\", \"operation\": \"reverse\", \"original_length\": 11}`\n3. `\"count_words\"` \u2014 Returns `{\"result\": 2, \"operation\": \"count_words\", \"original_length\": 11}`\n\nRequirements:\n- Return HTTP 400 with `{\"error\": \"<descriptive message>\"}` if:\n  - The request body is not valid JSON\n  - The `\"text\"` field is missing or not a string\n  - The `\"operation\"` field is missing or not one of the three supported operations\n- Return HTTP 200 with the result for valid requests.\n- Set Content-Type to application/json on all responses.\n- Include proper type hints and a docstring for the route handler.\n- Use `request.get_json(silent=True)` to gracefully handle non-JSON bodies.\n- Include a `if __name__ == '__main__':` block that runs the app in debug mode on port 5000.\n\nProvide the complete, runnable code including all necessary imports."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 12993,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

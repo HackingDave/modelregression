@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "th-1",
+    "name": "Edge Case Coverage",
+    "category": "code-thoroughness",
+    "categoryName": "Code Thoroughness",
+    "description": "Generate code handling null, empty, unicode, and overflow inputs",
+    "prompt": "Implement a robust file upload handler in Python (using Flask or FastAPI) that handles as many failure modes as possible. The handler should accept image uploads (JPEG, PNG, GIF, WebP) up to 10MB.\n\nEndpoint: POST /api/upload\n\nYour implementation will be scored based on how many failure modes and edge cases you address. Think about everything that can go wrong with a file upload and handle it. Here are the categories to consider:\n\n1. INPUT VALIDATION: What could be wrong with the uploaded file itself? Think about size, type, format, filename, content.\n\n2. STORAGE: What could go wrong when writing the file to disk? Think about disk space, permissions, partial writes, atomicity.\n\n3. CONCURRENCY: What happens with simultaneous uploads? Race conditions? Resource exhaustion?\n\n4. SECURITY: What attack vectors exist through file uploads? Path traversal, malicious content, spoofed types?\n\n5. RELIABILITY: What happens if the connection drops? If the server restarts mid-upload? If disk is full halfway through?\n\nRequirements:\n- Use proper HTTP status codes (400, 413, 415, 500, 201)\n- Return structured JSON error responses with error codes\n- Log all upload attempts (success and failure)\n- Use streaming/chunked reading \u2014 do NOT read the entire file into memory\n- Use atomic write pattern (write to temp file, then rename)\n- Sanitize filenames thoroughly\n- Validate MIME type by checking magic bytes, not just the Content-Type header or file extension\n\nProvide the complete implementation with all imports. The more failure modes you handle, the higher your score. Include comments explaining each failure mode you are addressing."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 60647,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "test": {
+    "id": "if-3",
+    "name": "Multi-step Instruction Chain",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Execute a 6-step instruction sequence without skipping or reordering",
+    "prompt": "Explain how a hash table works to a computer science student.\n\nYou must follow ALL of these rules:\n1. Do NOT use the word \"bucket\" anywhere in your explanation.\n2. Do NOT use the word \"collision\" anywhere in your explanation.\n3. Do NOT use the hyphenated term \"key-value\" anywhere in your explanation.\n4. Do NOT use bullet points, dashes as list markers, asterisks as list markers, or numbered lists. Write in paragraph form ONLY.\n5. Your explanation must be UNDER 200 words total.\n6. Despite these restrictions, your explanation must be accurate, clear, and cover: how data is stored, how the hash function maps data to positions, and how retrieval works.\n\nWrite your explanation as flowing prose paragraphs. Do not start with \"Sure,\" or \"Here's an explanation\" or any preamble \u2014 begin directly with the explanation content."
+  },
+  "results": {
+    "grok": {
+      "score": 100,
+      "modelOutput": "Hash tables store data in an array of positions where each position is selected by a hash function applied to an identifier. The hash function transforms the identifier, typically by treating it as a number and applying operations like multiplication and bit shifts followed by taking the result modulo the array size, thereby mapping it to a specific index. To place information into the structure, the identifier is fed to the hash function to determine the index, after which a record that includes the identifier together with the desired data is added to the sequence of records held at the resulting array position. To obtain data, the identifier undergoes the identical hashing process to arrive at the index, the sequence at that location is then traversed to find the record whose identifier matches, and the corresponding data from that record is returned.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 142,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "array",
+            "index",
+            "function",
+            "store"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 33470,
+      "tokenCount": 0,
+      "error": null
+    }
+  }
+}

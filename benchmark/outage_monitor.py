@@ -1,88 +1,88 @@
 """
-Outage monitor for AI model APIs.
+Outage monitor for AI model CLI tools.
 
 Can be run standalone or imported by the runner for pre-flight checks.
-Sends a simple health-check prompt to each model and tracks consecutive failures.
+Sends a simple health-check prompt to each model via its CLI tool and
+tracks consecutive failures.
 """
 
 import argparse
 import logging
+import subprocess
 import time
 import traceback
-
-import anthropic
-import openai
 
 import config
 import db as database
 
 logger = logging.getLogger(__name__)
 
-HEALTH_CHECK_PROMPT = "Hello, respond with just 'OK'"
-HEALTH_CHECK_TIMEOUT = 30  # seconds
-FAILURE_THRESHOLD = 3  # consecutive failures before declaring outage
+HEALTH_CHECK_PROMPT = "Respond with just the word OK"
+FAILURE_THRESHOLD = 3
 
 
 def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
     """
-    Send a health-check prompt to a model.
+    Send a health-check prompt to a model via its CLI tool.
 
     Returns (is_healthy, error_message, http_status).
+    http_status is always None for CLI-based checks.
     """
-    provider = model_cfg["provider"]
-    api_model = model_cfg["api_model"]
+    cli = model_cfg["cli"]
+    cli_model = model_cfg["cli_model"]
 
     try:
-        if provider == "anthropic":
-            client = anthropic.Anthropic(
-                api_key=config.ANTHROPIC_API_KEY,
-                timeout=HEALTH_CHECK_TIMEOUT,
+        if cli == "claude":
+            cmd = ["claude", "-p", "--model", cli_model]
+            result = subprocess.run(
+                cmd,
+                input=HEALTH_CHECK_PROMPT,
+                capture_output=True,
+                text=True,
+                timeout=config.HEALTH_CHECK_TIMEOUT,
             )
-            response = client.messages.create(
-                model=api_model,
-                max_tokens=10,
-                messages=[{"role": "user", "content": HEALTH_CHECK_PROMPT}],
+        elif cli == "codex":
+            cmd = ["codex", "exec", "-m", cli_model, "--sandbox", "read-only"]
+            result = subprocess.run(
+                cmd,
+                input=HEALTH_CHECK_PROMPT,
+                capture_output=True,
+                text=True,
+                timeout=config.HEALTH_CHECK_TIMEOUT,
             )
-            text = ""
-            for block in response.content:
-                if hasattr(block, "text"):
-                    text += block.text
-            if text.strip():
-                return (True, None, None)
-            else:
-                return (False, "Empty response", None)
-
-        elif provider in ("openai", "xai"):
-            client_kwargs = {"timeout": HEALTH_CHECK_TIMEOUT}
-            if provider == "xai":
-                client_kwargs["api_key"] = config.XAI_API_KEY
-                client_kwargs["base_url"] = model_cfg.get("base_url", "https://api.x.ai/v1")
-            else:
-                client_kwargs["api_key"] = config.OPENAI_API_KEY
-
-            client = openai.OpenAI(**client_kwargs)
-            response = client.chat.completions.create(
-                model=api_model,
-                max_tokens=10,
-                messages=[{"role": "user", "content": HEALTH_CHECK_PROMPT}],
+        elif cli == "gemini":
+            cmd = ["gemini", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model]
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=config.HEALTH_CHECK_TIMEOUT,
             )
-            text = response.choices[0].message.content if response.choices else ""
-            if text.strip():
-                return (True, None, None)
-            else:
-                return (False, "Empty response", None)
-
+        elif cli == "agent":
+            cmd = ["agent", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=config.HEALTH_CHECK_TIMEOUT,
+            )
         else:
-            return (False, f"Unknown provider: {provider}", None)
+            return (False, f"Unknown CLI tool: {cli}", None)
 
-    except anthropic.APIStatusError as e:
-        return (False, str(e.message), e.status_code)
-    except openai.APIStatusError as e:
-        return (False, str(e.message), e.status_code)
-    except anthropic.APITimeoutError:
+        if result.returncode != 0:
+            stderr = result.stderr.strip()[:300] if result.stderr else "unknown error"
+            return (False, f"{cli} exited {result.returncode}: {stderr}", None)
+
+        text = result.stdout.strip()
+        if text:
+            return (True, None, None)
+        else:
+            return (False, "Empty response", None)
+
+    except subprocess.TimeoutExpired:
         return (False, "Request timed out", None)
-    except openai.APITimeoutError:
-        return (False, "Request timed out", None)
+    except FileNotFoundError:
+        return (False, f"CLI tool '{cli}' not found", None)
     except Exception as e:
         return (False, f"{type(e).__name__}: {e}", None)
 
@@ -100,7 +100,7 @@ def check_all_models(conn) -> dict[str, bool]:
             continue
 
         model_id = model_cfg["id"]
-        logger.info("Health check: %s (%s)", model_cfg["name"], model_cfg["api_model"])
+        logger.info("Health check: %s (%s via %s)", model_cfg["name"], model_cfg["cli_model"], model_cfg["cli"])
 
         is_healthy, error_msg, http_status = _check_model(model_cfg)
 
@@ -120,7 +120,7 @@ def check_all_models(conn) -> dict[str, bool]:
 
             database.create_or_update_outage(
                 conn,
-                provider=model_cfg["provider"],
+                provider=model_cfg["cli"],
                 model_id=model_id,
                 error_type=error_type,
                 error_message=error_msg or "Unknown error",

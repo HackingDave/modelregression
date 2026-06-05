@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "fi-2",
+    "name": "Search Autocomplete",
+    "category": "feature-implementation",
+    "categoryName": "Feature Implementation",
+    "description": "Build debounced search with trie-based suggestions and highlighting",
+    "prompt": "Implement a sliding window rate limiting middleware for Express.js. This must be a TRUE sliding window algorithm, not a fixed window with periodic resets.\n\nRequirements:\n1. Create a middleware function `createRateLimiter(options)` where options include:\n   - `windowMs`: Window size in milliseconds (default: 60000, i.e., 1 minute)\n   - `maxRequests`: Maximum requests per window (default: 100)\n\n2. The sliding window algorithm must:\n   - Track each request's timestamp per client IP\n   - On each request, remove all timestamps older than `windowMs` from the current time\n   - Count remaining timestamps \u2014 if count >= maxRequests, reject; otherwise, add current timestamp and allow\n   - This ensures a truly sliding window, not a fixed interval reset\n\n3. When a request is allowed (under the limit):\n   - Call `next()` to pass to the next middleware\n   - Set headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` (epoch seconds)\n\n4. When a request is rejected (over the limit):\n   - Return HTTP 429 with JSON body: `{\"error\": \"Rate limit exceeded\", \"retryAfter\": <seconds>}`\n   - Set the `Retry-After` header (in seconds)\n   - Do NOT call `next()`\n\n5. Memory management:\n   - Include a periodic cleanup interval (every 60 seconds) that removes entries for IPs\n     with no requests in the last `windowMs`\n   - The cleanup interval must be clearable (return a `close()` method or similar) to prevent\n     the timer from keeping the process alive\n\n6. Add a note about `req.ip` behavior behind proxies (trust proxy setting).\n\nProvide the complete middleware code as a single JavaScript/Node.js module that exports `createRateLimiter`. Include a brief usage example showing how to apply it to an Express app."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 54077,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

@@ -128,7 +128,7 @@ export default function AboutPage() {
               This project exists because the AI community deserves
               transparency. ModelRegression.com runs{" "}
               <strong className="text-foreground">
-                automated benchmarks three times every day
+                automated benchmarks every day
               </strong>{" "}
               against every major frontier model, tracking performance across
               real-world tasks: coding, bug detection, security analysis,
@@ -187,6 +187,38 @@ export default function AboutPage() {
               operations for businesses of all sizes.
             </p>
           </a>
+        </div>
+      </ScrollReveal>
+
+      {/* Acknowledgments */}
+      <ScrollReveal>
+        <div className="rounded-xl border border-border/50 glass p-6">
+          <h3 className="font-bold text-lg text-foreground mb-3">
+            Acknowledgments
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Special thanks to{" "}
+            <a
+              href="https://x.com/BlasikRandy"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Randy Blasik
+            </a>{" "}
+            for inspiring this project and suggesting the idea of independent,
+            automated model regression tracking. A special shoutout to{" "}
+            <a
+              href="https://x.com/edskoudis"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Ed Skoudis
+            </a>{" "}
+            for the idea of testing if the model has regressed prior to using
+            each day.
+          </p>
         </div>
       </ScrollReveal>
 

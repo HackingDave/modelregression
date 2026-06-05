@@ -29,7 +29,7 @@ python export_json.py --output ../public/data  # Export JSON
 
 ## Cron Schedule (DGX)
 
-Three daily runs at 8am, 2pm, 10pm ET via `benchmark/run_benchmarks.sh`.
+Single daily run at 3am ET via `benchmark/run_benchmarks.sh`.
 
 ## Project Structure
 
@@ -43,7 +43,7 @@ Three daily runs at 8am, 2pm, 10pm ET via `benchmark/run_benchmarks.sh`.
 
 ## Models Tested
 
-Claude Opus 4.8, Claude Sonnet 4.6, GPT-5.5, o3, Grok
+Claude Opus 4.8, Claude Sonnet 4.6, GPT-5.5, Grok
 
 ## Key Files
 

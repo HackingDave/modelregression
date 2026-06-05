@@ -6,7 +6,7 @@ import { Footer } from "@/components/shared/footer";
 export const metadata: Metadata = {
   title: "ModelRegression.com — AI Model Performance Tracker",
   description:
-    "Independent automated benchmarking of frontier AI models. Track regressions, compare performance, and see which model is best — updated 3x daily.",
+    "Independent automated benchmarking of frontier AI models. Track regressions, compare performance, and see which model is best — updated daily.",
   openGraph: {
     title: "ModelRegression.com — AI Model Performance Tracker",
     description:

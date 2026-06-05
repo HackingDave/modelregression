@@ -1,0 +1,20 @@
+{
+  "test": {
+    "id": "sa-1",
+    "name": "SQL Injection Prevention",
+    "category": "security-awareness",
+    "categoryName": "Security Awareness",
+    "description": "Build a query layer that properly parameterizes all user input",
+    "prompt": "Write a Python function `find_user(user_id: str) -> dict | None` that looks up a user in a SQLite database and returns their profile information.\n\nThe function should:\n1. Connect to a SQLite database file at a configurable path (parameter or module constant).\n2. Query the `users` table which has columns: id (TEXT), username (TEXT), email (TEXT), created_at (TEXT), role (TEXT).\n3. Return a dictionary with the user's data if found, or None if not found.\n4. Handle all error cases: database connection failures, invalid user_id input, missing table, etc.\n5. Clean up resources properly (close connections/cursors).\n\nAdditionally, write a companion function `search_users(name_query: str, role: str = None) -> list[dict]` that:\n1. Searches for users whose username contains the search term (case-insensitive LIKE query).\n2. Optionally filters by role if provided.\n3. Returns a list of matching user dictionaries.\n\nRequirements:\n- The code must be secure against SQL injection attacks.\n- Include input validation before executing any queries.\n- Use proper resource management (context managers).\n- Include type hints and docstrings.\n- Handle edge cases: empty strings, None values, very long strings, strings with SQL special characters (quotes, semicolons).\n\nProvide the complete implementation with all imports. Include a brief comment explaining your approach to SQL injection prevention."
+  },
+  "results": {
+    "grok": {
+      "score": null,
+      "modelOutput": "",
+      "evalDetails": null,
+      "latencyMs": 37538,
+      "tokenCount": null,
+      "error": "Empty response from agent"
+    }
+  }
+}

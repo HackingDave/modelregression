@@ -72,10 +72,10 @@ export default function MethodologyPage() {
             </div>
             <div>
               <span className="text-3xl font-bold font-mono text-primary">
-                3x
+                1x
               </span>
               <p className="text-sm text-muted-foreground mt-1">
-                Daily benchmark runs (8am, 2pm, 10pm ET)
+                Daily benchmark run (3am ET)
               </p>
             </div>
           </div>

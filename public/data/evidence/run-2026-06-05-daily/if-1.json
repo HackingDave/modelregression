@@ -1,0 +1,46 @@
+{
+  "test": {
+    "id": "if-1",
+    "name": "Structured Output Compliance",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Produce JSON matching an exact schema with no extra fields",
+    "prompt": "List exactly 7 programming languages that were first released after the year 2010.\n\nYou MUST follow this exact format for each item:\n<number>. <LanguageName> (<year>) - <one sentence description>\n\nRules:\n1. List EXACTLY 7 languages \u2014 not 6, not 8.\n2. Each language must have been first released (v1.0 or initial public release) AFTER 2010, meaning 2011 or later.\n3. Each item must be on its own line.\n4. The format must be exactly: number, period, space, language name, space, year in parentheses, space, dash, space, one sentence description.\n5. Each description must be exactly ONE sentence (one period at the end, no additional sentences).\n6. Do NOT include any text before the list (no introduction, no \"Here are...\" preamble).\n7. Do NOT include any text after the list (no summary, no notes, no caveats).\n8. Output ONLY the 7 numbered items, nothing else.\n\nExample of the correct format (do NOT use this language, it's just to show format):\n1. ExampleLang (2015) - A language designed for example purposes only."
+  },
+  "results": {
+    "grok": {
+      "score": 100,
+      "modelOutput": "1. Red (2011) - Red is an imperative and functional programming language inspired by Rebol that supports high-level scripting and native compilation for a wide range of applications.\n2. Kotlin (2011) - Kotlin is a statically typed programming language developed by JetBrains that targets the Java Virtual Machine and Android platforms with concise syntax and full interoperability with Java.\n3. Dart (2011) - Dart is a client-optimized programming language developed by Google for building fast applications across mobile, web, and desktop platforms.\n4. Julia (2012) - Julia is a high-level, high-performance dynamic programming language designed for scientific computing, data science, and numerical analysis.\n5. Elixir (2012) - Elixir is a dynamic functional programming language that runs on the Erlang VM and is designed for building scalable, maintainable, and fault-tolerant distributed applications.\n6. TypeScript (2012) - TypeScript is a strongly typed superset of JavaScript developed by Microsoft that adds optional static typing to improve the development of large-scale web applications.\n7. Swift (2014) - Swift is a powerful and intuitive compiled programming language developed by Apple for building software across iOS, macOS, tvOS, and watchOS platforms.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 44562,
+      "tokenCount": 0,
+      "error": null
+    }
+  }
+}

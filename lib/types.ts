@@ -49,7 +49,7 @@ export interface LatestRun {
   runId: string;
   startedAt: string;
   completedAt: string;
-  schedule: "morning" | "afternoon" | "night";
+  schedule: "daily" | "morning" | "afternoon" | "night";
   models: Record<string, ModelRunResult>;
 }
 
