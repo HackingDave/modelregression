@@ -26,7 +26,7 @@
   ],
   "models": {
     "claude-opus-4-8": {
-      "currentScore": null,
+      "currentScore": 74,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
@@ -39,7 +39,7 @@
       ]
     },
     "claude-sonnet-4-6": {
-      "currentScore": null,
+      "currentScore": 84,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
@@ -52,7 +52,7 @@
       ]
     },
     "gpt-5-5": {
-      "currentScore": null,
+      "currentScore": 85,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",

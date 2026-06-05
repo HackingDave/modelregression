@@ -280,6 +280,16 @@ def export_models(conn, output_dir: str) -> None:
     """Per-model detail page data with full history, regressions, outages."""
     models_dir = os.path.join(output_dir, "models")
 
+    all_runs = conn.execute(
+        """SELECT * FROM benchmark_runs
+           WHERE status IN ('completed', 'completed_with_errors')
+           ORDER BY started_at ASC"""
+    ).fetchall()
+
+    # First pass: collect current data and composites for cross-model ranking
+    model_results = {}
+    all_composites = []
+
     for mcfg in config.MODELS:
         mid = mcfg["id"]
         slug = mcfg["slug"]
@@ -293,18 +303,16 @@ def export_models(conn, output_dir: str) -> None:
             "icon": mcfg.get("icon", "cpu"),
         }
 
-        # --- current (from latest run) ---
-        latest_run = database.get_latest_run(conn)
-        current = _model_current(conn, latest_run, mid) if latest_run else {
+        # --- current (from this model's latest run) ---
+        model_run = _get_latest_run_for_model(conn, mid)
+        current = _model_current(conn, model_run, mid) if model_run else {
             "compositeScore": None, "rank": None, "categories": {},
         }
 
-        # --- history (ALL completed runs, not just 30 days) ---
-        all_runs = conn.execute(
-            """SELECT * FROM benchmark_runs
-               WHERE status IN ('completed', 'completed_with_errors')
-               ORDER BY started_at ASC"""
-        ).fetchall()
+        if current["compositeScore"] is not None:
+            all_composites.append((slug, current["compositeScore"]))
+
+        # --- history (ALL completed runs) ---
         history = []
         for run in all_runs:
             run = dict(run)
@@ -350,13 +358,21 @@ def export_models(conn, output_dir: str) -> None:
                 "httpStatus": o["http_status"],
             })
 
-        _write_json(os.path.join(models_dir, f"{slug}.json"), {
+        model_results[slug] = {
             "model": model_meta,
             "current": current,
             "history": history,
             "regressions": regressions,
             "outages": outages,
-        })
+        }
+
+    # Recompute cross-model ranks
+    all_composites.sort(key=lambda x: x[1], reverse=True)
+    for rank, (slug, _) in enumerate(all_composites, 1):
+        model_results[slug]["current"]["rank"] = rank
+
+    for slug, data in model_results.items():
+        _write_json(os.path.join(models_dir, f"{slug}.json"), data)
 
 
 def _model_current(conn, run: dict, model_id: str) -> dict:
@@ -481,13 +497,13 @@ def export_categories(conn, output_dir: str) -> None:
             mid = mcfg["id"]
             mslug = mcfg["slug"]
 
-            # Current
-            latest_run = database.get_latest_run(conn)
+            # Current (from this model's latest run)
+            model_run = _get_latest_run_for_model(conn, mid)
             current_score = None
-            if latest_run:
+            if model_run:
                 cs = conn.execute(
                     "SELECT avg_score FROM run_scores WHERE run_id = ? AND model_id = ? AND category_id = ?",
-                    (latest_run["id"], mid, cid),
+                    (model_run["id"], mid, cid),
                 ).fetchone()
                 if cs:
                     current_score = _round_score(cs["avg_score"])

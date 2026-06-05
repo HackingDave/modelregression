@@ -8,9 +8,184 @@
     "icon": "brain"
   },
   "current": {
-    "compositeScore": null,
-    "rank": null,
-    "categories": {}
+    "compositeScore": 92,
+    "rank": 3,
+    "categories": {
+      "bug-fixes": {
+        "avgScore": 90,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "bf-1",
+            "name": "Race Condition Detection",
+            "score": 90,
+            "latencyMs": 26018
+          }
+        ]
+      },
+      "bug-introduction-rate": {
+        "avgScore": 100,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "bi-1",
+            "name": "Refactor Without Regression",
+            "score": 100,
+            "latencyMs": 28873
+          }
+        ]
+      },
+      "code-quality": {
+        "avgScore": 93.5,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "cq-1",
+            "name": "Idiomatic Python",
+            "score": 97,
+            "latencyMs": 79587
+          },
+          {
+            "testId": "cq-3",
+            "name": "Clean Architecture Patterns",
+            "score": 90,
+            "latencyMs": 160011
+          }
+        ]
+      },
+      "code-thoroughness": {
+        "avgScore": 74,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "th-3",
+            "name": "Test Suite Completeness",
+            "score": 86,
+            "latencyMs": 42307
+          },
+          {
+            "testId": "th-1",
+            "name": "Edge Case Coverage",
+            "score": 62,
+            "latencyMs": 143947
+          }
+        ]
+      },
+      "coding-tasks": {
+        "avgScore": 99,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "ct-1",
+            "name": "Graph Algorithm Implementation",
+            "score": 98,
+            "latencyMs": 17431
+          },
+          {
+            "testId": "ct-2",
+            "name": "REST API Design",
+            "score": 100,
+            "latencyMs": 26015
+          }
+        ]
+      },
+      "feature-implementation": {
+        "avgScore": 96.7,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "fi-1",
+            "name": "OAuth2 Integration",
+            "score": 90,
+            "latencyMs": 25968
+          },
+          {
+            "testId": "fi-3",
+            "name": "Webhook System",
+            "score": 100,
+            "latencyMs": 25285
+          },
+          {
+            "testId": "fi-2",
+            "name": "Search Autocomplete",
+            "score": 100,
+            "latencyMs": 50202
+          }
+        ]
+      },
+      "instruction-following": {
+        "avgScore": 100,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "if-1",
+            "name": "Structured Output Compliance",
+            "score": 100,
+            "latencyMs": 10317
+          }
+        ]
+      },
+      "long-reasoning": {
+        "avgScore": 77.8,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "lr-3",
+            "name": "Mathematical Proof",
+            "score": 78.7,
+            "latencyMs": 25305
+          },
+          {
+            "testId": "lr-2",
+            "name": "Legal Reasoning Chain",
+            "score": 77,
+            "latencyMs": 52127
+          }
+        ]
+      },
+      "performance-efficiency": {
+        "avgScore": 94,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "pe-1",
+            "name": "Algorithm Complexity",
+            "score": 100,
+            "latencyMs": 29643
+          },
+          {
+            "testId": "pe-3",
+            "name": "Query Optimization",
+            "score": 85,
+            "latencyMs": 48769
+          },
+          {
+            "testId": "pe-2",
+            "name": "Memory-efficient Processing",
+            "score": 97,
+            "latencyMs": 133387
+          }
+        ]
+      },
+      "security-awareness": {
+        "avgScore": 94.5,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "sa-2",
+            "name": "XSS Mitigation",
+            "score": 100,
+            "latencyMs": 54421
+          },
+          {
+            "testId": "sa-3",
+            "name": "Secret Management",
+            "score": 89,
+            "latencyMs": 137828
+          }
+        ]
+      }
+    }
   },
   "history": [
     {

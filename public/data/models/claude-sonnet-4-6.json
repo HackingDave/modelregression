@@ -8,9 +8,220 @@
     "icon": "zap"
   },
   "current": {
-    "compositeScore": null,
-    "rank": null,
-    "categories": {}
+    "compositeScore": 92.7,
+    "rank": 1,
+    "categories": {
+      "bug-fixes": {
+        "avgScore": 96.7,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "bf-2",
+            "name": "Memory Leak Fix",
+            "score": 100,
+            "latencyMs": 52285
+          },
+          {
+            "testId": "bf-1",
+            "name": "Race Condition Detection",
+            "score": 90,
+            "latencyMs": 50712
+          },
+          {
+            "testId": "bf-3",
+            "name": "Off-by-One Boundary Fix",
+            "score": 100,
+            "latencyMs": 51661
+          }
+        ]
+      },
+      "bug-introduction-rate": {
+        "avgScore": 97.3,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "bi-1",
+            "name": "Refactor Without Regression",
+            "score": 99,
+            "latencyMs": 63320
+          },
+          {
+            "testId": "bi-2",
+            "name": "Merge Conflict Resolution",
+            "score": 96,
+            "latencyMs": 73338
+          },
+          {
+            "testId": "bi-3",
+            "name": "Dependency Upgrade Safety",
+            "score": 97,
+            "latencyMs": 121858
+          }
+        ]
+      },
+      "code-quality": {
+        "avgScore": 99,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "cq-1",
+            "name": "Idiomatic Python",
+            "score": 99,
+            "latencyMs": 134237
+          }
+        ]
+      },
+      "code-thoroughness": {
+        "avgScore": 84,
+        "testCount": 1,
+        "tests": [
+          {
+            "testId": "th-3",
+            "name": "Test Suite Completeness",
+            "score": 84,
+            "latencyMs": 111489
+          }
+        ]
+      },
+      "coding-tasks": {
+        "avgScore": 97.3,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "ct-1",
+            "name": "Graph Algorithm Implementation",
+            "score": 92,
+            "latencyMs": 29929
+          },
+          {
+            "testId": "ct-2",
+            "name": "REST API Design",
+            "score": 100,
+            "latencyMs": 16935
+          },
+          {
+            "testId": "ct-3",
+            "name": "Concurrent Data Pipeline",
+            "score": 100,
+            "latencyMs": 80208
+          }
+        ]
+      },
+      "feature-implementation": {
+        "avgScore": 97.3,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "fi-1",
+            "name": "OAuth2 Integration",
+            "score": 93,
+            "latencyMs": 61688
+          },
+          {
+            "testId": "fi-3",
+            "name": "Webhook System",
+            "score": 99,
+            "latencyMs": 41300
+          },
+          {
+            "testId": "fi-2",
+            "name": "Search Autocomplete",
+            "score": 100,
+            "latencyMs": 119770
+          }
+        ]
+      },
+      "instruction-following": {
+        "avgScore": 96.7,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "if-1",
+            "name": "Structured Output Compliance",
+            "score": 100,
+            "latencyMs": 16280
+          },
+          {
+            "testId": "if-2",
+            "name": "Constraint Adherence",
+            "score": 100,
+            "latencyMs": 9011
+          },
+          {
+            "testId": "if-3",
+            "name": "Multi-step Instruction Chain",
+            "score": 90,
+            "latencyMs": 17521
+          }
+        ]
+      },
+      "long-reasoning": {
+        "avgScore": 68.9,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "lr-3",
+            "name": "Mathematical Proof",
+            "score": 83.6,
+            "latencyMs": 44632
+          },
+          {
+            "testId": "lr-2",
+            "name": "Legal Reasoning Chain",
+            "score": 74,
+            "latencyMs": 90224
+          },
+          {
+            "testId": "lr-1",
+            "name": "Multi-step Logic Puzzle",
+            "score": 49,
+            "latencyMs": 192442
+          }
+        ]
+      },
+      "performance-efficiency": {
+        "avgScore": 94.5,
+        "testCount": 2,
+        "tests": [
+          {
+            "testId": "pe-1",
+            "name": "Algorithm Complexity",
+            "score": 100,
+            "latencyMs": 86726
+          },
+          {
+            "testId": "pe-3",
+            "name": "Query Optimization",
+            "score": 89,
+            "latencyMs": 144450
+          }
+        ]
+      },
+      "security-awareness": {
+        "avgScore": 95.7,
+        "testCount": 3,
+        "tests": [
+          {
+            "testId": "sa-1",
+            "name": "SQL Injection Prevention",
+            "score": 100,
+            "latencyMs": 48845
+          },
+          {
+            "testId": "sa-3",
+            "name": "Secret Management",
+            "score": 87.2,
+            "latencyMs": 64006
+          },
+          {
+            "testId": "sa-2",
+            "name": "XSS Mitigation",
+            "score": 100,
+            "latencyMs": 107045
+          }
+        ]
+      }
+    }
   },
   "history": [
     {

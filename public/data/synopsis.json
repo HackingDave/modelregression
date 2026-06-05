@@ -2,8 +2,8 @@
   "day": {
     "modelId": "grok",
     "name": "Grok",
-    "score": 94.8,
-    "change": 0
+    "score": 95,
+    "change": 0.8
   },
   "week": {
     "modelId": "grok",
