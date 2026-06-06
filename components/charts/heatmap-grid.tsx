@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { MODELS } from "@/lib/models";
 import { CATEGORIES } from "@/lib/categories";
 import { formatScore } from "@/lib/utils";
+import type { ModelInfo } from "@/lib/types";
 
 interface HeatmapGridProps {
   scores: Record<string, Record<string, number>>;
+  models: ModelInfo[];
 }
 
 function getCellColor(score: number): string {
@@ -20,7 +21,7 @@ function getCellColor(score: number): string {
   return "bg-red-500/15 text-red-400 border-red-500/25";
 }
 
-export function HeatmapGrid({ scores }: HeatmapGridProps) {
+export function HeatmapGrid({ scores, models }: HeatmapGridProps) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full min-w-[640px]">
@@ -29,7 +30,7 @@ export function HeatmapGrid({ scores }: HeatmapGridProps) {
             <th className="text-left text-xs font-medium text-muted-foreground py-2 px-3 w-44">
               Category
             </th>
-            {MODELS.map((model) => (
+            {models.map((model) => (
               <th
                 key={model.id}
                 className="text-center text-xs font-medium py-2 px-2"
@@ -51,7 +52,7 @@ export function HeatmapGrid({ scores }: HeatmapGridProps) {
                   {category.name}
                 </Link>
               </td>
-              {MODELS.map((model) => {
+              {models.map((model) => {
                 const score = scores[model.id]?.[category.id] ?? 0;
                 return (
                   <td key={model.id} className="py-1.5 px-1.5">

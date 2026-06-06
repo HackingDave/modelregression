@@ -6,14 +6,14 @@ import { AnimatedCounter } from "@/components/shared/animated-counter";
 import { TimeRangeSelector } from "@/components/shared/time-range-selector";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { Crown, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import { getModel } from "@/lib/models";
-import type { Synopsis, TimeRange } from "@/lib/types";
+import type { ModelInfo, Synopsis, TimeRange } from "@/lib/types";
 
 interface SynopsisBannerProps {
   synopsis: Synopsis;
+  models: ModelInfo[];
 }
 
-export function SynopsisBanner({ synopsis }: SynopsisBannerProps) {
+export function SynopsisBanner({ synopsis, models }: SynopsisBannerProps) {
   const [range, setRange] = useState<TimeRange>("day");
 
   const periodData = {
@@ -24,7 +24,7 @@ export function SynopsisBanner({ synopsis }: SynopsisBannerProps) {
   };
 
   const current = periodData[range];
-  const model = getModel(current.modelId);
+  const model = models.find((m) => m.id === current.modelId);
   const TrendIcon =
     current.change > 2
       ? TrendingUp

@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { formatScore, getScoreColor, formatDateTime } from "@/lib/utils";
-import { MODELS } from "@/lib/models";
 import { CATEGORIES } from "@/lib/categories";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { Clock, ExternalLink } from "lucide-react";
-import type { LatestRun } from "@/lib/types";
+import type { LatestRun, ModelInfo } from "@/lib/types";
 
 interface LatestRunTableProps {
   run: LatestRun;
+  models: ModelInfo[];
 }
 
-export function LatestRunTable({ run }: LatestRunTableProps) {
+export function LatestRunTable({ run, models }: LatestRunTableProps) {
   return (
     <ScrollReveal>
       <div className="rounded-xl border border-border/50 glass overflow-hidden">
@@ -55,7 +55,7 @@ export function LatestRunTable({ run }: LatestRunTableProps) {
               </tr>
             </thead>
             <tbody>
-              {MODELS.map((model) => {
+              {models.map((model) => {
                 const result = run.models[model.id];
                 if (!result) return null;
 

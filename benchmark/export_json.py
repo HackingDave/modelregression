@@ -7,6 +7,7 @@ matching the exact structure consumed by the frontend at build time:
 
   - latest.json                            (most recent benchmark run)
   - synopsis.json                          (best model per day/week/month)
+  - models.json                            (all configured model metadata)
   - models/{slug}.json                     (per-model detail + history)
   - categories/{slug}.json                 (per-category detail + history)
   - trends/daily.json|weekly|monthly|yearly (composite trend lines)
@@ -24,6 +25,7 @@ import argparse
 import json
 import logging
 import os
+import sqlite3
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -33,6 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import config
 import db as database
+from openrouter_pricing import build_pricing_snapshot, empty_pricing_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -105,6 +108,81 @@ def _write_json(path: str, data) -> None:
     logger.debug("Wrote %s", path)
 
 
+def _model_meta(mcfg: dict) -> dict:
+    provider = mcfg.get("provider") or mcfg.get("cli") or "unknown"
+    return {
+        "id": mcfg["id"],
+        "provider": provider,
+        "name": mcfg["name"],
+        "slug": mcfg["slug"],
+        "color": mcfg["color"],
+        "icon": mcfg.get("icon", "cpu"),
+    }
+
+
+def _model_meta_from_row(row) -> dict:
+    data = dict(row)
+    meta = {
+        "id": data["id"],
+        "provider": data.get("provider") or data.get("cli") or "unknown",
+        "name": data["name"],
+        "slug": data["slug"],
+        "color": data["color"],
+        "icon": data.get("icon") or "cpu",
+    }
+    if data.get("provider") == "openrouter":
+        meta["openrouterModelId"] = data.get("cli_model")
+    return meta
+
+
+def _export_model_configs(conn) -> list[dict]:
+    """Models that should appear in static JSON, based on DB state when possible."""
+    try:
+        rows = conn.execute(
+            """SELECT DISTINCT m.*
+               FROM models m
+               WHERE m.is_active = 1
+                  OR EXISTS (SELECT 1 FROM model_run_scores mrs WHERE mrs.model_id = m.id)
+                  OR EXISTS (SELECT 1 FROM run_models rm WHERE rm.model_id = m.id)
+               ORDER BY m.name"""
+        ).fetchall()
+    except sqlite3.OperationalError:
+        rows = []
+
+    if rows:
+        return [dict(r) for r in rows]
+    return [dict(m) for m in config.MODELS]
+
+
+def export_model_index(output_dir: str, conn=None) -> None:
+    """Model metadata consumed by the Next.js UI."""
+    models = _export_model_configs(conn) if conn is not None else config.MODELS
+    _write_json(os.path.join(output_dir, "models.json"), [
+        _model_meta(mcfg) for mcfg in models
+    ])
+
+
+def export_openrouter_pricing(output_dir: str, timeout: int = 30) -> dict:
+    """Write the daily OpenRouter price sheet used by the website."""
+    output_path = os.path.join(output_dir, "openrouter-pricing.json")
+    try:
+        snapshot = build_pricing_snapshot(timeout=timeout)
+    except Exception as exc:
+        logger.warning("OpenRouter pricing refresh failed: %s", exc)
+        if os.path.exists(output_path):
+            try:
+                with open(output_path, "r", encoding="utf-8") as f:
+                    snapshot = json.load(f)
+                snapshot["error"] = f"Latest refresh failed: {exc}"
+            except (OSError, json.JSONDecodeError):
+                snapshot = empty_pricing_snapshot(error=str(exc))
+        else:
+            snapshot = empty_pricing_snapshot(error=str(exc))
+
+    _write_json(output_path, snapshot)
+    return snapshot
+
+
 # ---------------------------------------------------------------------------
 # latest.json
 # ---------------------------------------------------------------------------
@@ -140,7 +218,7 @@ def export_latest(conn, output_dir: str) -> None:
     models_data = {}
     all_composites = []
 
-    for mcfg in config.MODELS:
+    for mcfg in _export_model_configs(conn):
         mid = mcfg["id"]
         slug = mcfg["slug"]
         model_run = _get_latest_run_for_model(conn, mid)
@@ -290,18 +368,11 @@ def export_models(conn, output_dir: str) -> None:
     model_results = {}
     all_composites = []
 
-    for mcfg in config.MODELS:
+    for mcfg in _export_model_configs(conn):
         mid = mcfg["id"]
         slug = mcfg["slug"]
 
-        model_meta = {
-            "id": mid,
-            "provider": mcfg["cli"],
-            "name": mcfg["name"],
-            "slug": slug,
-            "color": mcfg["color"],
-            "icon": mcfg.get("icon", "cpu"),
-        }
+        model_meta = _model_meta(mcfg)
 
         # --- current (from this model's latest run) ---
         model_run = _get_latest_run_for_model(conn, mid)
@@ -493,7 +564,7 @@ def export_categories(conn, output_dir: str) -> None:
 
         # Per-model current score + history
         models_data = {}
-        for mcfg in config.MODELS:
+        for mcfg in _export_model_configs(conn):
             mid = mcfg["id"]
             mslug = mcfg["slug"]
 
@@ -733,8 +804,8 @@ def export_outages(conn, output_dir: str) -> None:
 def _compute_uptime(conn) -> dict:
     """Per-provider uptime for 7d / 30d / 90d windows."""
     providers = {}
-    for mcfg in config.MODELS:
-        p = mcfg["cli"]
+    for mcfg in _export_model_configs(conn):
+        p = mcfg.get("provider") or mcfg.get("cli")
         if p not in providers:
             providers[p] = {}
 
@@ -839,8 +910,10 @@ def export_evidence(conn, output_dir: str) -> None:
 # Empty stubs (no data yet)
 # ---------------------------------------------------------------------------
 
-def _generate_empty_stubs(output_dir: str) -> None:
+def _generate_empty_stubs(output_dir: str, conn=None) -> None:
     """Write minimal valid JSON so the Next.js site still builds."""
+    export_openrouter_pricing(output_dir)
+    export_model_index(output_dir, conn)
     _write_json(os.path.join(output_dir, "latest.json"), {
         "runId": None, "startedAt": None, "completedAt": None,
         "schedule": None, "models": {},
@@ -861,13 +934,10 @@ def _generate_empty_stubs(output_dir: str) -> None:
         _write_json(os.path.join(output_dir, "trends", f"{period}.json"), {
             "period": period, "data": [],
         })
-    for mcfg in config.MODELS:
+    empty_models = _export_model_configs(conn) if conn is not None else config.MODELS
+    for mcfg in empty_models:
         _write_json(os.path.join(output_dir, "models", f"{mcfg['slug']}.json"), {
-            "model": {
-                "id": mcfg["id"], "provider": mcfg["cli"],
-                "name": mcfg["name"], "slug": mcfg["slug"],
-                "color": mcfg["color"], "icon": mcfg.get("icon", "cpu"),
-            },
+            "model": _model_meta(mcfg),
             "current": {"compositeScore": None, "rank": None, "categories": {}},
             "history": [], "regressions": [], "outages": [],
         })
@@ -895,19 +965,31 @@ def export_all(output_dir: str, db_path: str | None = None) -> None:
     conn = database.get_connection(db_path)
 
     # Check for any completed runs
-    row = conn.execute(
-        "SELECT COUNT(*) as cnt FROM benchmark_runs WHERE status IN ('completed', 'completed_with_errors')"
-    ).fetchone()
-    has_data = dict(row)["cnt"] > 0
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) as cnt FROM benchmark_runs WHERE status IN ('completed', 'completed_with_errors')"
+        ).fetchone()
+        has_data = dict(row)["cnt"] > 0
+    except sqlite3.OperationalError as e:
+        if "no such table" not in str(e):
+            conn.close()
+            raise
+        logger.warning("Benchmark database schema is missing -- writing empty stubs.")
+        has_data = False
 
     if not has_data:
         logger.warning("No completed runs in database -- writing empty stubs.")
-        _generate_empty_stubs(output_dir)
+        _generate_empty_stubs(output_dir, conn)
         conn.close()
         return
 
     logger.info("Exporting JSON data to %s ...", output_dir)
     os.makedirs(output_dir, exist_ok=True)
+
+    export_openrouter_pricing(output_dir)
+    logger.info("  openrouter-pricing.json")
+
+    export_model_index(output_dir, conn)
 
     export_latest(conn, output_dir)
     logger.info("  latest.json")

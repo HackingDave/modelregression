@@ -91,6 +91,15 @@ export const CATEGORIES: CategoryInfo[] = [
     icon: "gauge",
     weight: 1.0,
   },
+  {
+    id: "computer-use",
+    name: "Computer-Use Planning",
+    slug: "computer-use",
+    description:
+      "Desktop-agent planning and verification discipline for Windows/macOS workflows; a text-evaluated proxy until a live GUI harness is added.",
+    icon: "monitor",
+    weight: 1.0,
+  },
 ];
 
 export function getCategory(id: string): CategoryInfo | undefined {

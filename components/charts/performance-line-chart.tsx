@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { MODELS } from "@/lib/models";
 import { formatDateTime } from "@/lib/utils";
+import type { ModelInfo } from "@/lib/types";
 
 interface DataPoint {
   timestamp: string;
@@ -23,6 +24,7 @@ interface PerformanceLineChartProps {
   height?: number;
   showLegend?: boolean;
   modelFilter?: string[];
+  models?: ModelInfo[];
 }
 
 export function PerformanceLineChart({
@@ -30,6 +32,7 @@ export function PerformanceLineChart({
   height = 350,
   showLegend = true,
   modelFilter,
+  models = MODELS,
 }: PerformanceLineChartProps) {
   const chartData = data.map((d) => ({
     timestamp: d.timestamp,
@@ -38,8 +41,8 @@ export function PerformanceLineChart({
   }));
 
   const modelsToShow = modelFilter
-    ? MODELS.filter((m) => modelFilter.includes(m.id))
-    : MODELS;
+    ? models.filter((m) => modelFilter.includes(m.id))
+    : models;
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -71,14 +74,14 @@ export function PerformanceLineChart({
             fontSize: 12,
           }}
           formatter={(value: number, name: string) => {
-            const model = MODELS.find((m) => m.id === name);
+            const model = models.find((m) => m.id === name);
             return [value.toFixed(1), model?.name || name];
           }}
         />
         {showLegend && (
           <Legend
             formatter={(value: string) => {
-              const model = MODELS.find((m) => m.id === value);
+              const model = models.find((m) => m.id === value);
               return model?.name || value;
             }}
           />

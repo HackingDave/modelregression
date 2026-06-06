@@ -1,12 +1,14 @@
 """
 Configuration for ModelRegression benchmark engine.
 
-Defines all models, categories, tests, and CLI tool settings.
-Models are tested via installed CLI tools (claude, codex, agent)
-rather than direct API integration.
+Defines all models, categories, tests, and model-call settings.
+The default frontier models are tested via installed CLI tools. OpenRouter
+models can be added through explicit IDs or a pinned local manifest.
 """
 
 import os
+
+from openrouter_models import load_openrouter_models_from_sources
 
 # ---------------------------------------------------------------------------
 # Database
@@ -19,16 +21,32 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "data", "benchmarks.db")
 CLI_TIMEOUT = 300
 HEALTH_CHECK_TIMEOUT = 60
 PARALLEL_TESTS = 4
+MAX_PARALLEL_MODELS = int(os.getenv("MAX_PARALLEL_MODELS", "4"))
+OPENROUTER_PARALLEL_TESTS = int(os.getenv("OPENROUTER_PARALLEL_TESTS", "1"))
+OPENROUTER_MAX_MODELS = int(os.getenv("OPENROUTER_MAX_MODELS", "50"))
 MAX_RETRIES = 2
 RETRY_DELAY = 5
 
 # ---------------------------------------------------------------------------
+# OpenRouter model selection
+#
+# Set OPENROUTER_MODEL_IDS to a comma-separated list for controlled runs:
+#   OPENROUTER_MODEL_IDS=meta-llama/llama-3.3-70b-instruct,qwen/qwen3.7-plus
+#
+# Or generate a pinned manifest first:
+#   python benchmark/openrouter_manifest.py --limit 50
+#
+# Then set OPENROUTER_MANIFEST or keep the default
+# benchmark/manifests/openrouter_models.json path.
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # Model definitions — each model specifies its CLI tool and model argument
 #
-#   cli:        executable name (claude, codex, agent)
-#   cli_model:  value passed to --model / -m flag
+#   cli:        adapter/executable name (claude, codex, agent, openrouter)
+#   cli_model:  value passed to --model / -m flag, or OpenRouter model id
 # ---------------------------------------------------------------------------
-MODELS = [
+BASE_MODELS = [
     {
         "id": "claude-opus-4-8",
         "cli": "claude",
@@ -70,6 +88,16 @@ MODELS = [
         "is_active": True,
     },
 ]
+
+MODELS = BASE_MODELS + load_openrouter_models_from_sources()
+
+_OPENROUTER_MODEL_COUNT = sum(1 for m in MODELS if m["cli"] == "openrouter")
+if OPENROUTER_MAX_MODELS > 0 and _OPENROUTER_MODEL_COUNT > OPENROUTER_MAX_MODELS:
+    raise RuntimeError(
+        f"Configured {_OPENROUTER_MODEL_COUNT} OpenRouter models, above "
+        f"OPENROUTER_MAX_MODELS={OPENROUTER_MAX_MODELS}. Increase the cap "
+        "deliberately or reduce the manifest."
+    )
 
 # ---------------------------------------------------------------------------
 # Category definitions (all weights equal at 1)
@@ -165,10 +193,19 @@ CATEGORIES = [
         "weight": 1,
         "sort_order": 10,
     },
+    {
+        "id": "computer-use",
+        "name": "Computer-Use Planning",
+        "slug": "computer-use",
+        "description": "Measures desktop-agent planning and verification discipline for Windows/macOS workflows. This is a text-evaluated proxy until a live GUI harness is added.",
+        "icon": "monitor",
+        "weight": 1,
+        "sort_order": 11,
+    },
 ]
 
 # ---------------------------------------------------------------------------
-# Test definitions (3 per category = 30 total)
+# Test definitions (3 per category = 33 total)
 # ---------------------------------------------------------------------------
 TESTS = [
     # Long Reasoning
@@ -447,6 +484,34 @@ TESTS = [
         "category_id": "performance-efficiency",
         "name": "Query Optimization",
         "description": "Write database queries that use indexes and avoid N+1 patterns",
+        "eval_type": "llm_judge",
+        "max_score": 100,
+        "version": 1,
+    },
+    # Computer Use
+    {
+        "id": "cu-1",
+        "category_id": "computer-use",
+        "name": "Windows Desktop Workflow Planning",
+        "description": "Plan and verify a Windows multi-window task with modal and identity recovery.",
+        "eval_type": "llm_judge",
+        "max_score": 100,
+        "version": 1,
+    },
+    {
+        "id": "cu-2",
+        "category_id": "computer-use",
+        "name": "macOS Cross-App Workflow Planning",
+        "description": "Plan a macOS Finder/browser/document workflow while preserving user intent.",
+        "eval_type": "llm_judge",
+        "max_score": 100,
+        "version": 1,
+    },
+    {
+        "id": "cu-3",
+        "category_id": "computer-use",
+        "name": "Desktop Verification Discipline",
+        "description": "Distinguish observed GUI state from assumptions and verify completion before claiming success.",
         "eval_type": "llm_judge",
         "max_score": 100,
         "version": 1,

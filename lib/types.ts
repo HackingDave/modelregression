@@ -1,4 +1,11 @@
-export type Provider = "anthropic" | "openai" | "xai" | "claude" | "codex" | "agent";
+export type Provider =
+  | "anthropic"
+  | "openai"
+  | "xai"
+  | "claude"
+  | "codex"
+  | "agent"
+  | "openrouter";
 
 export interface ModelInfo {
   id: string;
@@ -137,6 +144,28 @@ export interface OutageData {
       "90d": number;
     }
   >;
+}
+
+export interface OpenRouterPricingEntry {
+  id: string;
+  canonicalSlug?: string | null;
+  name: string;
+  contextLength?: number | null;
+  promptPerMTok: number | null;
+  completionPerMTok: number | null;
+  inputCacheReadPerMTok?: number | null;
+  blendedOneInOneOutPerM: number;
+  isFree: boolean;
+}
+
+export interface OpenRouterPricingData {
+  updatedAt: string;
+  source: string;
+  modelCount: number;
+  pricedModelCount: number;
+  freeModelCount: number;
+  error?: string;
+  models: OpenRouterPricingEntry[];
 }
 
 export interface EvidenceData {

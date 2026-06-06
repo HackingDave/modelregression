@@ -6,11 +6,25 @@ Independent, automated benchmarking of frontier AI coding models. Tracks perform
 
 ## Why This Exists
 
-AI model providers update their models constantly, and sometimes performance degrades without any announcement. ModelRegression runs the same 30 tests against every model daily, scores the results, and surfaces regressions automatically. No vendor self-reporting — just independent, reproducible benchmarks.
+AI model providers update their models constantly, and sometimes performance degrades without any announcement. ModelRegression runs the same 33 tests against every model daily, scores the results, and surfaces regressions automatically. No vendor self-reporting — just independent, reproducible benchmarks.
+
+## Trust Status
+
+The dashboard now answers the blunt question security teams actually care about:
+
+> Can I trust this model today?
+
+Each model gets a plain-English status:
+
+- **Good** - useful for security review support, with human verification.
+- **Watch** - helpful, but do not let it make the final call.
+- **Do not trust alone** - keep it away from incident response, risky fixes, and compliance decisions unless a human is driving.
+
+The status is derived from the latest composite score, Security Awareness score, Code Thoroughness score, active regression flags, and the weakest security-awareness evidence from the current run. Every claim links back to receipts.
 
 ## What Gets Tested
 
-30 tests across 10 categories, each targeting a different dimension of coding ability:
+33 tests across 11 categories, each targeting a different dimension of coding and agentic ability:
 
 | Category | What It Measures |
 |---|---|
@@ -24,6 +38,7 @@ AI model providers update their models constantly, and sometimes performance deg
 | Instruction Following | Schema compliance, constraint adherence, multi-step chains |
 | Code Quality | Idiomatic Python, TypeScript best practices, clean architecture |
 | Performance Efficiency | Algorithm complexity, streaming, query optimization |
+| Computer-Use Planning | Windows/macOS GUI state reasoning, recovery planning, and verified-completion discipline |
 
 ## Models Tracked
 
@@ -31,8 +46,11 @@ AI model providers update their models constantly, and sometimes performance deg
 - **Claude Sonnet 4.6** (Anthropic) — via `claude` CLI
 - **GPT-5.5** (OpenAI) — via `codex` CLI
 - **Grok** (xAI) — via `agent` CLI
+- **OpenRouter models** (open-weight/open-source candidates) - opt-in via `OPENROUTER_MODEL_IDS` or a pinned manifest
 
-Models are tested through their official CLI tools, not direct API calls. This tests the full stack that developers actually use.
+Default frontier models are tested through their official CLI tools. OpenRouter models are tested through OpenRouter's chat-completions API so the same suite can cover dozens of open-weight and API-hosted models.
+
+See [docs/research-basis.md](docs/research-basis.md) for the benchmark design rationale, including recent 2026 computer-use and cybersecurity benchmark references.
 
 ## Architecture
 
@@ -42,8 +60,8 @@ Models are tested through their official CLI tools, not direct API calls. This t
                 │   (cron job) │  Python 3.13 + SQLite
                 └──────┬───────┘
                        │
-            benchmark suite runs 30 tests
-            against each model via CLI tools
+            benchmark suite runs 33 tests
+            against each model via configured adapters
                        │
                        ▼
                 ┌──────────────┐
@@ -107,12 +125,12 @@ modelregression/
 │   ├── regression_detector.py    #   Regression detection logic
 │   ├── outage_monitor.py         #   Health checks + outage tracking
 │   ├── run_benchmarks.sh         #   Cron entry point (full pipeline)
-│   └── tests/                    #   Test implementations (30 tests)
+│   └── tests/                    #   Test implementations (33 tests)
 │       ├── base.py               #     Base test class
 │       ├── long_reasoning.py     #     3 long reasoning tests
 │       ├── coding_tasks.py       #     3 coding task tests
 │       ├── bug_fixes.py          #     3 bug fix tests
-│       └── ...                   #     (10 categories x 3 tests each)
+│       └── ...                   #     (11 categories x 3 tests each)
 ├── config/                       # Nginx configuration
 ├── deploy.sh                     # Blue-green atomic deployment
 └── ecosystem.config.js           # PM2 process configuration
@@ -156,11 +174,54 @@ python export_json.py --output ../public/data
 
 ### CLI Tool Prerequisites
 
-The benchmark engine calls models through their official CLI tools. You need these installed and authenticated:
+The benchmark engine calls default frontier models through their official CLI tools. You need these installed and authenticated:
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** (`claude`) — for Anthropic models
 - **[Codex CLI](https://github.com/openai/codex)** (`codex`) — for OpenAI models
 - **[Grok Agent](https://docs.x.ai/docs/grok-agent)** (`agent`) — for xAI models
+
+### OpenRouter Model Sweeps
+
+OpenRouter support is opt-in so daily runs do not suddenly benchmark dozens of additional models or incur unexpected cost. Broad sweeps should be pinned in a manifest first; benchmark runs do not fetch the live OpenRouter catalog during config import.
+
+```powershell
+# Controlled OpenRouter run against explicit model IDs
+$env:OPENROUTER_API_KEY = "<your key>"
+$env:OPENROUTER_MODEL_IDS = "meta-llama/llama-3.3-70b-instruct,qwen/qwen3.7-plus"
+py -3 benchmark\runner.py --schedule daily
+
+# Generate and review a broad open-weight candidate manifest
+$env:OPENROUTER_API_KEY = "<your key>"
+py -3 benchmark\openrouter_manifest.py --limit 50 --output benchmark\manifests\openrouter_models.json
+
+# Run from the pinned manifest
+$env:OPENROUTER_MANIFEST = "benchmark\manifests\openrouter_models.json"
+py -3 benchmark\runner.py --schedule daily
+
+# Optional: only include OpenRouter :free variants while generating the manifest
+py -3 benchmark\openrouter_manifest.py --free-only --limit 50 --output benchmark\manifests\openrouter_models.json
+```
+
+The manifest generator currently matches provider/model prefixes such as `meta-llama/`, `mistralai/`, `qwen/`, `deepseek/`, `google/gemma`, `nvidia/`, `microsoft/`, and other open-weight candidate families. Treat these as open-weight candidates until licenses are verified. Override with repeated `--prefix` flags when the catalog changes.
+
+Useful safety controls:
+
+```powershell
+$env:OPENROUTER_MAX_MODELS = "50"          # fail fast if the manifest is larger
+$env:MAX_PARALLEL_MODELS = "4"             # global model-level workers
+$env:OPENROUTER_PARALLEL_TESTS = "1"       # per-OpenRouter-model test workers
+```
+
+### OpenRouter Pricing
+
+The JSON export also refreshes `public/data/openrouter-pricing.json` from OpenRouter's model catalog each day. Prices are normalized from OpenRouter's per-token values into dollars per 1M input tokens, dollars per 1M output tokens, and a simple 1M-in + 1M-out blended number for dashboard display.
+
+```powershell
+# Standalone refresh if you only want to update the price sheet
+py -3 benchmark\openrouter_pricing.py --output public\data\openrouter-pricing.json
+```
+
+Negative OpenRouter router sentinel prices are ignored because they do not represent a real per-token price.
 
 ### Deployment
 

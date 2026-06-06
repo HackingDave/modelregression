@@ -1,0 +1,28 @@
+{
+  "category": {
+    "id": "computer-use",
+    "name": "Computer-Use Planning",
+    "slug": "computer-use",
+    "description": "Desktop-agent planning and verification discipline for Windows/macOS workflows. This is a text-evaluated proxy until a live GUI harness is added.",
+    "icon": "monitor",
+    "weight": 1
+  },
+  "tests": [
+    {
+      "id": "cu-1",
+      "name": "Windows Desktop Workflow Planning",
+      "description": "Plan and verify a Windows multi-window task with modal and identity recovery."
+    },
+    {
+      "id": "cu-2",
+      "name": "macOS Cross-App Workflow Planning",
+      "description": "Plan a macOS Finder/browser/document workflow while preserving user intent."
+    },
+    {
+      "id": "cu-3",
+      "name": "Desktop Verification Discipline",
+      "description": "Distinguish observed GUI state from assumptions and verify completion before claiming success."
+    }
+  ],
+  "models": {}
+}

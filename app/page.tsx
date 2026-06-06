@@ -1,7 +1,15 @@
-import { getLatestRun, getSynopsis, getRegressions, getTrends } from "@/lib/data";
-import { MODELS } from "@/lib/models";
+import {
+  getAllModels,
+  getLatestRun,
+  getOpenRouterPricing,
+  getSynopsis,
+  getRegressions,
+  getTrends,
+} from "@/lib/data";
 import { CATEGORIES } from "@/lib/categories";
 import { SynopsisBanner } from "@/components/dashboard/synopsis-banner";
+import { TrustStatusPanel } from "@/components/dashboard/trust-status-panel";
+import { OpenRouterCostPanel } from "@/components/dashboard/openrouter-cost-panel";
 import { ModelOverviewCards } from "@/components/dashboard/model-overview-cards";
 import { RegressionAlerts } from "@/components/dashboard/regression-alerts";
 import { HeatmapGrid } from "@/components/charts/heatmap-grid";
@@ -14,9 +22,11 @@ export default function HomePage() {
   const synopsis = getSynopsis();
   const regressions = getRegressions();
   const trends = getTrends("daily");
+  const models = getAllModels();
+  const openRouterPricing = getOpenRouterPricing();
 
   const heatmapScores: Record<string, Record<string, number>> = {};
-  for (const model of MODELS) {
+  for (const model of models) {
     heatmapScores[model.id] = {};
     const modelResult = latest.models[model.id];
     if (modelResult) {
@@ -29,7 +39,7 @@ export default function HomePage() {
 
   const modelHistory: Record<string, number[]> = {};
   const modelChanges: Record<string, number> = {};
-  for (const model of MODELS) {
+  for (const model of models) {
     const allPoints = trends.data
       .slice(-21)
       .map((d) => d.models[model.id] ?? null);
@@ -47,12 +57,22 @@ export default function HomePage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      <SynopsisBanner synopsis={synopsis} />
+      <SynopsisBanner synopsis={synopsis} models={models} />
+
+      <TrustStatusPanel
+        latest={latest}
+        models={models}
+        activeRegressions={regressions.active}
+        changes={modelChanges}
+      />
+
+      <OpenRouterCostPanel pricing={openRouterPricing} />
 
       <ModelOverviewCards
         latest={latest}
         history={modelHistory}
         changes={modelChanges}
+        models={models}
       />
 
       {/* Performance Timeline */}
@@ -61,7 +81,7 @@ export default function HomePage() {
           <h3 className="text-sm font-semibold text-foreground mb-4">
             Performance Timeline
           </h3>
-          <PerformanceTimeline trends={trends} />
+          <PerformanceTimeline trends={trends} models={models} />
         </div>
       </ScrollReveal>
 
@@ -74,12 +94,12 @@ export default function HomePage() {
           <h3 className="text-sm font-semibold text-foreground mb-4">
             Category Performance Heatmap
           </h3>
-          <HeatmapGrid scores={heatmapScores} />
+          <HeatmapGrid scores={heatmapScores} models={models} />
         </div>
       </ScrollReveal>
 
       {/* Latest Run Table */}
-      <LatestRunTable run={latest} />
+      <LatestRunTable run={latest} models={models} />
     </div>
   );
 }

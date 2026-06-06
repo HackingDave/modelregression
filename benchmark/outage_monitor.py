@@ -1,8 +1,8 @@
 """
-Outage monitor for AI model CLI tools.
+Outage monitor for AI model adapters.
 
 Can be run standalone or imported by the runner for pre-flight checks.
-Sends a simple health-check prompt to each model via its CLI tool and
+Sends a simple health-check prompt to each model via its configured adapter and
 tracks consecutive failures.
 """
 
@@ -14,6 +14,7 @@ import traceback
 
 import config
 import db as database
+from openrouter_client import call_chat_completion
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +24,10 @@ FAILURE_THRESHOLD = 3
 
 def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
     """
-    Send a health-check prompt to a model via its CLI tool.
+    Send a health-check prompt to a model via its configured adapter.
 
     Returns (is_healthy, error_message, http_status).
-    http_status is always None for CLI-based checks.
+    http_status is None for CLI-based checks.
     """
     cli = model_cfg["cli"]
     cli_model = model_cfg["cli_model"]
@@ -66,6 +67,16 @@ def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
                 text=True,
                 timeout=config.HEALTH_CHECK_TIMEOUT,
             )
+        elif cli == "openrouter":
+            text, _latency, _prompt_tokens, _completion_tokens, error, http_status = call_chat_completion(
+                cli_model,
+                HEALTH_CHECK_PROMPT,
+                timeout=config.HEALTH_CHECK_TIMEOUT,
+                supported_parameters=(model_cfg.get("metadata") or {}).get("supported_parameters"),
+            )
+            if text:
+                return (True, None, None)
+            return (False, error or "Empty response", http_status)
         else:
             return (False, f"Unknown CLI tool: {cli}", None)
 

@@ -1,5 +1,5 @@
 import { CATEGORIES } from "@/lib/categories";
-import { MODELS } from "@/lib/models";
+import { getAllModels } from "@/lib/data";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import {
   Brain,
@@ -12,6 +12,7 @@ import {
   ListChecks,
   Star,
   Gauge,
+  Monitor,
   Timer,
   Server,
   BarChart3,
@@ -29,9 +30,12 @@ const ICON_MAP: Record<string, React.ElementType> = {
   "list-checks": ListChecks,
   star: Star,
   gauge: Gauge,
+  monitor: Monitor,
 };
 
 export default function MethodologyPage() {
+  const models = getAllModels();
+
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
       <ScrollReveal>
@@ -56,7 +60,7 @@ export default function MethodologyPage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div>
               <span className="text-3xl font-bold font-mono text-primary">
-                30
+                33
               </span>
               <p className="text-sm text-muted-foreground mt-1">
                 Individual tests per run
@@ -64,7 +68,7 @@ export default function MethodologyPage() {
             </div>
             <div>
               <span className="text-3xl font-bold font-mono text-primary">
-                10
+                11
               </span>
               <p className="text-sm text-muted-foreground mt-1">
                 Benchmark categories
@@ -90,7 +94,7 @@ export default function MethodologyPage() {
             Models Tested
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {MODELS.map((model) => (
+            {models.map((model) => (
               <div
                 key={model.id}
                 className="flex items-center gap-3 p-3 rounded-lg bg-muted/30 border border-border/30"
@@ -111,10 +115,9 @@ export default function MethodologyPage() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-4">
-            All models are called via their official APIs with temperature set to
-            0.0 for maximum reproducibility. When a new frontier model is
-            released, it is added to the benchmark suite and begins tracking
-            immediately.
+            Models are called through their configured adapters, including
+            official CLIs and OpenRouter's chat-completions API. Temperature is
+            set to 0.0 where the adapter supports it.
           </p>
         </div>
       </ScrollReveal>
@@ -203,9 +206,10 @@ export default function MethodologyPage() {
             </div>
             <p>
               <strong className="text-foreground">Composite scores</strong> are
-              weighted averages across all 10 categories. Weights reflect the
-              relative importance of each capability (coding and security are
-              weighted higher than instruction following).
+              weighted averages across all 11 categories. Weights reflect the
+              relative importance of each capability. Current category weights
+              are equal until enough run history exists to justify differentiated
+              weighting.
             </p>
           </div>
         </div>
@@ -263,7 +267,7 @@ export default function MethodologyPage() {
               geographic location.
             </li>
             <li>
-              30 tests cannot cover all capabilities. Results indicate trends,
+              33 tests cannot cover all capabilities. Results indicate trends,
               not absolute quality.
             </li>
             <li>

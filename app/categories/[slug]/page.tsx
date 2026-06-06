@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCategoryDetail, getAllCategorySlugs } from "@/lib/data";
-import { getModel } from "@/lib/models";
+import { getAllModels, getCategoryDetail, getAllCategorySlugs } from "@/lib/data";
 import {
   cn,
   formatScore,
@@ -83,12 +82,13 @@ export default async function CategoryDetailPage({
     notFound();
   }
 
-  const { category, tests, models } = detail;
+  const modelInfos = getAllModels();
+  const { category, tests, models: categoryModels } = detail;
 
   // ---- Build line chart data from all models' history ----
   // Collect all unique timestamps
   const timestampSet = new Set<string>();
-  for (const [, modelData] of Object.entries(models)) {
+  for (const [, modelData] of Object.entries(categoryModels)) {
     for (const h of modelData.history) {
       timestampSet.add(h.timestamp);
     }
@@ -97,7 +97,7 @@ export default async function CategoryDetailPage({
 
   // Build lookup maps for fast access
   const modelHistoryMaps: Record<string, Map<string, number>> = {};
-  for (const [modelId, modelData] of Object.entries(models)) {
+  for (const [modelId, modelData] of Object.entries(categoryModels)) {
     const map = new Map<string, number>();
     for (const h of modelData.history) {
       map.set(h.timestamp, h.score);
@@ -110,7 +110,7 @@ export default async function CategoryDetailPage({
       timestamp: ts,
       models: {},
     };
-    for (const modelId of Object.keys(models)) {
+    for (const modelId of Object.keys(categoryModels)) {
       const val = modelHistoryMaps[modelId].get(ts);
       if (val !== undefined) {
         point.models[modelId] = val;
@@ -120,10 +120,10 @@ export default async function CategoryDetailPage({
   });
 
   // ---- Rank models by current score ----
-  const rankedModels = Object.entries(models)
+  const rankedModels = Object.entries(categoryModels)
     .map(([modelId, data]) => ({
       modelId,
-      info: getModel(modelId),
+      info: modelInfos.find((m) => m.id === modelId),
       score: data.currentScore,
       sparkline: data.history.slice(-7).map((h) => h.score),
     }))
@@ -234,6 +234,7 @@ export default async function CategoryDetailPage({
             data={chartData}
             height={400}
             showLegend={true}
+            models={modelInfos}
           />
         </div>
       </ScrollReveal>
