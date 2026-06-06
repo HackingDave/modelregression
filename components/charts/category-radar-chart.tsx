@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { CATEGORIES } from "@/lib/categories";
 import { MODELS } from "@/lib/models";
+import type { ModelInfo } from "@/lib/types";
 
 interface RadarDataPoint {
   category: string;
@@ -22,12 +23,14 @@ interface CategoryRadarChartProps {
   scores: Record<string, Record<string, number>>;
   modelFilter?: string[];
   height?: number;
+  models?: ModelInfo[];
 }
 
 export function CategoryRadarChart({
   scores,
   modelFilter,
   height = 400,
+  models = MODELS,
 }: CategoryRadarChartProps) {
   const data: RadarDataPoint[] = CATEGORIES.map((cat) => {
     const point: RadarDataPoint = {
@@ -41,8 +44,8 @@ export function CategoryRadarChart({
   });
 
   const modelsToShow = modelFilter
-    ? MODELS.filter((m) => modelFilter.includes(m.id))
-    : MODELS.filter((m) => m.id in scores);
+    ? models.filter((m) => modelFilter.includes(m.id))
+    : models.filter((m) => m.id in scores);
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -70,7 +73,7 @@ export function CategoryRadarChart({
         ))}
         <Legend
           formatter={(value: string) => {
-            const model = MODELS.find((m) => m.name === value);
+            const model = models.find((m) => m.name === value);
             return model?.name || value;
           }}
         />

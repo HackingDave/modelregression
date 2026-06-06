@@ -9,6 +9,7 @@ from .security_awareness import SECURITY_AWARENESS_TESTS
 from .instruction_following import INSTRUCTION_FOLLOWING_TESTS
 from .code_quality import CODE_QUALITY_TESTS
 from .performance_efficiency import PERFORMANCE_EFFICIENCY_TESTS
+from .computer_use import COMPUTER_USE_TESTS
 
 ALL_TESTS = (
     LONG_REASONING_TESTS +
@@ -20,5 +21,6 @@ ALL_TESTS = (
     SECURITY_AWARENESS_TESTS +
     INSTRUCTION_FOLLOWING_TESTS +
     CODE_QUALITY_TESTS +
-    PERFORMANCE_EFFICIENCY_TESTS
+    PERFORMANCE_EFFICIENCY_TESTS +
+    COMPUTER_USE_TESTS
 )

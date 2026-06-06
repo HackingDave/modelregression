@@ -1,4 +1,11 @@
-export type Provider = "anthropic" | "openai" | "xai" | "claude" | "codex" | "agent";
+export type Provider =
+  | "anthropic"
+  | "openai"
+  | "xai"
+  | "claude"
+  | "codex"
+  | "agent"
+  | "openrouter";
 
 export interface ModelInfo {
   id: string;

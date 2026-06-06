@@ -9,7 +9,9 @@ import type {
   RegressionData,
   OutageData,
   EvidenceData,
+  ModelInfo,
 } from "./types";
+import { MODELS } from "./models";
 
 function loadJSON<T>(filePath: string): T {
   const fullPath = path.join(process.cwd(), "public", "data", filePath);
@@ -43,6 +45,14 @@ export function getRegressions(): RegressionData {
 
 export function getOutages(): OutageData {
   return loadJSON<OutageData>("outages.json");
+}
+
+export function getAllModels(): ModelInfo[] {
+  try {
+    return loadJSON<ModelInfo[]>("models.json");
+  } catch {
+    return MODELS;
+  }
 }
 
 export function getEvidence(runId: string, testId: string): EvidenceData {

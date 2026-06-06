@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS models (
     slug TEXT NOT NULL UNIQUE,
     cli_model TEXT NOT NULL,
     color TEXT NOT NULL,
+    icon TEXT NOT NULL DEFAULT 'cpu',
     is_active INTEGER NOT NULL DEFAULT 1
 );
 
@@ -81,6 +82,19 @@ CREATE TABLE IF NOT EXISTS benchmark_runs (
     total_tests INTEGER NOT NULL DEFAULT 0,
     passed_tests INTEGER NOT NULL DEFAULT 0,
     error_log TEXT
+);
+
+CREATE TABLE IF NOT EXISTS run_models (
+    run_id TEXT NOT NULL REFERENCES benchmark_runs(id),
+    model_id TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    name TEXT NOT NULL,
+    slug TEXT NOT NULL,
+    cli_model TEXT NOT NULL,
+    color TEXT NOT NULL,
+    icon TEXT NOT NULL DEFAULT 'cpu',
+    config_json TEXT,
+    PRIMARY KEY (run_id, model_id)
 );
 
 CREATE TABLE IF NOT EXISTS test_results (
@@ -150,6 +164,7 @@ CREATE INDEX IF NOT EXISTS idx_test_results_run ON test_results(run_id);
 CREATE INDEX IF NOT EXISTS idx_test_results_model ON test_results(model_id);
 CREATE INDEX IF NOT EXISTS idx_run_scores_run ON run_scores(run_id);
 CREATE INDEX IF NOT EXISTS idx_model_run_scores_run ON model_run_scores(run_id);
+CREATE INDEX IF NOT EXISTS idx_run_models_run ON run_models(run_id);
 CREATE INDEX IF NOT EXISTS idx_regressions_model ON regressions(model_id);
 CREATE INDEX IF NOT EXISTS idx_outages_model ON outages(model_id);
 CREATE INDEX IF NOT EXISTS idx_benchmark_runs_started ON benchmark_runs(started_at);
@@ -160,20 +175,40 @@ def init_db(db_path: str | None = None) -> sqlite3.Connection:
     """Create all tables and return the connection."""
     conn = get_connection(db_path)
     conn.executescript(_SCHEMA)
+    _ensure_column(conn, "models", "icon", "TEXT NOT NULL DEFAULT 'cpu'")
     conn.commit()
     logger.info("Database initialized at %s", db_path or DB_PATH)
     return conn
+
+
+def _ensure_column(conn: sqlite3.Connection, table: str, column: str, ddl: str) -> None:
+    existing = {
+        row["name"]
+        for row in conn.execute(f"PRAGMA table_info({table})").fetchall()
+    }
+    if column not in existing:
+        conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ddl}")
 
 
 # ---- Seeding ---------------------------------------------------------------
 
 def seed_models_and_categories(conn: sqlite3.Connection) -> None:
     """Insert or update model and category metadata from config."""
+    current_ids = [m["id"] for m in MODELS]
+    if current_ids:
+        placeholders = ",".join("?" for _ in current_ids)
+        conn.execute(
+            f"UPDATE models SET is_active = 0 WHERE id NOT IN ({placeholders})",
+            current_ids,
+        )
     for m in MODELS:
         conn.execute(
-            """INSERT OR REPLACE INTO models (id, provider, name, slug, cli_model, color, is_active)
-               VALUES (?, ?, ?, ?, ?, ?, ?)""",
-            (m["id"], m["cli"], m["name"], m["slug"], m["cli_model"], m["color"], int(m["is_active"])),
+            """INSERT OR REPLACE INTO models (id, provider, name, slug, cli_model, color, icon, is_active)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                m["id"], m["cli"], m["name"], m["slug"], m["cli_model"],
+                m["color"], m.get("icon", "cpu"), int(m["is_active"]),
+            ),
         )
     for c in CATEGORIES:
         conn.execute(
@@ -204,6 +239,40 @@ def create_run(conn: sqlite3.Connection, schedule: str) -> str:
     )
     conn.commit()
     return run_id
+
+
+def save_run_model_manifest(conn: sqlite3.Connection, run_id: str, models: list[dict]) -> None:
+    """Persist the exact model set selected for a benchmark run."""
+    for m in models:
+        conn.execute(
+            """INSERT OR REPLACE INTO run_models
+               (run_id, model_id, provider, name, slug, cli_model, color, icon, config_json)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (
+                run_id,
+                m["id"],
+                m["cli"],
+                m["name"],
+                m["slug"],
+                m["cli_model"],
+                m["color"],
+                m.get("icon", "cpu"),
+                json.dumps(m, default=str),
+            ),
+        )
+    conn.commit()
+
+
+def get_run_model_manifest(conn: sqlite3.Connection, run_id: str) -> list[dict]:
+    """Return model metadata saved for a benchmark run."""
+    rows = conn.execute(
+        """SELECT model_id as id, provider, name, slug, cli_model, color, icon, config_json
+           FROM run_models
+           WHERE run_id = ?
+           ORDER BY name""",
+        (run_id,),
+    ).fetchall()
+    return [dict(r) for r in rows]
 
 
 def complete_run(conn: sqlite3.Connection, run_id: str, total_tests: int, passed_tests: int, error_log: str | None = None) -> None:

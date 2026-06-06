@@ -1,14 +1,14 @@
-import { getLatestRun, getTrends } from "@/lib/data";
-import { MODELS } from "@/lib/models";
+import { getAllModels, getLatestRun, getTrends } from "@/lib/data";
 import { CATEGORIES } from "@/lib/categories";
 import { CompareClient } from "./compare-client";
 
 export default function ComparePage() {
+  const models = getAllModels();
   const latest = getLatestRun();
   const trends = getTrends("daily");
 
   const allScores: Record<string, Record<string, number>> = {};
-  for (const model of MODELS) {
+  for (const model of models) {
     allScores[model.id] = {};
     const result = latest.models[model.id];
     if (result) {
@@ -34,6 +34,7 @@ export default function ComparePage() {
         scores={allScores}
         trends={trends}
         latest={latest}
+        models={models}
       />
     </div>
   );

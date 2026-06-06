@@ -2,24 +2,30 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { MODELS } from "@/lib/models";
 import { CATEGORIES } from "@/lib/categories";
 import { formatScore, getScoreColor } from "@/lib/utils";
 import { CategoryRadarChart } from "@/components/charts/category-radar-chart";
 import { PerformanceLineChart } from "@/components/charts/performance-line-chart";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { Check } from "lucide-react";
-import type { TrendData, LatestRun } from "@/lib/types";
+import type { TrendData, LatestRun, ModelInfo } from "@/lib/types";
 
 interface CompareClientProps {
   scores: Record<string, Record<string, number>>;
   trends: TrendData;
   latest: LatestRun;
+  models: ModelInfo[];
 }
 
-export function CompareClient({ scores, trends, latest }: CompareClientProps) {
+export function CompareClient({ scores, trends, latest, models }: CompareClientProps) {
   const [selected, setSelected] = useState<string[]>(
-    MODELS.map((m) => m.id)
+    models
+      .filter((m) => latest.models[m.id])
+      .sort((a, b) =>
+        (latest.models[a.id]?.rank ?? 999) - (latest.models[b.id]?.rank ?? 999)
+      )
+      .slice(0, Math.min(models.length, 6))
+      .map((m) => m.id)
   );
 
   const toggle = (id: string) => {
@@ -42,7 +48,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
             Select Models to Compare
           </h3>
           <div className="flex flex-wrap gap-2">
-            {MODELS.map((model) => {
+            {models.map((model) => {
               const isSelected = selected.includes(model.id);
               return (
                 <button
@@ -85,6 +91,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
             <CategoryRadarChart
               scores={filteredScores}
               modelFilter={selected}
+              models={models}
               height={450}
             />
           </div>
@@ -101,6 +108,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
             <PerformanceLineChart
               data={trends.data}
               modelFilter={selected}
+              models={models}
               height={350}
             />
           </div>
@@ -123,7 +131,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                     <th className="text-left text-[11px] font-medium text-muted-foreground py-3 px-4 w-44">
                       Category
                     </th>
-                    {MODELS.filter((m) => selected.includes(m.id)).map(
+                    {models.filter((m) => selected.includes(m.id)).map(
                       (model) => (
                         <th
                           key={model.id}
@@ -138,7 +146,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                 </thead>
                 <tbody>
                   {CATEGORIES.map((cat) => {
-                    const selectedModels = MODELS.filter((m) =>
+                    const selectedModels = models.filter((m) =>
                       selected.includes(m.id)
                     );
                     const catScores = selectedModels.map(
@@ -185,7 +193,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                     <td className="py-3 px-4 text-sm font-semibold text-foreground">
                       Composite
                     </td>
-                    {MODELS.filter((m) => selected.includes(m.id)).map(
+                    {models.filter((m) => selected.includes(m.id)).map(
                       (model) => {
                         const result = latest.models[model.id];
                         return (

@@ -10,7 +10,7 @@ import {
   WifiOff,
 } from "lucide-react";
 
-const PROVIDERS = ["claude", "codex", "agent"] as const;
+const BASE_PROVIDERS = ["claude", "codex", "agent", "openrouter"];
 
 function getStatusInfo(uptime: number) {
   if (uptime >= 99.9)
@@ -37,6 +37,14 @@ function getStatusInfo(uptime: number) {
 
 export default function OutagesPage() {
   const outages = getOutages();
+  const providers = Array.from(
+    new Set([
+      ...BASE_PROVIDERS,
+      ...Object.keys(outages.uptime),
+      ...outages.current.map((o) => o.provider),
+      ...outages.history.map((o) => o.provider),
+    ])
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -51,8 +59,8 @@ export default function OutagesPage() {
 
       {/* Current Status */}
       <ScrollReveal>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {PROVIDERS.map((provider) => {
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {providers.map((provider) => {
             const uptime7d = outages.uptime[provider]?.["7d"] ?? 100;
             const uptime30d = outages.uptime[provider]?.["30d"] ?? 100;
             const uptime90d = outages.uptime[provider]?.["90d"] ?? 100;

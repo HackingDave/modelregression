@@ -1,13 +1,14 @@
 """
 Main benchmark orchestrator.
 
-Runs all tests against all active models via CLI tools (claude, codex, agent),
+Runs all tests against all active models via configured model adapters,
 scores results, detects regressions, and updates the database.
 """
 
 import argparse
 import json
 import logging
+import os
 import subprocess
 import sys
 import threading
@@ -21,11 +22,12 @@ import db
 from scoring import aggregate_run_scores, compute_composite_scores
 from regression_detector import detect_regressions
 from outage_monitor import preflight_check
+from openrouter_client import call_chat_completion
 
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# CLI-based model calls
+# Model calls
 # ---------------------------------------------------------------------------
 
 def _call_once(
@@ -33,7 +35,7 @@ def _call_once(
     prompt: str,
     system_prompt: str | None,
 ) -> tuple[str | None, int | None, int | None, int | None, str | None]:
-    """Single attempt to call a model CLI. Returns the raw result tuple."""
+    """Single attempt to call a model adapter. Returns the raw result tuple."""
     cli = model_config["cli"]
 
     if cli == "claude":
@@ -42,6 +44,8 @@ def _call_once(
         return _call_codex(model_config, prompt, system_prompt)
     elif cli == "agent":
         return _call_grok(model_config, prompt, system_prompt)
+    elif cli == "openrouter":
+        return _call_openrouter(model_config, prompt, system_prompt)
     else:
         return (None, None, None, None, f"Unknown CLI tool: {cli}")
 
@@ -52,6 +56,9 @@ def _is_retryable(error: str | None) -> bool:
         return False
     return any(phrase in error for phrase in (
         "Empty response",
+        "HTTP 429",
+        "rate limit",
+        "temporarily unavailable",
         "unknown error",
         "timed out",
     ))
@@ -63,7 +70,7 @@ def call_model(
     system_prompt: str | None = None,
 ) -> tuple[str | None, int | None, int | None, int | None, str | None]:
     """
-    Call a model via its CLI tool and return
+    Call a model via its configured adapter and return
     (response_text, latency_ms, prompt_tokens, completion_tokens, error).
 
     Retries up to MAX_RETRIES times on transient failures.
@@ -179,6 +186,22 @@ def _call_codex(
         return (None, elapsed, None, None, "Empty response from codex")
 
     return (text, elapsed, None, None, None)
+
+
+def _call_openrouter(
+    model_config: dict,
+    prompt: str,
+    system_prompt: str | None,
+) -> tuple[str | None, int | None, int | None, int | None, str | None]:
+    """Call any OpenRouter text model through the chat-completions API."""
+    text, latency_ms, prompt_tokens, completion_tokens, error, _http_status = call_chat_completion(
+        model_config["cli_model"],
+        prompt,
+        system_prompt,
+        timeout=config.CLI_TIMEOUT,
+        supported_parameters=(model_config.get("metadata") or {}).get("supported_parameters"),
+    )
+    return (text, latency_ms, prompt_tokens, completion_tokens, error)
 
 
 
@@ -387,12 +410,17 @@ def _run_model_tests(
     total = len(active_tests)
     passed = 0
     errors = []
+    parallel_tests = (
+        config.OPENROUTER_PARALLEL_TESTS
+        if model_cfg["cli"] == "openrouter"
+        else config.PARALLEL_TESTS
+    )
 
     logger.info("Testing model: %s (%s via %s) — %d tests, %d parallel",
                 model_cfg["name"], model_cfg["cli_model"], model_cfg["cli"],
-                total, config.PARALLEL_TESTS)
+                total, parallel_tests)
 
-    with ThreadPoolExecutor(max_workers=config.PARALLEL_TESTS) as pool:
+    with ThreadPoolExecutor(max_workers=parallel_tests) as pool:
         futures = {
             pool.submit(_run_single_test, model_cfg, test_row, run_id, conn): test_row
             for test_row in active_tests
@@ -406,6 +434,49 @@ def _run_model_tests(
 
     logger.info("  %s done: %d/%d passed", model_id, passed, total)
     return (total, passed, errors)
+
+
+def _openrouter_sweep_summary(model_configs: list[dict], active_tests: list) -> None:
+    """Log bounded scope and rough cost for OpenRouter-backed runs."""
+    openrouter_models = [m for m in model_configs if m["cli"] == "openrouter"]
+    if not openrouter_models:
+        return
+
+    benchmark_calls = len(openrouter_models) * len(active_tests)
+    logger.info(
+        "OpenRouter sweep: %d model(s), %d benchmark calls, up to %d judge calls; "
+        "model workers=%d, OpenRouter test workers/model=%d",
+        len(openrouter_models),
+        benchmark_calls,
+        benchmark_calls,
+        config.MAX_PARALLEL_MODELS,
+        config.OPENROUTER_PARALLEL_TESTS,
+    )
+
+    prompt_tokens = int(os.getenv("OPENROUTER_EST_PROMPT_TOKENS", "2000"))
+    completion_tokens = int(os.getenv("OPENROUTER_EST_COMPLETION_TOKENS", "1000"))
+    cost_estimate = 0.0
+    priced_models = 0
+    for model in openrouter_models:
+        pricing = (model.get("metadata") or {}).get("pricing") or {}
+        try:
+            prompt_price = float(pricing.get("prompt", 0) or 0)
+            completion_price = float(pricing.get("completion", 0) or 0)
+        except (TypeError, ValueError):
+            continue
+        if prompt_price or completion_price:
+            priced_models += 1
+            cost_estimate += len(active_tests) * (
+                prompt_tokens * prompt_price + completion_tokens * completion_price
+            )
+
+    if priced_models:
+        logger.info(
+            "OpenRouter rough model-call cost estimate: $%.4f across %d priced model(s); "
+            "judge calls are not included.",
+            cost_estimate,
+            priced_models,
+        )
 
 
 def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
@@ -437,21 +508,28 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
             conn.close()
             return
 
+    selected_model_configs = []
+    for model_row in active_models:
+        model_cfg = config.get_model_by_id(model_row["id"])
+        if model_cfg:
+            selected_model_configs.append(model_cfg)
+        else:
+            logger.warning("Active DB model %s has no current config; skipping", model_row["id"])
+
+    db.save_run_model_manifest(conn, run_id, selected_model_configs)
+    _openrouter_sweep_summary(selected_model_configs, active_tests)
+
     total_tests = 0
     passed_tests = 0
     all_errors = []
 
     try:
         # Run all models in parallel — each uses a different CLI tool
-        with ThreadPoolExecutor(max_workers=len(active_models)) as model_pool:
+        model_workers = min(len(selected_model_configs), config.MAX_PARALLEL_MODELS)
+        with ThreadPoolExecutor(max_workers=max(1, model_workers)) as model_pool:
             model_futures = {}
-            for model_row in active_models:
-                model_id = model_row["id"]
-                model_cfg = config.get_model_by_id(model_id)
-                if not model_cfg:
-                    logger.error("No config found for model %s", model_id)
-                    continue
-
+            for model_cfg in selected_model_configs:
+                model_id = model_cfg["id"]
                 open_outage = db.get_open_outage(conn, model_id)
                 if open_outage and open_outage["check_count"] >= 3:
                     logger.warning("Skipping model %s (in outage since %s)", model_id, open_outage["started_at"])

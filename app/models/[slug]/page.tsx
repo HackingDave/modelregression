@@ -226,6 +226,7 @@ export default async function ModelDetailPage({
             <CategoryRadarChart
               scores={radarScores}
               modelFilter={[model.id]}
+              models={[model]}
               height={380}
             />
           </div>
@@ -243,6 +244,7 @@ export default async function ModelDetailPage({
             <PerformanceLineChart
               data={lineChartData}
               modelFilter={[model.id]}
+              models={[model]}
               height={380}
               showLegend={false}
             />

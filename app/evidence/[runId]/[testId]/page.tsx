@@ -1,5 +1,4 @@
-import { getEvidence, getAllEvidencePaths } from "@/lib/data";
-import { getModel } from "@/lib/models";
+import { getAllModels, getEvidence, getAllEvidencePaths } from "@/lib/data";
 import { getCategory } from "@/lib/categories";
 import { formatScore, getScoreColor, cn } from "@/lib/utils";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
@@ -42,6 +41,7 @@ export default async function EvidencePage({
     );
   }
 
+  const models = getAllModels();
   const category = getCategory(evidence.test.category);
 
   return (
@@ -97,7 +97,7 @@ export default async function EvidencePage({
         {Object.entries(evidence.results)
           .sort((a, b) => (b[1].score ?? -1) - (a[1].score ?? -1))
           .map(([modelId, result]) => {
-            const model = getModel(modelId);
+            const model = models.find((m) => m.id === modelId);
             if (!model) return null;
 
             return (

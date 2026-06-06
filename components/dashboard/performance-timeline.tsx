@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { PerformanceLineChart } from "@/components/charts/performance-line-chart";
 import { TimeRangeSelector } from "@/components/shared/time-range-selector";
-import type { TrendData, TimeRange } from "@/lib/types";
+import type { ModelInfo, TrendData, TimeRange } from "@/lib/types";
 
 interface PerformanceTimelineProps {
   trends: TrendData;
+  models: ModelInfo[];
 }
 
-export function PerformanceTimeline({ trends }: PerformanceTimelineProps) {
+export function PerformanceTimeline({ trends, models }: PerformanceTimelineProps) {
   const [range, setRange] = useState<TimeRange>("week");
 
   const sliceMap: Record<TimeRange, number> = {
@@ -26,7 +27,7 @@ export function PerformanceTimeline({ trends }: PerformanceTimelineProps) {
       <div className="flex justify-end mb-4">
         <TimeRangeSelector value={range} onChange={setRange} />
       </div>
-      <PerformanceLineChart data={data} height={320} />
+      <PerformanceLineChart data={data} height={320} models={models} />
     </div>
   );
 }
