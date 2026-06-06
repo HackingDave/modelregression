@@ -10,6 +10,7 @@ import type {
   OutageData,
   EvidenceData,
   ModelInfo,
+  OpenRouterPricingData,
 } from "./types";
 import { MODELS } from "./models";
 
@@ -45,6 +46,10 @@ export function getRegressions(): RegressionData {
 
 export function getOutages(): OutageData {
   return loadJSON<OutageData>("outages.json");
+}
+
+export function getOpenRouterPricing(): OpenRouterPricingData {
+  return loadJSON<OpenRouterPricingData>("openrouter-pricing.json");
 }
 
 export function getAllModels(): ModelInfo[] {

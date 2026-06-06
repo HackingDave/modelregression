@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Activity, Github, Twitter } from "lucide-react";
+import { Github, Twitter } from "lucide-react";
 
 export function Footer() {
   return (
@@ -10,7 +10,11 @@ export function Footer() {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
+                <img
+                  src="/images/stick-figure-shooting-graph.svg"
+                  alt=""
+                  className="h-8 w-8 rounded-lg"
+                />
               </div>
               <span className="font-bold text-lg">
                 Model<span className="text-gradient">Regression</span>

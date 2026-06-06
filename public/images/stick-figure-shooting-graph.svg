@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Stick figure holding a graph machine gun">
+  <rect width="64" height="64" rx="14" fill="#0f172a"/>
+  <path d="M28 31 L35 24 L42 29 L48 19 L55 24" fill="none" stroke="#22d3ee" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M34 34 H52" fill="none" stroke="#22d3ee" stroke-width="5" stroke-linecap="round"/>
+  <path d="M45 34 V41 M39 34 L36 42 M52 32 L59 30" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+  <path d="M58 27 L62 30 L58 33" fill="none" stroke="#fb923c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M57 23 L62 20 M58 37 L62 40" fill="none" stroke="#fb923c" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="18" cy="17" r="5" fill="none" stroke="#f8fafc" stroke-width="3"/>
+  <path d="M18 22 L18 36 M18 27 L29 32 M18 30 L34 34 M18 36 L10 49 M18 36 L27 50" fill="none" stroke="#f8fafc" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M29 31 L35 34" fill="none" stroke="#f8fafc" stroke-width="5" stroke-linecap="round"/>
+</svg>

@@ -1,6 +1,15 @@
-import { getAllModels, getLatestRun, getSynopsis, getRegressions, getTrends } from "@/lib/data";
+import {
+  getAllModels,
+  getLatestRun,
+  getOpenRouterPricing,
+  getSynopsis,
+  getRegressions,
+  getTrends,
+} from "@/lib/data";
 import { CATEGORIES } from "@/lib/categories";
 import { SynopsisBanner } from "@/components/dashboard/synopsis-banner";
+import { TrustStatusPanel } from "@/components/dashboard/trust-status-panel";
+import { OpenRouterCostPanel } from "@/components/dashboard/openrouter-cost-panel";
 import { ModelOverviewCards } from "@/components/dashboard/model-overview-cards";
 import { RegressionAlerts } from "@/components/dashboard/regression-alerts";
 import { HeatmapGrid } from "@/components/charts/heatmap-grid";
@@ -14,6 +23,7 @@ export default function HomePage() {
   const regressions = getRegressions();
   const trends = getTrends("daily");
   const models = getAllModels();
+  const openRouterPricing = getOpenRouterPricing();
 
   const heatmapScores: Record<string, Record<string, number>> = {};
   for (const model of models) {
@@ -48,6 +58,15 @@ export default function HomePage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       <SynopsisBanner synopsis={synopsis} models={models} />
+
+      <TrustStatusPanel
+        latest={latest}
+        models={models}
+        activeRegressions={regressions.active}
+        changes={modelChanges}
+      />
+
+      <OpenRouterCostPanel pricing={openRouterPricing} />
 
       <ModelOverviewCards
         latest={latest}

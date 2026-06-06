@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: "ModelRegression.com — AI Model Performance Tracker",
   description:
     "Independent automated benchmarking of frontier AI models. Track regressions, compare performance, and see which model is best — updated daily.",
+  icons: {
+    icon: "/images/stick-figure-shooting-graph.svg",
+  },
   openGraph: {
     title: "ModelRegression.com — AI Model Performance Tracker",
     description:
@@ -28,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-background antialiased">
+      <body className="min-h-screen overflow-x-hidden bg-background antialiased">
         <div className="relative min-h-screen flex flex-col">
           {/* Background effects */}
           <div className="fixed inset-0 bg-grid pointer-events-none" />

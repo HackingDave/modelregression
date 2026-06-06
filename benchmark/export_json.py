@@ -35,6 +35,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import config
 import db as database
+from openrouter_pricing import build_pricing_snapshot, empty_pricing_snapshot
 
 logger = logging.getLogger(__name__)
 
@@ -108,9 +109,10 @@ def _write_json(path: str, data) -> None:
 
 
 def _model_meta(mcfg: dict) -> dict:
+    provider = mcfg.get("provider") or mcfg.get("cli") or "unknown"
     return {
         "id": mcfg["id"],
-        "provider": mcfg.get("provider") or mcfg["cli"],
+        "provider": provider,
         "name": mcfg["name"],
         "slug": mcfg["slug"],
         "color": mcfg["color"],
@@ -120,7 +122,7 @@ def _model_meta(mcfg: dict) -> dict:
 
 def _model_meta_from_row(row) -> dict:
     data = dict(row)
-    return {
+    meta = {
         "id": data["id"],
         "provider": data.get("provider") or data.get("cli") or "unknown",
         "name": data["name"],
@@ -128,6 +130,9 @@ def _model_meta_from_row(row) -> dict:
         "color": data["color"],
         "icon": data.get("icon") or "cpu",
     }
+    if data.get("provider") == "openrouter":
+        meta["openrouterModelId"] = data.get("cli_model")
+    return meta
 
 
 def _export_model_configs(conn) -> list[dict]:
@@ -155,6 +160,27 @@ def export_model_index(output_dir: str, conn=None) -> None:
     _write_json(os.path.join(output_dir, "models.json"), [
         _model_meta(mcfg) for mcfg in models
     ])
+
+
+def export_openrouter_pricing(output_dir: str, timeout: int = 30) -> dict:
+    """Write the daily OpenRouter price sheet used by the website."""
+    output_path = os.path.join(output_dir, "openrouter-pricing.json")
+    try:
+        snapshot = build_pricing_snapshot(timeout=timeout)
+    except Exception as exc:
+        logger.warning("OpenRouter pricing refresh failed: %s", exc)
+        if os.path.exists(output_path):
+            try:
+                with open(output_path, "r", encoding="utf-8") as f:
+                    snapshot = json.load(f)
+                snapshot["error"] = f"Latest refresh failed: {exc}"
+            except (OSError, json.JSONDecodeError):
+                snapshot = empty_pricing_snapshot(error=str(exc))
+        else:
+            snapshot = empty_pricing_snapshot(error=str(exc))
+
+    _write_json(output_path, snapshot)
+    return snapshot
 
 
 # ---------------------------------------------------------------------------
@@ -886,6 +912,7 @@ def export_evidence(conn, output_dir: str) -> None:
 
 def _generate_empty_stubs(output_dir: str, conn=None) -> None:
     """Write minimal valid JSON so the Next.js site still builds."""
+    export_openrouter_pricing(output_dir)
     export_model_index(output_dir, conn)
     _write_json(os.path.join(output_dir, "latest.json"), {
         "runId": None, "startedAt": None, "completedAt": None,
@@ -958,6 +985,9 @@ def export_all(output_dir: str, db_path: str | None = None) -> None:
 
     logger.info("Exporting JSON data to %s ...", output_dir)
     os.makedirs(output_dir, exist_ok=True)
+
+    export_openrouter_pricing(output_dir)
+    logger.info("  openrouter-pricing.json")
 
     export_model_index(output_dir, conn)
 

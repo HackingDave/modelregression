@@ -34,7 +34,11 @@ export function Navbar() {
           <Link href="/" className="flex items-center gap-3 group">
             <div className="relative">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-white" />
+                <img
+                  src="/images/stick-figure-shooting-graph.svg"
+                  alt=""
+                  className="h-8 w-8 rounded-lg"
+                />
               </div>
               <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-green-500 to-blue-500 blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
             </div>

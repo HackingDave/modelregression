@@ -146,6 +146,28 @@ export interface OutageData {
   >;
 }
 
+export interface OpenRouterPricingEntry {
+  id: string;
+  canonicalSlug?: string | null;
+  name: string;
+  contextLength?: number | null;
+  promptPerMTok: number | null;
+  completionPerMTok: number | null;
+  inputCacheReadPerMTok?: number | null;
+  blendedOneInOneOutPerM: number;
+  isFree: boolean;
+}
+
+export interface OpenRouterPricingData {
+  updatedAt: string;
+  source: string;
+  modelCount: number;
+  pricedModelCount: number;
+  freeModelCount: number;
+  error?: string;
+  models: OpenRouterPricingEntry[];
+}
+
 export interface EvidenceData {
   test: {
     id: string;

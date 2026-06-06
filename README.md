@@ -8,6 +8,20 @@ Independent, automated benchmarking of frontier AI coding models. Tracks perform
 
 AI model providers update their models constantly, and sometimes performance degrades without any announcement. ModelRegression runs the same 33 tests against every model daily, scores the results, and surfaces regressions automatically. No vendor self-reporting — just independent, reproducible benchmarks.
 
+## Trust Status
+
+The dashboard now answers the blunt question security teams actually care about:
+
+> Can I trust this model today?
+
+Each model gets a plain-English status:
+
+- **Good** - useful for security review support, with human verification.
+- **Watch** - helpful, but do not let it make the final call.
+- **Do not trust alone** - keep it away from incident response, risky fixes, and compliance decisions unless a human is driving.
+
+The status is derived from the latest composite score, Security Awareness score, Code Thoroughness score, active regression flags, and the weakest security-awareness evidence from the current run. Every claim links back to receipts.
+
 ## What Gets Tested
 
 33 tests across 11 categories, each targeting a different dimension of coding and agentic ability:
@@ -197,6 +211,17 @@ $env:OPENROUTER_MAX_MODELS = "50"          # fail fast if the manifest is larger
 $env:MAX_PARALLEL_MODELS = "4"             # global model-level workers
 $env:OPENROUTER_PARALLEL_TESTS = "1"       # per-OpenRouter-model test workers
 ```
+
+### OpenRouter Pricing
+
+The JSON export also refreshes `public/data/openrouter-pricing.json` from OpenRouter's model catalog each day. Prices are normalized from OpenRouter's per-token values into dollars per 1M input tokens, dollars per 1M output tokens, and a simple 1M-in + 1M-out blended number for dashboard display.
+
+```powershell
+# Standalone refresh if you only want to update the price sheet
+py -3 benchmark\openrouter_pricing.py --output public\data\openrouter-pricing.json
+```
+
+Negative OpenRouter router sentinel prices are ignored because they do not represent a real per-token price.
 
 ### Deployment
 
