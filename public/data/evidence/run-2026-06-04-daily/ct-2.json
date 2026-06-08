@@ -16,6 +16,8 @@
       },
       "latencyMs": 24350,
       "tokenCount": 4418,
+      "promptTokens": 2051,
+      "completionTokens": 2367,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 15048,
       "tokenCount": 901,
+      "promptTokens": 3,
+      "completionTokens": 898,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The implementation is essentially perfect. All Flask routing, JSON parsing, transformations, error handling, type hints, and docstrings are correctly implemented with no deficiencies.\", \"breakdown\": {\"flask_route_post_method\": 10, \"parses_json_with_get_json_silent\": 10, \"uppercase_transformation\": 10, \"reverse_transformation\": 10, \"count_words_transformation\": 10, \"content_type_application_json\": 10, \"error_missing_text_field_400\": 10, \"error_missing_invalid_"
       },
       "latencyMs": 19554,
-      "tokenCount": 0,
+      "tokenCount": 12268,
+      "promptTokens": 11399,
+      "completionTokens": 869,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 15744,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

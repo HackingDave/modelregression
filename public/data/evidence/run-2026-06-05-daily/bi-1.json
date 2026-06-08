@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"This is a near-perfect implementation. All 8 requirements are fully satisfied: caching with OrderedDict keyed by user_id, cache checked before DB call, populated after, 60s TTL with proactive expiry in _enforce_cache_limits, LRU eviction at max size 100, clear_cache() function, unchanged function signature, and thread-safe via RLock. All 6 existing tests pass: validations (TypeError/ValueError) fire before cache lookup preserving error behavior; None results "
       },
       "latencyMs": 137721,
-      "tokenCount": 0,
+      "tokenCount": 38114,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

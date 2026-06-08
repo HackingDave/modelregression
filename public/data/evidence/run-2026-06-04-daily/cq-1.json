@@ -16,6 +16,8 @@
       },
       "latencyMs": 64050,
       "tokenCount": 9038,
+      "promptTokens": 2051,
+      "completionTokens": 6987,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -24,6 +26,8 @@
       "evalDetails": null,
       "latencyMs": 1347,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "claude exited 1: unknown error"
     },
     "gpt-5-5": {
@@ -33,7 +37,9 @@
         "raw": "```json\n{\"score\": 98, \"reasoning\": \"This is an exceptional implementation that satisfies nearly every rubric criterion perfectly. The exception hierarchy is thorough and specific (7 custom exceptions, each semantically distinct). The Protocol-based Discount design is sophisticated and correct. Frozen dataclasses for CartItem, PercentageDiscount, and FlatDiscount enforce immutability correctly. All public and private helpers are short, single-purpose, and well-named. DRY is excellent: _get_existi"
       },
       "latencyMs": 36963,
-      "tokenCount": 0,
+      "tokenCount": 13125,
+      "promptTokens": 11374,
+      "completionTokens": 1751,
       "error": null
     },
     "grok": {
@@ -42,6 +48,8 @@
       "evalDetails": null,
       "latencyMs": 107400,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

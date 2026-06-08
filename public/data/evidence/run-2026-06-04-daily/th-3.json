@@ -16,6 +16,8 @@
       },
       "latencyMs": 32592,
       "tokenCount": 5223,
+      "promptTokens": 2049,
+      "completionTokens": 3174,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 200292,
       "tokenCount": 15443,
+      "promptTokens": 5,
+      "completionTokens": 15438,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 87, \"reasoning\": \"This is an excellent test suite that demonstrates strong pytest practices. It covers the vast majority of required scenarios with well-organized parametrized groups, clear descriptive names, and proper exception handling. Deductions: (1) Special characters coverage is thin \u2014 tabs and newlines appear only as whitespace separators, but unicode, emoji, and null bytes are entirely absent. (2) No error message verification \u2014 pytest.raises is used correctly but neve"
       },
       "latencyMs": 67635,
-      "tokenCount": 0,
+      "tokenCount": 15132,
+      "promptTokens": 11565,
+      "completionTokens": 3567,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 31210,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

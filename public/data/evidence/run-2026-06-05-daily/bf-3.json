@@ -1,10 +1,10 @@
 {
   "test": {
     "id": "bf-3",
-    "name": "Off-by-One Boundary Fix",
+    "name": "Memory Leak Fix",
     "category": "bug-fixes",
     "categoryName": "Bug Fixes",
-    "description": "Fix pagination logic that skips the last page of results",
+    "description": "Identify and patch a memory leak caused by unclosed event listeners",
     "prompt": "The following React component has a memory leak. Users report that after navigating away from and back to this page several times, the browser becomes increasingly slow and laggy. Identify the memory leak, explain why it happens, and provide the corrected code.\n\n```jsx\nimport React, { useState, useEffect } from 'react';\n\nfunction ScrollTracker() {\n    const [scrollY, setScrollY] = useState(0);\n    const [scrollDirection, setScrollDirection] = useState('none');\n    const [lastScrollY, setLastScrollY] = useState(0);\n\n    useEffect(() => {\n        window.addEventListener('scroll', () => {\n            const currentScrollY = window.scrollY;\n            setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');\n            setLastScrollY(currentScrollY);\n            setScrollY(currentScrollY);\n        });\n\n        window.addEventListener('resize', () => {\n            console.log('Window resized, recalculating...');\n            setScrollY(window.scrollY);\n        });\n    });\n\n    return (\n        <div style={{ position: 'fixed', top: 10, right: 10, padding: '10px', background: '#333', color: '#fff' }}>\n            <p>Scroll Y: {scrollY}</p>\n            <p>Direction: {scrollDirection}</p>\n        </div>\n    );\n}\n\nexport default ScrollTracker;\n```\n\nYour response should:\n1. Identify ALL the issues causing the memory leak (there are at least two major problems).\n2. Explain the lifecycle: why missing cleanup and missing dependency array cause handlers to accumulate.\n3. Explain why using anonymous arrow functions inside addEventListener is a problem for cleanup.\n4. Provide the COMPLETE corrected component with proper useEffect cleanup, dependency array, and named handler references.\n5. Mention how React 18 Strict Mode in development double-invokes effects, making this bug more visible during development.\n6. Ensure the corrected code has the same functionality as the original."
   },
   "results": {
@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The response perfectly addresses all scoring criteria with exceptional depth and clarity. It identifies all memory leak causes (missing cleanup, missing dependency array, anonymous functions), explains the accumulation lifecycle in detail, correctly explains why anonymous arrow functions prevent removeEventListener from working, provides complete corrected code using named handlers and useRef, demonstrates the exact cleanup pattern with return () => { removeE"
       },
       "latencyMs": 79692,
-      "tokenCount": 0,
+      "tokenCount": 21555,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

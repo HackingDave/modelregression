@@ -14,6 +14,8 @@
       "evalDetails": null,
       "latencyMs": 134325,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "claude exited 1: unknown error"
     },
     "claude-sonnet-4-6": {
@@ -22,6 +24,8 @@
       "evalDetails": null,
       "latencyMs": 1008,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "claude exited 1: unknown error"
     },
     "gpt-5-5": {
@@ -31,7 +35,9 @@
         "raw": "```json\n{\"score\": 95, \"reasoning\": \"Exceptional API design that satisfies nearly every criterion. Method names are verbose but unambiguous English phrases (add_task, get_next_task, peek_next_task, cancel_task, update_task_priority). All mutating methods return the resulting Task object, giving callers immediate feedback. Protocols are fully implemented: __len__, __bool__, __iter__, __contains__, __repr__, and context manager. Task is a frozen generic dataclass with all required fields. The lazy-"
       },
       "latencyMs": 53998,
-      "tokenCount": 0,
+      "tokenCount": 14201,
+      "promptTokens": 11436,
+      "completionTokens": 2765,
       "error": null
     },
     "grok": {
@@ -40,6 +46,8 @@
       "evalDetails": null,
       "latencyMs": 78458,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

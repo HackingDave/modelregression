@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="faviconTitle">
+  <title id="faviconTitle">ModelRegression favicon</title>
+  <defs>
+    <linearGradient id="faviconBg" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22c55e" />
+      <stop offset="0.55" stop-color="#3b82f6" />
+      <stop offset="1" stop-color="#06b6d4" />
+    </linearGradient>
+    <linearGradient id="faviconGlow" x1="12" y1="14" x2="52" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.95" />
+      <stop offset="1" stop-color="#dbeafe" stop-opacity="0.92" />
+    </linearGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="#08111c" />
+  <rect x="5.5" y="5.5" width="53" height="53" rx="14.5" fill="url(#faviconBg)" />
+  <rect x="10" y="10" width="44" height="44" rx="12" fill="#08111c" fill-opacity="0.88" />
+  <path
+    d="M12 34h10l5-12 8 20 6-14 4 6h7"
+    fill="none"
+    stroke="url(#faviconGlow)"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    stroke-width="5"
+  />
+  <circle cx="52" cy="34" r="3" fill="#ecfeff" />
+</svg>

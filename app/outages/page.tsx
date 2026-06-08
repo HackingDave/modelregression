@@ -1,6 +1,6 @@
 import { getOutages } from "@/lib/data";
 import { getProviderName } from "@/lib/models";
-import { formatDate, formatDateTime, cn } from "@/lib/utils";
+import { formatDateTime, cn } from "@/lib/utils";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import {
   AlertTriangle,
@@ -146,7 +146,7 @@ export default function OutagesPage() {
               {outages.current.map((outage) => (
                 <div
                   key={outage.id}
-                  className="flex items-center justify-between p-3 rounded-lg bg-red-500/10 border border-red-500/20"
+                  className="flex flex-col gap-3 p-3 rounded-lg bg-red-500/10 border border-red-500/20 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div>
                     <span className="font-medium text-sm text-foreground">
@@ -188,7 +188,81 @@ export default function OutagesPage() {
               </p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+              <div className="space-y-3 p-4 md:hidden">
+                {outages.history.map((outage) => {
+                  const start = new Date(outage.startedAt).getTime();
+                  const end = outage.endedAt
+                    ? new Date(outage.endedAt).getTime()
+                    : Date.now();
+                  const durationMin = Math.round((end - start) / 60000);
+
+                  return (
+                    <div
+                      key={outage.id}
+                      className="rounded-lg border border-border/40 bg-muted/10 p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h4 className="text-sm font-semibold text-foreground">
+                            {getProviderName(outage.provider)}
+                          </h4>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {outage.errorType}
+                          </p>
+                        </div>
+                        {outage.endedAt ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-green-500/10 text-green-400 border border-green-500/20">
+                            <CheckCircle2 className="w-3 h-3" />
+                            Resolved
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                            <Clock className="w-3 h-3" />
+                            Active
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mt-3 space-y-2 text-xs text-muted-foreground">
+                        <div className="flex items-center justify-between gap-3">
+                          <span>Started</span>
+                          <span className="font-mono text-right">
+                            {formatDateTime(outage.startedAt)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-3">
+                          <span>Ended</span>
+                          <span className="font-mono text-right">
+                            {outage.endedAt
+                              ? formatDateTime(outage.endedAt)
+                              : "Ongoing"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between gap-3">
+                          <span>Duration</span>
+                          <span className="font-mono text-right">
+                            {durationMin}m
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex items-start gap-2">
+                        {outage.httpStatus && (
+                          <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-red-500/10 text-red-400 border border-red-500/20">
+                            {outage.httpStatus}
+                          </span>
+                        )}
+                        <span className="text-xs text-muted-foreground">
+                          {outage.errorMessage}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="hidden overflow-x-auto md:block">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border/30">
@@ -269,7 +343,8 @@ export default function OutagesPage() {
                   })}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </>
           )}
         </div>
       </ScrollReveal>

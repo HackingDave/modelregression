@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getModelDetail, getAllModelSlugs } from "@/lib/data";
 import { getProviderName } from "@/lib/models";
-import { CATEGORIES } from "@/lib/categories";
+import { CATEGORIES, TOKEN_EFFICIENCY_CATEGORY_ID } from "@/lib/categories";
 import {
   cn,
   formatScore,
@@ -12,6 +12,7 @@ import {
   formatDate,
   formatDateTime,
   formatDuration,
+  formatTokens,
 } from "@/lib/utils";
 import { ScrollReveal } from "@/components/shared/scroll-reveal";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
@@ -28,6 +29,7 @@ import {
   Activity,
   Shield,
   XCircle,
+  Hash,
 } from "lucide-react";
 
 // ---------------------------------------------------------------------------
@@ -92,6 +94,8 @@ export default async function ModelDetailPage({
   }
 
   const { model, current, history, regressions, outages } = detail;
+  const tokenBenchmark =
+    current.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? null;
 
   // ---- Radar chart scores: this model across all categories ----
   const radarScores: Record<string, Record<string, number>> = {
@@ -105,7 +109,7 @@ export default async function ModelDetailPage({
   // ---- Line chart data: composite score history ----
   const lineChartData = history.map((h) => ({
     timestamp: h.timestamp,
-    models: { [model.id]: h.compositeScore },
+    models: h.compositeScore != null ? { [model.id]: h.compositeScore } : {},
   }));
 
   // ---- Sparkline per category from history (last 7 entries) ----
@@ -153,7 +157,7 @@ export default async function ModelDetailPage({
             style={{ backgroundColor: model.color }}
           />
 
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between relative">
             {/* Left: Provider badge + model name */}
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -177,34 +181,66 @@ export default async function ModelDetailPage({
               </p>
             </div>
 
-            {/* Right: Score + Rank */}
-            <div className="flex items-center gap-8">
-              <div className="text-center">
+            {/* Right: Score + Rank + Tokens */}
+            <div className="grid w-full gap-3 sm:grid-cols-2 xl:w-auto xl:grid-cols-4">
+              <div className="rounded-xl border border-border/30 bg-background/25 p-4 text-center">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                   Composite Score
                 </p>
                 <AnimatedCounter
-                  value={current.compositeScore}
+                  value={current.compositeScore ?? 0}
                   className={cn(
-                    "text-5xl font-extrabold",
+                    "text-4xl font-extrabold sm:text-5xl",
                     getScoreColor(current.compositeScore)
                   )}
                 />
-                <span className="text-lg text-muted-foreground font-mono">
+                <span className="text-base text-muted-foreground font-mono">
                   /100
                 </span>
               </div>
-              <div className="text-center">
+              <div className="rounded-xl border border-border/30 bg-background/25 p-4 text-center">
                 <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
                   Rank
                 </p>
-                <div className="flex items-center gap-1.5">
-                  <Trophy className="w-6 h-6 text-yellow-500" />
-                  <span className="text-5xl font-extrabold font-mono text-foreground">
-                    #{current.rank}
+                <div className="flex items-center justify-center gap-1.5">
+                  <Trophy className="w-5 h-5 text-yellow-500" />
+                  <span className="text-4xl font-extrabold font-mono text-foreground sm:text-5xl">
+                    {current.rank != null ? `#${current.rank}` : "—"}
                   </span>
                 </div>
               </div>
+              <div className="rounded-xl border border-border/30 bg-background/25 p-4 text-center">
+                <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
+                  Token Benchmark
+                </p>
+                <span
+                  className={cn(
+                    "font-mono text-3xl font-extrabold sm:text-4xl",
+                    getScoreColor(tokenBenchmark)
+                  )}
+                >
+                  {formatScore(tokenBenchmark)}
+                </span>
+                <p className="text-[10px] text-muted-foreground mt-0.5">
+                  Lower burn, higher score
+                </p>
+              </div>
+              {current.totalTokens != null && (
+                <div className="rounded-xl border border-border/30 bg-background/25 p-4 text-center">
+                  <p className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
+                    Total Tokens
+                  </p>
+                  <div className="flex items-center justify-center gap-1.5">
+                    <Hash className="w-5 h-5 text-blue-400" />
+                    <span className="text-2xl font-extrabold font-mono text-foreground sm:text-3xl">
+                      {formatTokens(current.totalTokens)}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">
+                    ~{formatTokens(current.avgTokensPerTest)}/test
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -223,11 +259,20 @@ export default async function ModelDetailPage({
                 Category Radar
               </h2>
             </div>
-            <CategoryRadarChart
-              scores={radarScores}
-              modelFilter={[model.id]}
-              height={380}
-            />
+            <div className="rounded-lg border border-border/30 bg-background/20 p-4 md:hidden">
+              <p className="text-sm text-muted-foreground leading-6">
+                The full radar chart is shown on wider screens. On mobile, the
+                category breakdown below provides the same values in a readable
+                stacked layout.
+              </p>
+            </div>
+            <div className="hidden md:block">
+              <CategoryRadarChart
+                scores={radarScores}
+                modelFilter={[model.id]}
+                height={380}
+              />
+            </div>
           </div>
         </ScrollReveal>
 
@@ -261,7 +306,65 @@ export default async function ModelDetailPage({
               Category Breakdown
             </h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="grid gap-3 p-4 md:hidden">
+            {sortedCategories.map((cat) => {
+              const catScore = current.categories[cat.id];
+
+              return (
+                <div
+                  key={cat.id}
+                  className="rounded-lg border border-border/40 bg-muted/10 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-[10px] font-mono uppercase text-muted-foreground">
+                        #{sortedCategories.findIndex((item) => item.id === cat.id) + 1}
+                      </p>
+                      <Link
+                        href={`/categories/${cat.slug}`}
+                        className="mt-1 block text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                      >
+                        {cat.name}
+                      </Link>
+                    </div>
+                    <span
+                      className={cn(
+                        "font-mono text-lg font-bold",
+                        getScoreColor(cat.score)
+                      )}
+                    >
+                      {formatScore(cat.score)}
+                    </span>
+                  </div>
+
+                  <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
+                    <div
+                      className="h-full rounded-full score-bar"
+                      style={{
+                        width: `${cat.score}%`,
+                        backgroundColor: model.color,
+                      }}
+                    />
+                  </div>
+
+                  <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>{catScore?.testCount ?? 0} tests</span>
+                    <span>{cat.weight.toFixed(1)}x weight</span>
+                  </div>
+
+                  <div className="mt-3 rounded-lg border border-border/30 bg-background/25 p-2">
+                    <Sparkline
+                      data={categorySparklines[cat.id]}
+                      color={model.color}
+                      width={240}
+                      height={28}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-border/30">
@@ -366,6 +469,8 @@ export default async function ModelDetailPage({
             {CATEGORIES.map((cat) => {
               const catScore = current.categories[cat.id];
               if (!catScore) return null;
+              const isTokenEfficiencyCategory =
+                cat.id === TOKEN_EFFICIENCY_CATEGORY_ID;
 
               return (
                 <div
@@ -389,39 +494,73 @@ export default async function ModelDetailPage({
                     </span>
                   </div>
 
-                  <div className="space-y-3">
-                    {catScore.tests.map((test) => (
-                      <div key={test.testId} className="space-y-1.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs text-muted-foreground truncate pr-2">
-                            {test.name}
-                          </span>
-                          <div className="flex items-center gap-3 flex-shrink-0">
-                            <span className="text-[10px] font-mono text-muted-foreground/70">
-                              {formatDuration(test.latencyMs)}
-                            </span>
-                            <span
-                              className={cn(
-                                "font-mono text-xs font-bold",
-                                getScoreColor(test.score)
-                              )}
-                            >
-                              {formatScore(test.score)}
-                            </span>
-                          </div>
+                  {isTokenEfficiencyCategory && catScore.tests.length === 0 ? (
+                    <div className="space-y-3">
+                      <p className="text-xs leading-6 text-muted-foreground">
+                        Token Efficiency is computed from every successful task
+                        in the run. The model with the lowest average token burn
+                        receives 100, and heavier token usage is penalized
+                        proportionally.
+                      </p>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="rounded-lg border border-border/30 bg-background/25 p-3">
+                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            Avg Tokens/Test
+                          </p>
+                          <p className="mt-1 font-mono text-sm font-semibold text-foreground">
+                            {formatTokens(current.avgTokensPerTest)}
+                          </p>
                         </div>
-                        <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
-                          <div
-                            className="h-full rounded-full score-bar"
-                            style={{
-                              width: `${test.score}%`,
-                              backgroundColor: model.color,
-                            }}
-                          />
+                        <div className="rounded-lg border border-border/30 bg-background/25 p-3">
+                          <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+                            Total Tokens
+                          </p>
+                          <p className="mt-1 font-mono text-sm font-semibold text-foreground">
+                            {formatTokens(current.totalTokens)}
+                          </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {catScore.tests.map((test) => (
+                        <div key={test.testId} className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-muted-foreground truncate pr-2">
+                              {test.name}
+                            </span>
+                            <div className="flex items-center gap-3 flex-shrink-0">
+                              {test.tokenCount != null && test.tokenCount > 0 && (
+                                <span className="text-[10px] font-mono text-muted-foreground/70">
+                                  {formatTokens(test.tokenCount)} tok
+                                </span>
+                              )}
+                              <span className="text-[10px] font-mono text-muted-foreground/70">
+                                {formatDuration(test.latencyMs)}
+                              </span>
+                              <span
+                                className={cn(
+                                  "font-mono text-xs font-bold",
+                                  getScoreColor(test.score)
+                                )}
+                              >
+                                {formatScore(test.score)}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
+                            <div
+                              className="h-full rounded-full score-bar"
+                              style={{
+                                width: `${test.score}%`,
+                                backgroundColor: model.color,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               );
             })}

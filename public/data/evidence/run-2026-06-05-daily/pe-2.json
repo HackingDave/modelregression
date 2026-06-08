@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 98, \"reasoning\": \"This is an exceptionally well-implemented solution that meets virtually all requirements. Streaming: csv.DictReader is used as a pure iterator \u2014 only one row dict exists at a time, never any list of rows. Memory is truly O(1) w.r.t. file size. Aggregation: all 8 required statistics are correctly computed via running accumulators updated per-row (total, min, max, count, category/currency maps, customer dict, hour buckets[24]). Average and top-10 are derived at "
       },
       "latencyMs": 144628,
-      "tokenCount": 0,
+      "tokenCount": 40270,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

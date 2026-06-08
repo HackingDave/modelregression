@@ -217,7 +217,17 @@ export default function AboutPage() {
               Ed Skoudis
             </a>{" "}
             for the idea of testing if the model has regressed prior to using
-            each day.
+            each day. Thanks to{" "}
+            <a
+              href="https://x.com/cyberpeterg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              Peter G
+            </a>{" "}
+            for the idea of tracking token usage and efficiency as a
+            benchmark metric.
           </p>
         </div>
       </ScrollReveal>

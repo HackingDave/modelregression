@@ -5,10 +5,20 @@
       "timestamp": "2026-06-01T00:00:00.000Z",
       "weekLabel": "Week of 06-01",
       "models": {
-        "grok": 94.8,
-        "claude-opus-4-8": 91.8,
-        "gpt-5-5": 89.2,
-        "claude-sonnet-4-6": 88.8
+        "claude-opus-4-8": 82,
+        "gpt-5-5": 83.2,
+        "claude-sonnet-4-6": 75.2,
+        "grok": 57.8
+      }
+    },
+    {
+      "timestamp": "2026-06-08T00:00:00.000Z",
+      "weekLabel": "Week of 06-08",
+      "models": {
+        "claude-opus-4-8": 94.3,
+        "claude-sonnet-4-6": 89.2,
+        "gpt-5-5": 88.3,
+        "grok": 87.5
       }
     }
   ]

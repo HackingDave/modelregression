@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 98, \"reasoning\": \"This is an exceptionally high-quality implementation that satisfies nearly every rubric criterion to the maximum. The custom exception hierarchy (7 specific types under ShoppingCartError) is textbook-correct. The frozen CartItem dataclass with a computed line_total property, all validation extracted to dedicated _validate_* helpers, case/whitespace-insensitive normalization via _normalize_product_name, and the consistent fluent-chaining API are all senior-engi"
       },
       "latencyMs": 137456,
-      "tokenCount": 0,
+      "tokenCount": 43663,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

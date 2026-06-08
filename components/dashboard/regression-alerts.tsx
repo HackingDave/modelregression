@@ -49,7 +49,7 @@ export function RegressionAlerts({ regressions }: RegressionAlertsProps) {
           </span>
         </div>
 
-        {regressions.map((reg, i) => (
+        {regressions.map((reg) => (
           <Link
             key={reg.id}
             href={`/models/${reg.modelId}`}

@@ -124,20 +124,25 @@ export default async function EvidencePage({
                     </div>
                     <div className="flex items-center gap-4">
                       {result.latencyMs != null && (
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Clock className="w-3.5 h-3.5" />
-                        <span className="font-mono">
-                          {(result.latencyMs / 1000).toFixed(1)}s
-                        </span>
-                      </div>
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <Clock className="w-3.5 h-3.5" />
+                          <span className="font-mono">
+                            {(result.latencyMs / 1000).toFixed(1)}s
+                          </span>
+                        </div>
                       )}
-                      {result.tokenCount != null && (
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Hash className="w-3.5 h-3.5" />
-                        <span className="font-mono">
-                          {result.tokenCount.toLocaleString()} tokens
-                        </span>
-                      </div>
+                      {result.tokenCount != null && result.tokenCount > 0 && (
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                          <Hash className="w-3.5 h-3.5" />
+                          <span className="font-mono">
+                            {result.tokenCount.toLocaleString()} tokens
+                            {result.promptTokens != null && result.completionTokens != null && (
+                              <span className="text-muted-foreground/60 ml-1">
+                                ({result.promptTokens.toLocaleString()} in / {result.completionTokens.toLocaleString()} out)
+                              </span>
+                            )}
+                          </span>
+                        </div>
                       )}
                       <span
                         className={cn(

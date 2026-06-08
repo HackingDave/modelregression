@@ -10,23 +10,25 @@
   "tests": [
     {
       "id": "bf-1",
+      "name": "Off-by-One Boundary Fix",
+      "description": "Fix pagination logic that skips the last page of results"
+    },
+    {
+      "id": "bf-2",
       "name": "Race Condition Detection",
       "description": "Find and fix a subtle race condition in async queue processing"
     },
     {
-      "id": "bf-2",
+      "id": "bf-3",
       "name": "Memory Leak Fix",
       "description": "Identify and patch a memory leak caused by unclosed event listeners"
-    },
-    {
-      "id": "bf-3",
-      "name": "Off-by-One Boundary Fix",
-      "description": "Fix pagination logic that skips the last page of results"
     }
   ],
   "models": {
     "claude-opus-4-8": {
-      "currentScore": 90,
+      "currentScore": 96.1,
+      "totalTokens": 12776,
+      "avgTokensPerTest": null,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
@@ -34,12 +36,26 @@
         },
         {
           "timestamp": "2026-06-05T16:17:31.000Z",
-          "score": 90
+          "score": 30
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 96.5
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 96.7
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 96.1
         }
       ]
     },
     "claude-sonnet-4-6": {
       "currentScore": 96.7,
+      "totalTokens": 8887,
+      "avgTokensPerTest": null,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
@@ -48,11 +64,25 @@
         {
           "timestamp": "2026-06-05T16:17:31.000Z",
           "score": 96.7
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 96.7
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 99.8
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 96.7
         }
       ]
     },
     "gpt-5-5": {
-      "currentScore": 93.3,
+      "currentScore": 93,
+      "totalTokens": 38108,
+      "avgTokensPerTest": null,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
@@ -61,26 +91,52 @@
         {
           "timestamp": "2026-06-05T16:17:31.000Z",
           "score": 93.3
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 92.3
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 93.3
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 93
         }
       ]
     },
     "grok": {
       "currentScore": 96.3,
+      "totalTokens": 55053,
+      "avgTokensPerTest": null,
       "history": [
         {
           "timestamp": "2026-06-04T21:11:08.000Z",
-          "score": 100
+          "score": 33.3
         },
         {
           "timestamp": "2026-06-05T16:17:31.000Z",
-          "score": 100
+          "score": 33.3
         },
         {
           "timestamp": "2026-06-05T19:40:39.000Z",
-          "score": 100
+          "score": 33.3
         },
         {
           "timestamp": "2026-06-05T20:40:18.000Z",
+          "score": 96.3
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 96.7
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 96.7
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
           "score": 96.3
         }
       ]

@@ -1,10 +1,10 @@
 {
   "test": {
     "id": "bf-1",
-    "name": "Race Condition Detection",
+    "name": "Off-by-One Boundary Fix",
     "category": "bug-fixes",
     "categoryName": "Bug Fixes",
-    "description": "Find and fix a subtle race condition in async queue processing",
+    "description": "Fix pagination logic that skips the last page of results",
     "prompt": "The following Python pagination utility has a bug. Users report that when they have 23 items with 10 per page, the items on page 3 (items 21-23) never appear. Find the bug, explain it clearly, and provide the corrected code.\n\n```python\nclass Paginator:\n    def __init__(self, items: list, page_size: int = 10):\n        self.items = items\n        self.page_size = page_size\n        self.total_items = len(items)\n        self.total_pages = self.total_items / self.page_size  # BUG IS HERE\n\n    def get_page(self, page_number: int) -> dict:\n        \"\"\"Return items for the given page number (1-indexed).\"\"\"\n        if page_number < 1 or page_number > self.total_pages:\n            return {\"items\": [], \"page\": page_number, \"total_pages\": self.total_pages}\n\n        start = (page_number - 1) * self.page_size\n        end = start + self.page_size\n        return {\n            \"items\": self.items[start:end],\n            \"page\": page_number,\n            \"total_pages\": self.total_pages,\n        }\n\n    def has_next(self, page_number: int) -> bool:\n        return page_number < self.total_pages\n\n    def has_previous(self, page_number: int) -> bool:\n        return page_number > 1\n```\n\nTest case that fails:\n```python\nitems = list(range(1, 24))  # 23 items\np = Paginator(items, page_size=10)\nprint(p.total_pages)       # Prints 2.3 \u2014 should be 3\nprint(p.get_page(3))       # Returns empty \u2014 should return items 21-23\nprint(p.has_next(2))       # Returns False \u2014 should return True\n```\n\nYour response should:\n1. Identify the exact line with the bug and explain why it is wrong.\n2. Explain the root cause (integer vs float division and why truncation/float loses the remainder).\n3. Provide the COMPLETE corrected class with the fix applied.\n4. Show that the fix works with the test case above.\n5. Discuss additional edge cases the fix should handle (0 items, exact multiples, page_size > total_items)."
   },
   "results": {
@@ -29,6 +29,8 @@
       },
       "latencyMs": 26273,
       "tokenCount": 4086,
+      "promptTokens": 2049,
+      "completionTokens": 2037,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -52,6 +54,8 @@
       },
       "latencyMs": 51113,
       "tokenCount": 3234,
+      "promptTokens": 3,
+      "completionTokens": 3231,
       "error": null
     },
     "gpt-5-5": {
@@ -74,7 +78,9 @@
         }
       },
       "latencyMs": 22965,
-      "tokenCount": 0,
+      "tokenCount": 12596,
+      "promptTokens": 11550,
+      "completionTokens": 1046,
       "error": null
     },
     "grok": {
@@ -83,6 +89,8 @@
       "evalDetails": null,
       "latencyMs": 14582,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

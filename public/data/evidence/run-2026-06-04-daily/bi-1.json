@@ -16,6 +16,8 @@
       },
       "latencyMs": 25659,
       "tokenCount": 4172,
+      "promptTokens": 2049,
+      "completionTokens": 2123,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 49894,
       "tokenCount": 3224,
+      "promptTokens": 3,
+      "completionTokens": 3221,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 93, \"reasoning\": \"Excellent implementation that satisfies all functional requirements. Caching layer is complete: OrderedDict keyed by user_id, TTL check via time.monotonic(), LRU eviction with popitem(last=False), clear_cache() function, and RLock for thread safety. All 6 existing tests pass without modification: type/value checks fire before cache access so exceptions are unchanged; None results are cached; case sensitivity and special chars return None as before; concurrent "
       },
       "latencyMs": 34285,
-      "tokenCount": 0,
+      "tokenCount": 13500,
+      "promptTokens": 11845,
+      "completionTokens": 1655,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 33632,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

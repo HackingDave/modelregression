@@ -1,10 +1,10 @@
 {
   "test": {
     "id": "bf-3",
-    "name": "Off-by-One Boundary Fix",
+    "name": "Memory Leak Fix",
     "category": "bug-fixes",
     "categoryName": "Bug Fixes",
-    "description": "Fix pagination logic that skips the last page of results",
+    "description": "Identify and patch a memory leak caused by unclosed event listeners",
     "prompt": "The following React component has a memory leak. Users report that after navigating away from and back to this page several times, the browser becomes increasingly slow and laggy. Identify the memory leak, explain why it happens, and provide the corrected code.\n\n```jsx\nimport React, { useState, useEffect } from 'react';\n\nfunction ScrollTracker() {\n    const [scrollY, setScrollY] = useState(0);\n    const [scrollDirection, setScrollDirection] = useState('none');\n    const [lastScrollY, setLastScrollY] = useState(0);\n\n    useEffect(() => {\n        window.addEventListener('scroll', () => {\n            const currentScrollY = window.scrollY;\n            setScrollDirection(currentScrollY > lastScrollY ? 'down' : 'up');\n            setLastScrollY(currentScrollY);\n            setScrollY(currentScrollY);\n        });\n\n        window.addEventListener('resize', () => {\n            console.log('Window resized, recalculating...');\n            setScrollY(window.scrollY);\n        });\n    });\n\n    return (\n        <div style={{ position: 'fixed', top: 10, right: 10, padding: '10px', background: '#333', color: '#fff' }}>\n            <p>Scroll Y: {scrollY}</p>\n            <p>Direction: {scrollDirection}</p>\n        </div>\n    );\n}\n\nexport default ScrollTracker;\n```\n\nYour response should:\n1. Identify ALL the issues causing the memory leak (there are at least two major problems).\n2. Explain the lifecycle: why missing cleanup and missing dependency array cause handlers to accumulate.\n3. Explain why using anonymous arrow functions inside addEventListener is a problem for cleanup.\n4. Provide the COMPLETE corrected component with proper useEffect cleanup, dependency array, and named handler references.\n5. Mention how React 18 Strict Mode in development double-invokes effects, making this bug more visible during development.\n6. Ensure the corrected code has the same functionality as the original."
   },
   "results": {
@@ -16,6 +16,8 @@
       },
       "latencyMs": 26175,
       "tokenCount": 4011,
+      "promptTokens": 2049,
+      "completionTokens": 1962,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 51652,
       "tokenCount": 3025,
+      "promptTokens": 3,
+      "completionTokens": 3022,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The response fully satisfies every rubric criterion with no deductions. It identifies all memory leak causes (no cleanup, no dependency array, anonymous functions preventing removeEventListener matching, stale closure on lastScrollY). It explains the accumulation lifecycle clearly. It correctly names the anonymous-arrow-function problem and why removeEventListener can't match it. The corrected code uses named handler references (handleScroll, handleResize) co"
       },
       "latencyMs": 24198,
-      "tokenCount": 0,
+      "tokenCount": 12623,
+      "promptTokens": 11503,
+      "completionTokens": 1120,
       "error": null
     },
     "grok": {
@@ -45,7 +51,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The response is essentially flawless across all rubric criteria. It identifies all memory leak causes (missing cleanup, missing dependency array, anonymous functions, state-update-driven re-render cascade, stale closures). The lifecycle explanation in section 2 is accurate and thorough, covering mount, re-render accumulation, unmount without cleanup, and multi-visit compounding. Section 3 correctly explains the function reference identity requirement for remo"
       },
       "latencyMs": 66844,
-      "tokenCount": 0,
+      "tokenCount": 30857,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

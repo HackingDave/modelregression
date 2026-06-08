@@ -1,6 +1,17 @@
 import { CategoryInfo } from "./types";
 
+export const TOKEN_EFFICIENCY_CATEGORY_ID = "token-efficiency";
+
 export const CATEGORIES: CategoryInfo[] = [
+  {
+    id: TOKEN_EFFICIENCY_CATEGORY_ID,
+    name: "Token Efficiency",
+    slug: "token-efficiency",
+    description:
+      "A synthetic benchmark that rewards lower token burn per successful task and penalizes wasteful completions.",
+    icon: "hash",
+    weight: 1.0,
+  },
   {
     id: "long-reasoning",
     name: "Long Reasoning",
@@ -17,7 +28,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Implement data structures, REST APIs, and algorithmic challenges from specifications.",
     icon: "code",
-    weight: 1.2,
+    weight: 1.0,
   },
   {
     id: "bug-fixes",
@@ -26,7 +37,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Identify and fix subtle bugs including off-by-one errors, race conditions, and memory leaks.",
     icon: "bug",
-    weight: 1.2,
+    weight: 1.0,
   },
   {
     id: "feature-implementation",
@@ -44,7 +55,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Error handling completeness, input validation depth, and test generation quality.",
     icon: "shield-check",
-    weight: 0.9,
+    weight: 1.0,
   },
   {
     id: "bug-introduction-rate",
@@ -53,7 +64,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Modify existing code, refactor safely, and add features without breaking existing functionality.",
     icon: "alert-triangle",
-    weight: 1.1,
+    weight: 1.0,
   },
   {
     id: "security-awareness",
@@ -62,7 +73,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "SQL injection prevention, vulnerability identification, and secure file handling practices.",
     icon: "lock",
-    weight: 1.1,
+    weight: 1.0,
   },
   {
     id: "instruction-following",
@@ -71,7 +82,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Format constraints, multi-constraint outputs, and adherence to negative instructions.",
     icon: "list-checks",
-    weight: 0.8,
+    weight: 1.0,
   },
   {
     id: "code-quality",
@@ -80,7 +91,7 @@ export const CATEGORIES: CategoryInfo[] = [
     description:
       "Clean code standards, readable complex logic, and well-designed API interfaces.",
     icon: "star",
-    weight: 0.9,
+    weight: 1.0,
   },
   {
     id: "performance-efficiency",

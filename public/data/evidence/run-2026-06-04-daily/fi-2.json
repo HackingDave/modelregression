@@ -16,6 +16,8 @@
       },
       "latencyMs": 54490,
       "tokenCount": 7266,
+      "promptTokens": 2051,
+      "completionTokens": 5215,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 78284,
       "tokenCount": 5004,
+      "promptTokens": 4,
+      "completionTokens": 5000,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"This is a textbook-correct, production-quality sliding window rate limiter. Every requirement is met precisely: (1) True sliding window \u2014 timestamps are tracked per IP and pruned against `now - windowMs` on every request, so the window slides continuously with no periodic reset. (2) Pruning is correct \u2014 `pruneOldRequests` shifts timestamps off the front of the sorted array while `timestamps[0] <= cutoff`, correctly evicting anything outside the window. (3) 42"
       },
       "latencyMs": 26954,
-      "tokenCount": 0,
+      "tokenCount": 12739,
+      "promptTokens": 11488,
+      "completionTokens": 1251,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 33772,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

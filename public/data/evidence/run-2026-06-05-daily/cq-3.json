@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 98, \"reasoning\": \"This is an exceptional API design that hits virtually every criterion in the rubric. Method names are English-readable and unambiguous (enqueue/dequeue/peek/cancel_task/update_priority/list_tasks/get_task/is_empty/clear). All Python protocols are implemented (__len__, __iter__, __bool__, __repr__, __enter__/__exit__). The frozen Task dataclass has all five required fields with correct types. EmptyQueueError and TaskNotFoundError are well-scoped custom exceptio"
       },
       "latencyMs": 168843,
-      "tokenCount": 0,
+      "tokenCount": 51661,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

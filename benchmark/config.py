@@ -16,11 +16,16 @@ DB_PATH = os.path.join(os.path.dirname(__file__), "data", "benchmarks.db")
 # ---------------------------------------------------------------------------
 # CLI tool timeout (seconds) for benchmark calls and health checks
 # ---------------------------------------------------------------------------
-CLI_TIMEOUT = 300
+CLI_TIMEOUT = 600
 HEALTH_CHECK_TIMEOUT = 60
 PARALLEL_TESTS = 4
 MAX_RETRIES = 2
 RETRY_DELAY = 5
+CLI_CONCURRENCY_LIMITS = {
+    "claude": 2,
+    "codex": 4,
+    "agent": 4,
+}
 
 # ---------------------------------------------------------------------------
 # Model definitions — each model specifies its CLI tool and model argument
@@ -33,6 +38,8 @@ MODELS = [
         "id": "claude-opus-4-8",
         "cli": "claude",
         "cli_model": "opus",
+        "timeout_seconds": 900,
+        "parallel_tests": 2,
         "name": "Claude Opus 4.8",
         "slug": "claude-opus-4-8",
         "color": "#D97706",
@@ -43,6 +50,8 @@ MODELS = [
         "id": "claude-sonnet-4-6",
         "cli": "claude",
         "cli_model": "sonnet",
+        "timeout_seconds": 900,
+        "parallel_tests": 2,
         "name": "Claude Sonnet 4.6",
         "slug": "claude-sonnet-4-6",
         "color": "#8B5CF6",
@@ -75,6 +84,15 @@ MODELS = [
 # Category definitions (all weights equal at 1)
 # ---------------------------------------------------------------------------
 CATEGORIES = [
+    {
+        "id": "token-efficiency",
+        "name": "Token Efficiency",
+        "slug": "token-efficiency",
+        "description": "Measures how efficiently a model solves tasks by penalizing higher token consumption. Lower usage earns a higher score.",
+        "icon": "hash",
+        "weight": 1,
+        "sort_order": 0,
+    },
     {
         "id": "long-reasoning",
         "name": "Long Reasoning",

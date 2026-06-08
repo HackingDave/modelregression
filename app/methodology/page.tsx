@@ -203,9 +203,16 @@ export default function MethodologyPage() {
             </div>
             <p>
               <strong className="text-foreground">Composite scores</strong> are
-              weighted averages across all 10 categories. Weights reflect the
-              relative importance of each capability (coding and security are
-              weighted higher than instruction following).
+              weighted averages across all 11 categories. This includes a
+              token-efficiency benchmark that penalizes higher average token
+              burn per successful task. Weights reflect the relative importance
+              of each capability (coding and security are weighted higher than
+              instruction following).
+            </p>
+            <p>
+              Failed calls, timeouts, exceptions, and other null test results
+              count as 0 in category and composite scores instead of shrinking
+              the scoring denominator.
             </p>
           </div>
         </div>

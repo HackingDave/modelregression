@@ -76,6 +76,10 @@ rsync -avz --progress \
     --exclude '.env.local' \
     --exclude '.deploy.env' \
     --exclude '.git' \
+    --exclude '.venv' \
+    --exclude '.pytest_cache' \
+    --exclude '__pycache__' \
+    --exclude '*.pyc' \
     --exclude 'benchmark' \
     --exclude 'dogfood-output' \
     --exclude '.DS_Store' \

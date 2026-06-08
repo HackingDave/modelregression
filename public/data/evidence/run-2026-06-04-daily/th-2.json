@@ -34,6 +34,8 @@
       },
       "latencyMs": 228028,
       "tokenCount": 25581,
+      "promptTokens": 2051,
+      "completionTokens": 23530,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -42,6 +44,8 @@
       "evalDetails": null,
       "latencyMs": 300000,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "CLI call timed out"
     },
     "gpt-5-5": {
@@ -50,6 +54,8 @@
       "evalDetails": null,
       "latencyMs": 300000,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "CLI call timed out"
     },
     "grok": {
@@ -58,6 +64,8 @@
       "evalDetails": null,
       "latencyMs": 202794,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

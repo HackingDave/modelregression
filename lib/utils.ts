@@ -75,6 +75,13 @@ export function formatDuration(ms: number): string {
   return `${Math.floor(ms / 60000)}m ${Math.round((ms % 60000) / 1000)}s`;
 }
 
+export function formatTokens(count: number | null | undefined): string {
+  if (count == null || count === 0) return "—";
+  if (count >= 1_000_000) return `${(count / 1_000_000).toFixed(1)}M`;
+  if (count >= 1_000) return `${(count / 1_000).toFixed(1)}k`;
+  return count.toLocaleString();
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()

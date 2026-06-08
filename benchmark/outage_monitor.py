@@ -8,6 +8,8 @@ tracks consecutive failures.
 
 import argparse
 import logging
+import os
+import signal
 import subprocess
 import time
 import traceback
@@ -19,6 +21,26 @@ logger = logging.getLogger(__name__)
 
 HEALTH_CHECK_PROMPT = "Respond with just the word OK"
 FAILURE_THRESHOLD = 3
+
+
+def _run_cli(cmd, timeout, input=None, **kwargs):
+    """Run a CLI subprocess with process-group isolation so timeouts kill the whole tree."""
+    proc = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE if input is not None else None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+        **kwargs,
+    )
+    try:
+        stdout, stderr = proc.communicate(input=input, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        os.killpg(proc.pid, signal.SIGKILL)
+        proc.wait()
+        raise
+    return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr)
 
 
 def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
@@ -34,38 +56,16 @@ def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
     try:
         if cli == "claude":
             cmd = ["claude", "-p", "--model", cli_model]
-            result = subprocess.run(
-                cmd,
-                input=HEALTH_CHECK_PROMPT,
-                capture_output=True,
-                text=True,
-                timeout=config.HEALTH_CHECK_TIMEOUT,
-            )
+            result = _run_cli(cmd, input=HEALTH_CHECK_PROMPT, timeout=config.HEALTH_CHECK_TIMEOUT)
         elif cli == "codex":
             cmd = ["codex", "exec", "-m", cli_model, "--sandbox", "read-only"]
-            result = subprocess.run(
-                cmd,
-                input=HEALTH_CHECK_PROMPT,
-                capture_output=True,
-                text=True,
-                timeout=config.HEALTH_CHECK_TIMEOUT,
-            )
+            result = _run_cli(cmd, input=HEALTH_CHECK_PROMPT, timeout=config.HEALTH_CHECK_TIMEOUT)
         elif cli == "gemini":
             cmd = ["gemini", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model]
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=config.HEALTH_CHECK_TIMEOUT,
-            )
+            result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
         elif cli == "agent":
             cmd = ["agent", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
-            result = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=config.HEALTH_CHECK_TIMEOUT,
-            )
+            result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
         else:
             return (False, f"Unknown CLI tool: {cli}", None)
 

@@ -15,7 +15,9 @@
         "raw": "Now I have the actual 754-line implementation to score against the rubric precisely.\n\n```json\n{\"score\": 99, \"reasoning\": \"Exceptionally thorough implementation that covers nearly every failure mode in the rubric. File validation: all 8 modes addressed \u2014 streaming size check with incremental enforcement (no full read), magic-byte-only MIME detection, zero-byte detection via both Content-Length and actual read, comprehensive filename sanitization (path traversal, null bytes, control chars, unicode"
       },
       "latencyMs": 297521,
-      "tokenCount": 0,
+      "tokenCount": 67534,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

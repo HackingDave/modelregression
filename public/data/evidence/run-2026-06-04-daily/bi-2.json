@@ -16,6 +16,8 @@
       },
       "latencyMs": 20140,
       "tokenCount": 3906,
+      "promptTokens": 2049,
+      "completionTokens": 1857,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 43678,
       "tokenCount": 3299,
+      "promptTokens": 3,
+      "completionTokens": 3296,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 97, \"reasoning\": \"Excellent conversion with near-perfect fidelity to the original. All four functions correctly converted to async, callback hell fully flattened into sequential awaits, all error messages identical, and all console.log statements preserved in the exact same order. The validateRecords refactor (returning an object instead of two callback args) is the correct idiomatic solution for multi-value async returns. Uses fs.promises correctly. No .then()/.catch() or resi"
       },
       "latencyMs": 27811,
-      "tokenCount": 0,
+      "tokenCount": 13355,
+      "promptTokens": 12046,
+      "completionTokens": 1309,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 59096,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

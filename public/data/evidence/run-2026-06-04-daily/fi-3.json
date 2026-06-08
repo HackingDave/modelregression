@@ -16,6 +16,8 @@
       },
       "latencyMs": 28435,
       "tokenCount": 4105,
+      "promptTokens": 2049,
+      "completionTokens": 2056,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 53572,
       "tokenCount": 3360,
+      "promptTokens": 3,
+      "completionTokens": 3357,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 99, \"reasoning\": \"Near-perfect implementation. All nine rubric criteria are fully or nearly fully met. The solution completely removes OFFSET in favor of a compound WHERE clause using (created_at, id). Cursor encoding is properly opaque base64-encoded JSON. Response shape exactly matches the spec: posts array, hasMore boolean, nextCursor (null on last page), limit \u2014 and no totalCount. First-page handling correctly omits the cursor filter. Forward pagination is correctly impleme"
       },
       "latencyMs": 26114,
-      "tokenCount": 0,
+      "tokenCount": 12656,
+      "promptTokens": 11594,
+      "completionTokens": 1062,
       "error": null
     },
     "grok": {
@@ -45,7 +51,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The solution is essentially perfect across all rubric criteria. It correctly replaces OFFSET with a compound keyset WHERE clause `(created_at, id) < ($1, $2)`, uses base64-encoded JSON for an opaque cursor, implements LIMIT N+1 to determine hasMore without a COUNT query, returns the exact required response shape (posts, hasMore, nextCursor, limit \u2014 no totalCount), handles the first page by omitting the WHERE filter when no cursor is provided, preserves ORDER "
       },
       "latencyMs": 26864,
-      "tokenCount": 0,
+      "tokenCount": 14312,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

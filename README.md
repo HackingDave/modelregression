@@ -184,9 +184,10 @@ The full pipeline (benchmark, export, build, deploy) runs via cron on the DGX:
 1. Each test produces a raw score (0-100) via sandbox execution, LLM-as-judge, or exact match
 2. Scores are averaged per category (3 tests each)
 3. Category averages are combined into a composite score (equal weight)
-4. Composite scores are ranked across models
-5. Regression detection compares against a rolling window of previous runs
-6. Regressions are classified by severity: minor (>5% drop), moderate (>10%), major (>20%)
+4. Failed calls, timeouts, exceptions, and other null test results count as 0 rather than being dropped
+5. Composite scores are ranked across models
+6. Regression detection compares against a rolling window of previous runs
+7. Regressions are classified by severity: minor (>5% drop), moderate (>10%), major (>20%)
 
 ## Contributing
 

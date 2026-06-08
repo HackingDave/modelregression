@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The implementation is essentially perfect across all criteria. It uses Flask correctly with @app.route and POST method, uses request.get_json(silent=True) exactly as required, implements all three transformations correctly (uppercase via .upper(), reverse via [::-1], count_words via len(text.split())), returns jsonify() responses which automatically set Content-Type to application/json, handles all specified 400 error cases (non-JSON body via None check, miss"
       },
       "latencyMs": 82751,
-      "tokenCount": 0,
+      "tokenCount": 21584,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

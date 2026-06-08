@@ -18,6 +18,11 @@ interface DataPoint {
   models: Record<string, number>;
 }
 
+type ChartPoint = {
+  timestamp: string;
+  label: string;
+} & Record<string, string | number>;
+
 interface PerformanceLineChartProps {
   data: DataPoint[];
   height?: number;
@@ -31,15 +36,27 @@ export function PerformanceLineChart({
   showLegend = true,
   modelFilter,
 }: PerformanceLineChartProps) {
-  const chartData = data.map((d) => ({
+  const modelsToShow = modelFilter
+    ? MODELS.filter((m) => modelFilter.includes(m.id))
+    : MODELS;
+
+  const chartData: ChartPoint[] = data.map((d) => ({
     timestamp: d.timestamp,
     label: formatDateTime(d.timestamp),
     ...d.models,
   }));
 
-  const modelsToShow = modelFilter
-    ? MODELS.filter((m) => modelFilter.includes(m.id))
-    : MODELS;
+  const visibleValues = chartData.flatMap((point) =>
+    modelsToShow
+      .map((model) => point[model.id])
+      .filter((value): value is number => typeof value === "number")
+  );
+  const minVisibleValue =
+    visibleValues.length > 0 ? Math.min(...visibleValues) : 50;
+  const yAxisMin =
+    minVisibleValue < 50
+      ? Math.max(0, Math.floor(minVisibleValue / 10) * 10)
+      : 50;
 
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -52,7 +69,7 @@ export function PerformanceLineChart({
           tickLine={false}
         />
         <YAxis
-          domain={[50, 100]}
+          domain={[yAxisMin, 100]}
           tick={{ fontSize: 11 }}
           tickLine={false}
           axisLine={false}

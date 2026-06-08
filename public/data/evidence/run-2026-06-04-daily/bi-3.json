@@ -16,6 +16,8 @@
       },
       "latencyMs": 35490,
       "tokenCount": 5482,
+      "promptTokens": 2049,
+      "completionTokens": 3433,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -27,6 +29,8 @@
       },
       "latencyMs": 135827,
       "tokenCount": 9642,
+      "promptTokens": 3,
+      "completionTokens": 9639,
       "error": null
     },
     "gpt-5-5": {
@@ -36,7 +40,9 @@
         "raw": "```json\n{\"score\": 99, \"reasoning\": \"This is an exceptionally well-executed solution that satisfies virtually every requirement. The _safe_log() wrapper ensures logging failures never propagate. Both _mask_email() and _mask_card() are implemented with defensive try/except blocks. All sensitive data is properly protected: CC numbers show only last 4 digits, SMTP_PASS is never logged (only SMTP_USER after login), and customer emails are masked at DEBUG level. Log levels are used correctly throughou"
       },
       "latencyMs": 50258,
-      "tokenCount": 0,
+      "tokenCount": 14702,
+      "promptTokens": 12126,
+      "completionTokens": 2576,
       "error": null
     },
     "grok": {
@@ -45,6 +51,8 @@
       "evalDetails": null,
       "latencyMs": 64030,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

@@ -12,6 +12,11 @@
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
+# PATH — cron runs with a minimal PATH; add dirs where CLI tools live
+# ---------------------------------------------------------------------------
+export PATH="$HOME/.local/bin:$HOME/.npm-global/bin:/usr/local/bin:$PATH"
+
+# ---------------------------------------------------------------------------
 # Paths
 # ---------------------------------------------------------------------------
 PROJECT_DIR="/home/hackingdave/projects/modelregression"

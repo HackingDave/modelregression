@@ -16,6 +16,8 @@
       },
       "latencyMs": 24295,
       "tokenCount": 4310,
+      "promptTokens": 2049,
+      "completionTokens": 2261,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 70934,
       "tokenCount": 5156,
+      "promptTokens": 3,
+      "completionTokens": 5153,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 95, \"reasoning\": \"The implementation is excellent and satisfies all 9 requirements. Custom debounce hook with 300ms delay is properly implemented and not borrowed from lodash. Controlled input with useState, case-insensitive substring matching via .includes() (avoiding regex entirely \u2014 which also prevents special-character crashes), useMemo for filtered results, isDebouncing state for the Searching indicator, whitespace trimming for the empty-input edge case, <mark> highlightin"
       },
       "latencyMs": 28084,
-      "tokenCount": 0,
+      "tokenCount": 12968,
+      "promptTokens": 11606,
+      "completionTokens": 1362,
       "error": null
     },
     "grok": {
@@ -45,7 +51,9 @@
         "raw": "```json\n{\"score\": 90, \"reasoning\": \"The solution is excellent, meeting nearly all requirements cleanly. Custom useDebounce hook correctly implements 300ms debounce without lodash, with proper cleanup via clearTimeout in the useEffect return. Controlled input, case-insensitive substring filtering, whitespace normalization (trim()), and special-character safety (uses indexOf/includes instead of regex) are all handled correctly. The isSearching indicator, mark-tag highlighting with multiple-match s"
       },
       "latencyMs": 32386,
-      "tokenCount": 0,
+      "tokenCount": 16422,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

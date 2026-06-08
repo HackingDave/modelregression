@@ -16,6 +16,8 @@
       },
       "latencyMs": 58708,
       "tokenCount": 6914,
+      "promptTokens": 2049,
+      "completionTokens": 4865,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -27,6 +29,8 @@
       },
       "latencyMs": 107427,
       "tokenCount": 6476,
+      "promptTokens": 3,
+      "completionTokens": 6473,
       "error": null
     },
     "gpt-5-5": {
@@ -36,7 +40,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The model correctly identifies all 5 planted vulnerabilities with precise line references, clear attack vectors, and concrete code fixes. XSS/SSTI via render_template_string is flagged Critical with an accurate explanation that attacker-controlled DB content becomes template source. CSRF on /transfer is identified with the correct attack vector (cross-origin hidden form). Path traversal on /download is flagged with a working exploit example (../../etc/passwd)"
       },
       "latencyMs": 38004,
-      "tokenCount": 0,
+      "tokenCount": 13640,
+      "promptTokens": 11741,
+      "completionTokens": 1899,
       "error": null
     },
     "grok": {
@@ -45,6 +51,8 @@
       "evalDetails": null,
       "latencyMs": 83566,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

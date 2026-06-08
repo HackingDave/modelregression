@@ -40,6 +40,8 @@
       },
       "latencyMs": 9578,
       "tokenCount": 2656,
+      "promptTokens": 2049,
+      "completionTokens": 607,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -48,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 1226,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "claude exited 1: unknown error"
     },
     "gpt-5-5": {
@@ -81,7 +85,9 @@
         }
       },
       "latencyMs": 15820,
-      "tokenCount": 0,
+      "tokenCount": 12019,
+      "promptTokens": 11332,
+      "completionTokens": 687,
       "error": null
     },
     "grok": {
@@ -115,7 +121,9 @@
         }
       },
       "latencyMs": 35516,
-      "tokenCount": 0,
+      "tokenCount": 27071,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

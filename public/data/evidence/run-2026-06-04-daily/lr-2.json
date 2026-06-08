@@ -16,6 +16,8 @@
       },
       "latencyMs": 45747,
       "tokenCount": 3519,
+      "promptTokens": 2,
+      "completionTokens": 3517,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 70150,
       "tokenCount": 3727,
+      "promptTokens": 3,
+      "completionTokens": 3724,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\n  \"score\": 72,\n  \"reasoning\": \"The model correctly identifies all relevant clauses, builds a largely sound logical chain, and directly rebuts the buyer's Amendment B argument. However, it critically miscalculates the force majeure extension duration, concluding the vendor IS in breach (2 days late, adjusted deadline March 20) rather than NOT in breach (delivery March 22 within the March 29 adjusted deadline). The error stems from equating the extension to the event's literal duration ("
       },
       "latencyMs": 19479,
-      "tokenCount": 0,
+      "tokenCount": 12547,
+      "promptTokens": 11674,
+      "completionTokens": 873,
       "error": null
     },
     "grok": {
@@ -45,7 +51,9 @@
         "raw": "```json\n{\n  \"score\": 82,\n  \"reasoning\": \"The model produces a high-quality legal analysis that correctly identifies all relevant clauses, builds a coherent logical chain, and arrives at a $0 penalty outcome. However, it diverges from the rubric's expected conclusion on the force majeure extension: the model correctly reads Section 5.1 as extending the deadline by the *duration of the event* (5 days \u2192 March 20), while the rubric expects the *maximum* (14 days \u2192 March 29). This leads the model to "
       },
       "latencyMs": 33446,
-      "tokenCount": 0,
+      "tokenCount": 16027,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

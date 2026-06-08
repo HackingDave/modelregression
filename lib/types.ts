@@ -30,18 +30,20 @@ export interface TestResult {
   name: string;
   score: number;
   latencyMs: number;
-  tokenCount?: number;
+  tokenCount?: number | null;
 }
 
 export interface CategoryScore {
-  avgScore: number;
+  avgScore: number | null;
   testCount: number;
   tests: TestResult[];
 }
 
 export interface ModelRunResult {
-  compositeScore: number;
-  rank: number;
+  compositeScore: number | null;
+  rank: number | null;
+  totalTokens?: number | null;
+  avgTokensPerTest?: number | null;
   categories: Record<string, CategoryScore>;
 }
 
@@ -62,8 +64,9 @@ export interface Synopsis {
 
 export interface HistoryEntry {
   timestamp: string;
-  compositeScore: number;
-  categories: Record<string, number>;
+  compositeScore: number | null;
+  totalTokens?: number | null;
+  categories: Record<string, number | null>;
 }
 
 export interface Regression {
@@ -107,8 +110,10 @@ export interface CategoryDetail {
   models: Record<
     string,
     {
-      currentScore: number;
-      history: { timestamp: string; score: number }[];
+      currentScore: number | null;
+      totalTokens?: number | null;
+      avgTokensPerTest?: number | null;
+      history: { timestamp: string; score: number | null }[];
     }
   >;
 }
@@ -155,7 +160,9 @@ export interface EvidenceData {
       modelOutput: string;
       evalDetails: Record<string, unknown>;
       latencyMs: number;
-      tokenCount: number;
+      tokenCount: number | null;
+      promptTokens: number | null;
+      completionTokens: number | null;
       error: string | null;
     }
   >;

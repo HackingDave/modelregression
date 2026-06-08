@@ -8,219 +8,388 @@
     "icon": "brain"
   },
   "current": {
-    "compositeScore": 92,
-    "rank": 3,
+    "compositeScore": 94.3,
+    "rank": 1,
+    "totalTokens": 229491,
+    "avgTokensPerTest": 7650,
     "categories": {
       "bug-fixes": {
-        "avgScore": 90,
-        "testCount": 1,
+        "avgScore": 96.1,
+        "testCount": 3,
         "tests": [
           {
-            "testId": "bf-1",
+            "testId": "bf-2",
             "name": "Race Condition Detection",
-            "score": 90,
-            "latencyMs": 26018
+            "score": 100,
+            "latencyMs": 24474,
+            "tokenCount": 3931
+          },
+          {
+            "testId": "bf-1",
+            "name": "Off-by-One Boundary Fix",
+            "score": 88.2,
+            "latencyMs": 26067,
+            "tokenCount": 4264
+          },
+          {
+            "testId": "bf-3",
+            "name": "Memory Leak Fix",
+            "score": 100,
+            "latencyMs": 31584,
+            "tokenCount": 4581
           }
         ]
       },
       "bug-introduction-rate": {
-        "avgScore": 100,
-        "testCount": 1,
+        "avgScore": 98.3,
+        "testCount": 3,
         "tests": [
           {
             "testId": "bi-1",
             "name": "Refactor Without Regression",
             "score": 100,
-            "latencyMs": 28873
+            "latencyMs": 28583,
+            "tokenCount": 4655
+          },
+          {
+            "testId": "bi-2",
+            "name": "Merge Conflict Resolution",
+            "score": 97,
+            "latencyMs": 21461,
+            "tokenCount": 4158
+          },
+          {
+            "testId": "bi-3",
+            "name": "Dependency Upgrade Safety",
+            "score": 98,
+            "latencyMs": 37193,
+            "tokenCount": 5966
           }
         ]
       },
       "code-quality": {
-        "avgScore": 93.5,
-        "testCount": 2,
+        "avgScore": 96.3,
+        "testCount": 3,
         "tests": [
           {
             "testId": "cq-1",
             "name": "Idiomatic Python",
-            "score": 97,
-            "latencyMs": 79587
+            "score": 99,
+            "latencyMs": 67037,
+            "tokenCount": 9480
+          },
+          {
+            "testId": "cq-2",
+            "name": "TypeScript Best Practices",
+            "score": 96,
+            "latencyMs": 185842,
+            "tokenCount": 21369
           },
           {
             "testId": "cq-3",
             "name": "Clean Architecture Patterns",
-            "score": 90,
-            "latencyMs": 160011
+            "score": 94,
+            "latencyMs": 200249,
+            "tokenCount": 21041
           }
         ]
       },
       "code-thoroughness": {
-        "avgScore": 74,
-        "testCount": 2,
+        "avgScore": 89.2,
+        "testCount": 3,
         "tests": [
           {
             "testId": "th-3",
             "name": "Test Suite Completeness",
-            "score": 86,
-            "latencyMs": 42307
+            "score": 80,
+            "latencyMs": 37393,
+            "tokenCount": 5886
           },
           {
             "testId": "th-1",
             "name": "Edge Case Coverage",
-            "score": 62,
-            "latencyMs": 143947
+            "score": 90,
+            "latencyMs": 139227,
+            "tokenCount": 15738
+          },
+          {
+            "testId": "th-2",
+            "name": "Error Path Completeness",
+            "score": 97.6,
+            "latencyMs": 170739,
+            "tokenCount": 19256
           }
         ]
       },
       "coding-tasks": {
         "avgScore": 99,
-        "testCount": 2,
+        "testCount": 3,
         "tests": [
           {
             "testId": "ct-1",
             "name": "Graph Algorithm Implementation",
-            "score": 98,
-            "latencyMs": 17431
+            "score": 97,
+            "latencyMs": 42874,
+            "tokenCount": 6472
           },
           {
             "testId": "ct-2",
             "name": "REST API Design",
             "score": 100,
-            "latencyMs": 26015
+            "latencyMs": 25780,
+            "tokenCount": 4697
+          },
+          {
+            "testId": "ct-3",
+            "name": "Concurrent Data Pipeline",
+            "score": 100,
+            "latencyMs": 26616,
+            "tokenCount": 4277
           }
         ]
       },
       "feature-implementation": {
-        "avgScore": 96.7,
+        "avgScore": 99.7,
         "testCount": 3,
         "tests": [
           {
             "testId": "fi-1",
             "name": "OAuth2 Integration",
-            "score": 90,
-            "latencyMs": 25968
-          },
-          {
-            "testId": "fi-3",
-            "name": "Webhook System",
-            "score": 100,
-            "latencyMs": 25285
+            "score": 99,
+            "latencyMs": 21959,
+            "tokenCount": 4231
           },
           {
             "testId": "fi-2",
             "name": "Search Autocomplete",
             "score": 100,
-            "latencyMs": 50202
+            "latencyMs": 31221,
+            "tokenCount": 4893
+          },
+          {
+            "testId": "fi-3",
+            "name": "Webhook System",
+            "score": 100,
+            "latencyMs": 24256,
+            "tokenCount": 4210
           }
         ]
       },
       "instruction-following": {
         "avgScore": 100,
-        "testCount": 1,
+        "testCount": 3,
         "tests": [
           {
             "testId": "if-1",
             "name": "Structured Output Compliance",
             "score": 100,
-            "latencyMs": 10317
+            "latencyMs": 8934,
+            "tokenCount": 2795
+          },
+          {
+            "testId": "if-2",
+            "name": "Constraint Adherence",
+            "score": 100,
+            "latencyMs": 3861,
+            "tokenCount": 2333
+          },
+          {
+            "testId": "if-3",
+            "name": "Multi-step Instruction Chain",
+            "score": 100,
+            "latencyMs": 9209,
+            "tokenCount": 2522
           }
         ]
       },
       "long-reasoning": {
-        "avgScore": 77.8,
-        "testCount": 2,
+        "avgScore": 68.2,
+        "testCount": 3,
         "tests": [
           {
             "testId": "lr-3",
             "name": "Mathematical Proof",
             "score": 78.7,
-            "latencyMs": 25305
+            "latencyMs": 32572,
+            "tokenCount": 5296
           },
           {
             "testId": "lr-2",
             "name": "Legal Reasoning Chain",
-            "score": 77,
-            "latencyMs": 52127
+            "score": 74,
+            "latencyMs": 57359,
+            "tokenCount": 6783
+          },
+          {
+            "testId": "lr-1",
+            "name": "Multi-step Logic Puzzle",
+            "score": 51.8,
+            "latencyMs": 108737,
+            "tokenCount": 10505
           }
         ]
       },
       "performance-efficiency": {
-        "avgScore": 94,
+        "avgScore": 93.7,
         "testCount": 3,
         "tests": [
           {
             "testId": "pe-1",
             "name": "Algorithm Complexity",
-            "score": 100,
-            "latencyMs": 29643
+            "score": 98,
+            "latencyMs": 33544,
+            "tokenCount": 4856
           },
           {
             "testId": "pe-3",
             "name": "Query Optimization",
             "score": 85,
-            "latencyMs": 48769
+            "latencyMs": 56598,
+            "tokenCount": 6713
           },
           {
             "testId": "pe-2",
             "name": "Memory-efficient Processing",
-            "score": 97,
-            "latencyMs": 133387
+            "score": 98,
+            "latencyMs": 131394,
+            "tokenCount": 15150
           }
         ]
       },
       "security-awareness": {
-        "avgScore": 94.5,
-        "testCount": 2,
+        "avgScore": 96.5,
+        "testCount": 3,
         "tests": [
+          {
+            "testId": "sa-1",
+            "name": "SQL Injection Prevention",
+            "score": 100,
+            "latencyMs": 32560,
+            "tokenCount": 5167
+          },
           {
             "testId": "sa-2",
             "name": "XSS Mitigation",
             "score": 100,
-            "latencyMs": 54421
+            "latencyMs": 57528,
+            "tokenCount": 6955
           },
           {
             "testId": "sa-3",
             "name": "Secret Management",
-            "score": 89,
-            "latencyMs": 137828
+            "score": 89.6,
+            "latencyMs": 101383,
+            "tokenCount": 11311
           }
         ]
+      },
+      "token-efficiency": {
+        "avgScore": 100,
+        "testCount": 30,
+        "tests": []
       }
     }
   },
   "history": [
     {
       "timestamp": "2026-06-04T21:11:08.000Z",
-      "compositeScore": 91.7,
+      "compositeScore": 85.8,
+      "totalTokens": 181372,
       "categories": {
         "bug-fixes": 99.8,
         "bug-introduction-rate": 98,
-        "code-quality": 96,
+        "code-quality": 64,
         "code-thoroughness": 92.1,
         "coding-tasks": 99.3,
         "feature-implementation": 93.7,
         "instruction-following": 100,
         "long-reasoning": 72.7,
-        "performance-efficiency": 74,
-        "security-awareness": 91.3
+        "performance-efficiency": 49.3,
+        "security-awareness": 91.3,
+        "token-efficiency": 83.8
       }
     },
     {
       "timestamp": "2026-06-05T16:17:31.000Z",
-      "compositeScore": 92,
+      "compositeScore": 58.9,
+      "totalTokens": 134682,
       "categories": {
-        "bug-fixes": 90,
-        "bug-introduction-rate": 100,
-        "code-quality": 93.5,
-        "code-thoroughness": 74,
-        "coding-tasks": 99,
+        "bug-fixes": 30,
+        "bug-introduction-rate": 33.3,
+        "code-quality": 62.3,
+        "code-thoroughness": 49.3,
+        "coding-tasks": 66,
         "feature-implementation": 96.7,
-        "instruction-following": 100,
-        "long-reasoning": 77.8,
+        "instruction-following": 33.3,
+        "long-reasoning": 51.9,
         "performance-efficiency": 94,
-        "security-awareness": 94.5
+        "security-awareness": 63,
+        "token-efficiency": 68.3
+      }
+    },
+    {
+      "timestamp": "2026-06-06T13:35:00.000Z",
+      "compositeScore": 88.9,
+      "totalTokens": 226301,
+      "categories": {
+        "bug-fixes": 96.5,
+        "bug-introduction-rate": 89,
+        "code-quality": 96.7,
+        "code-thoroughness": 90.4,
+        "coding-tasks": 99,
+        "feature-implementation": 95.3,
+        "instruction-following": 98,
+        "long-reasoning": 70.9,
+        "performance-efficiency": 94.3,
+        "security-awareness": 91.7,
+        "token-efficiency": 56.6
+      }
+    },
+    {
+      "timestamp": "2026-06-07T03:00:29.000Z",
+      "compositeScore": 94.3,
+      "totalTokens": 224378,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97,
+        "code-quality": 97,
+        "code-thoroughness": 91.3,
+        "coding-tasks": 99.3,
+        "feature-implementation": 96.3,
+        "instruction-following": 98,
+        "long-reasoning": 68.6,
+        "performance-efficiency": 96,
+        "security-awareness": 96.7,
+        "token-efficiency": 100
+      }
+    },
+    {
+      "timestamp": "2026-06-08T03:00:24.000Z",
+      "compositeScore": 94.3,
+      "totalTokens": 229491,
+      "categories": {
+        "bug-fixes": 96.1,
+        "bug-introduction-rate": 98.3,
+        "code-quality": 96.3,
+        "code-thoroughness": 89.2,
+        "coding-tasks": 99,
+        "feature-implementation": 99.7,
+        "instruction-following": 100,
+        "long-reasoning": 68.2,
+        "performance-efficiency": 93.7,
+        "security-awareness": 96.5,
+        "token-efficiency": 100
       }
     }
   ],
   "regressions": [],
-  "outages": []
+  "outages": [
+    {
+      "id": "7f59c626-8b60-41c2-9ebf-5ec2db9aa6ae",
+      "startedAt": "2026-06-07T04:01:01.000Z",
+      "endedAt": "2026-06-07T04:30:03.000Z",
+      "errorType": "timeout",
+      "httpStatus": null
+    }
+  ]
 }

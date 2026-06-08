@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 88, \"reasoning\": \"This is an excellent, comprehensive response that addresses nearly all requirements thoroughly. It correctly identifies 7 performance problems (more than the required 5), provides a well-structured CTE-based rewrite that eliminates correlated subqueries, uses explicit INNER JOINs, and scopes aggregates to only qualifying customers. Index recommendations are exemplary \u2014 covering FK join columns, filter columns, composite indexes, a partial index, and detailed c"
       },
       "latencyMs": 98089,
-      "tokenCount": 0,
+      "tokenCount": 25347,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }
