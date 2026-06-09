@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Mock sshpass: log argv (to prove the password is NEVER an argument), record
+# that the password arrived via env (-e), then strip sshpass's own flags and
+# exec the wrapped command (the mock ssh).
+log="${MOCK_LOG_DIR:?MOCK_LOG_DIR not set}/sshpass"
+{ printf 'sshpass'; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\n'; } >> "$log.log"
+for a in "$@"; do printf '%s\n' "$a" >> "$log.argv"; done
+[ -n "${SSHPASS:-}" ] && printf 'env\n' >> "$log.passmode"
+
+args=("$@"); out=(); i=0
+while [ $i -lt ${#args[@]} ]; do
+    case "${args[$i]}" in
+        -e) ;;
+        -p|-f) i=$((i + 1)) ;;   # skip flag value
+        *) out+=("${args[$i]}") ;;
+    esac
+    i=$((i + 1))
+done
+exec "${out[@]}"
