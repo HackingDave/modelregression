@@ -15,7 +15,9 @@
         "raw": "```json\n{\n  \"score\": 100,\n  \"reasoning\": \"The model correctly identifies all 5 planted vulnerabilities with precise locations, clear attack vectors, concrete code fixes, and reasonable severity ratings. It also identifies 2 additional genuine vulnerabilities (debug mode RCE and missing authentication on /transfer) that are real issues, not false positives. The model explicitly and correctly excludes the LIKE query in /search as NOT a vulnerability, demonstrating accurate discrimination. Attack v"
       },
       "latencyMs": 108166,
-      "tokenCount": 0,
+      "tokenCount": 34434,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

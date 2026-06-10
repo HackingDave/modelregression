@@ -30,6 +30,8 @@
       },
       "latencyMs": 26616,
       "tokenCount": 2532,
+      "promptTokens": 2,
+      "completionTokens": 2530,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -54,6 +56,8 @@
       },
       "latencyMs": 39419,
       "tokenCount": 2890,
+      "promptTokens": 3,
+      "completionTokens": 2887,
       "error": null
     },
     "gpt-5-5": {
@@ -77,7 +81,9 @@
         }
       },
       "latencyMs": 29170,
-      "tokenCount": 0,
+      "tokenCount": 12653,
+      "promptTokens": 11285,
+      "completionTokens": 1368,
       "error": null
     },
     "grok": {
@@ -86,6 +92,8 @@
       "evalDetails": null,
       "latencyMs": 16428,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

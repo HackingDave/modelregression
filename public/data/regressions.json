@@ -1,15 +1,43 @@
 {
   "active": [
     {
-      "id": "52c3ceca-764a-42fd-9442-bf567adf0821",
-      "modelId": "grok",
-      "modelName": "Grok",
+      "id": "df79f0f3-4401-433f-b257-20c9c7b65bc3",
+      "modelId": "claude-sonnet-4-6",
+      "modelName": "Claude Sonnet 4.6",
+      "categoryId": "token-efficiency",
+      "categoryName": "Token Efficiency",
+      "detectedAt": "2026-06-08T03:36:10.000Z",
+      "previousAvg": 98.8,
+      "currentScore": 74.3,
+      "dropPct": -24.8,
+      "severity": "major",
+      "windowDays": 7,
+      "resolvedAt": null
+    },
+    {
+      "id": "d14df23d-6d2b-4648-8278-44db14b76d24",
+      "modelId": "gpt-5-5",
+      "modelName": "GPT-5.5",
       "categoryId": "long-reasoning",
       "categoryName": "Long Reasoning",
-      "detectedAt": "2026-06-05T21:04:00.000Z",
-      "previousAvg": 86.7,
-      "currentScore": 70.1,
-      "dropPct": -19.1,
+      "detectedAt": "2026-06-07T03:42:20.000Z",
+      "previousAvg": 65,
+      "currentScore": 61.3,
+      "dropPct": -5.7,
+      "severity": "moderate",
+      "windowDays": 7,
+      "resolvedAt": null
+    },
+    {
+      "id": "b6360021-56d1-4a3f-a1ef-20e67de69c97",
+      "modelId": "grok",
+      "modelName": "Grok",
+      "categoryId": "token-efficiency",
+      "categoryName": "Token Efficiency",
+      "detectedAt": "2026-06-06T16:29:00.000Z",
+      "previousAvg": 61.5,
+      "currentScore": 13.2,
+      "dropPct": -78.5,
       "severity": "major",
       "windowDays": 7,
       "resolvedAt": null
@@ -17,32 +45,18 @@
   ],
   "recent": [
     {
-      "id": "90be6534-3b0d-40cb-92b9-0a2dd6ddd13c",
-      "modelId": "grok",
-      "modelName": "Grok",
-      "categoryId": null,
-      "categoryName": null,
-      "detectedAt": "2026-06-05T21:04:00.000Z",
-      "previousAvg": 95.6,
-      "currentScore": 92.6,
-      "dropPct": -3.1,
-      "severity": "minor",
-      "windowDays": 7,
-      "resolvedAt": "2026-06-05T21:04:00.000Z"
-    },
-    {
-      "id": "b6592908-e340-4791-8a91-96069430c3af",
-      "modelId": "grok",
-      "modelName": "Grok",
-      "categoryId": "bug-fixes",
-      "categoryName": "Bug Fixes",
-      "detectedAt": "2026-06-05T21:04:00.000Z",
+      "id": "15c0ea1c-1c0e-417f-9608-24023a9dd70e",
+      "modelId": "claude-sonnet-4-6",
+      "modelName": "Claude Sonnet 4.6",
+      "categoryId": "token-efficiency",
+      "categoryName": "Token Efficiency",
+      "detectedAt": "2026-06-07T03:42:20.000Z",
       "previousAvg": 100,
-      "currentScore": 96.3,
-      "dropPct": -3.7,
+      "currentScore": 95.3,
+      "dropPct": -4.7,
       "severity": "minor",
       "windowDays": 7,
-      "resolvedAt": "2026-06-05T21:04:00.000Z"
+      "resolvedAt": "2026-06-07T03:42:20.000Z"
     }
   ]
 }

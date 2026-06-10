@@ -1,21 +1,21 @@
 {
   "day": {
-    "modelId": "grok",
-    "name": "Grok",
-    "score": 95,
-    "change": 0.8
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 94.3,
+    "change": 2.7
   },
   "week": {
-    "modelId": "grok",
-    "name": "Grok",
-    "score": 94.8,
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 84.4,
     "change": 0
   },
   "month": {
-    "modelId": "grok",
-    "name": "Grok",
-    "score": 94.8,
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 84.4,
     "change": 0
   },
-  "updatedAt": "2026-06-05T21:04:00.000Z"
+  "updatedAt": "2026-06-08T03:36:10.000Z"
 }

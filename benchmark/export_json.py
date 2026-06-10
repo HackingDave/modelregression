@@ -37,6 +37,7 @@ import db as database
 logger = logging.getLogger(__name__)
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+TOKEN_EFFICIENCY_CATEGORY_ID = "token-efficiency"
 
 
 # ---------------------------------------------------------------------------
@@ -105,6 +106,92 @@ def _write_json(path: str, data) -> None:
     logger.debug("Wrote %s", path)
 
 
+def _recompute_cross_model_token_efficiency(models_data: dict[str, dict]) -> None:
+    """Recompute token-efficiency scores across the composed latest model set."""
+    averages = {
+        slug: data["avgTokensPerTest"]
+        for slug, data in models_data.items()
+        if data.get("avgTokensPerTest") is not None and data["avgTokensPerTest"] > 0
+    }
+    if not averages:
+        return
+
+    best_avg_tokens = min(averages.values())
+    for slug, data in models_data.items():
+        categories = data.setdefault("categories", {})
+        token_category = categories.setdefault(
+            TOKEN_EFFICIENCY_CATEGORY_ID,
+            {"avgScore": None, "testCount": 0, "tests": []},
+        )
+        avg_tokens = data.get("avgTokensPerTest")
+        if avg_tokens is None or avg_tokens <= 0:
+            token_category["avgScore"] = None
+            continue
+        token_category["avgScore"] = _round_score(
+            min(100.0, (best_avg_tokens / avg_tokens) * 100)
+        )
+
+
+def _recompute_cross_model_composites(models_data: dict[str, dict]) -> None:
+    """Recompute current composites/ranks from the composed latest category scores."""
+    composites = []
+    category_slugs = {
+        category_slug
+        for data in models_data.values()
+        for category_slug, category in data.get("categories", {}).items()
+        if category.get("avgScore") is not None
+    }
+    weighted_categories = [
+        cat for cat in config.CATEGORIES
+        if cat["slug"] in category_slugs and cat["weight"] > 0
+    ]
+
+    for slug, data in models_data.items():
+        weighted_sum = 0.0
+        actual_weight = 0.0
+        for cat in weighted_categories:
+            score = data.get("categories", {}).get(cat["slug"], {}).get("avgScore")
+            weighted_sum += (float(score) if score is not None else 0.0) * cat["weight"]
+            actual_weight += cat["weight"]
+
+        data["compositeScore"] = (
+            _round_score(weighted_sum / actual_weight) if actual_weight > 0 else None
+        )
+        data["rank"] = None
+
+        if data["compositeScore"] is not None:
+            composites.append((slug, float(data["compositeScore"])))
+
+    composites.sort(key=lambda item: item[1], reverse=True)
+    for rank, (slug, _) in enumerate(composites, start=1):
+        models_data[slug]["rank"] = rank
+
+
+def _build_model_views_from_runs(conn, model_runs: dict[str, dict]) -> dict[str, dict]:
+    """Build cross-model views from a provided slug -> run mapping."""
+    model_ids = {mcfg["slug"]: mcfg["id"] for mcfg in config.MODELS}
+    models_data = {}
+    for slug, model_run in model_runs.items():
+        model_id = model_ids.get(slug)
+        if not model_id or not model_run:
+            continue
+        models_data[slug] = _model_current(conn, model_run, model_id)
+
+    _recompute_cross_model_token_efficiency(models_data)
+    _recompute_cross_model_composites(models_data)
+    return models_data
+
+
+def _build_latest_model_views(conn) -> dict[str, dict]:
+    """Build the current dashboard view for each model from its latest available run."""
+    model_runs = {}
+    for mcfg in config.MODELS:
+        model_run = _get_latest_run_for_model(conn, mcfg["id"])
+        if model_run:
+            model_runs[mcfg["slug"]] = model_run
+    return _build_model_views_from_runs(conn, model_runs)
+
+
 # ---------------------------------------------------------------------------
 # latest.json
 # ---------------------------------------------------------------------------
@@ -137,73 +224,7 @@ def export_latest(conn, output_dir: str) -> None:
         })
         return
 
-    models_data = {}
-    all_composites = []
-
-    for mcfg in config.MODELS:
-        mid = mcfg["id"]
-        slug = mcfg["slug"]
-        model_run = _get_latest_run_for_model(conn, mid)
-        if not model_run:
-            continue
-
-        run_id = model_run["id"]
-
-        mc = conn.execute(
-            "SELECT composite_score, rank FROM model_run_scores WHERE run_id = ? AND model_id = ?",
-            (run_id, mid),
-        ).fetchone()
-        if not mc:
-            continue
-
-        all_composites.append((slug, mc["composite_score"]))
-
-        cat_rows = conn.execute(
-            """SELECT rs.*, c.slug as category_slug
-               FROM run_scores rs
-               JOIN categories c ON rs.category_id = c.id
-               WHERE rs.run_id = ? AND rs.model_id = ?""",
-            (run_id, mid),
-        ).fetchall()
-
-        test_rows = conn.execute(
-            """SELECT tr.*, t.name as test_name, c.slug as category_slug
-               FROM test_results tr
-               JOIN tests t ON tr.test_id = t.id
-               JOIN categories c ON tr.category_id = c.id
-               WHERE tr.run_id = ? AND tr.model_id = ? AND tr.score IS NOT NULL""",
-            (run_id, mid),
-        ).fetchall()
-
-        tests_by_cat = defaultdict(list)
-        for tr in test_rows:
-            tests_by_cat[tr["category_slug"]].append({
-                "testId": _display_test_id(tr["test_id"]),
-                "name": tr["test_name"],
-                "score": _round_score(tr["score"]),
-                "latencyMs": tr["latency_ms"],
-            })
-
-        categories = {}
-        for cs in cat_rows:
-            cslug = cs["category_slug"]
-            categories[cslug] = {
-                "avgScore": _round_score(cs["avg_score"]),
-                "testCount": cs["test_count"],
-                "tests": tests_by_cat.get(cslug, []),
-            }
-
-        models_data[slug] = {
-            "compositeScore": _round_score(mc["composite_score"]),
-            "rank": mc["rank"],
-            "categories": categories,
-        }
-
-    # Recompute ranks across all models for the composite view
-    all_composites.sort(key=lambda x: x[1] or 0, reverse=True)
-    for rank, (slug, _) in enumerate(all_composites, 1):
-        if slug in models_data:
-            models_data[slug]["rank"] = rank
+    models_data = _build_latest_model_views(conn)
 
     _write_json(os.path.join(output_dir, "latest.json"), {
         "runId": _run_label(latest_run),
@@ -279,6 +300,7 @@ def export_synopsis(conn, output_dir: str) -> None:
 def export_models(conn, output_dir: str) -> None:
     """Per-model detail page data with full history, regressions, outages."""
     models_dir = os.path.join(output_dir, "models")
+    latest_views = _build_latest_model_views(conn)
 
     all_runs = conn.execute(
         """SELECT * FROM benchmark_runs
@@ -286,9 +308,7 @@ def export_models(conn, output_dir: str) -> None:
            ORDER BY started_at ASC"""
     ).fetchall()
 
-    # First pass: collect current data and composites for cross-model ranking
     model_results = {}
-    all_composites = []
 
     for mcfg in config.MODELS:
         mid = mcfg["id"]
@@ -304,13 +324,11 @@ def export_models(conn, output_dir: str) -> None:
         }
 
         # --- current (from this model's latest run) ---
-        model_run = _get_latest_run_for_model(conn, mid)
-        current = _model_current(conn, model_run, mid) if model_run else {
-            "compositeScore": None, "rank": None, "categories": {},
-        }
-
-        if current["compositeScore"] is not None:
-            all_composites.append((slug, current["compositeScore"]))
+        current = latest_views.get(slug, {
+            "compositeScore": None,
+            "rank": None,
+            "categories": {},
+        })
 
         # --- history (ALL completed runs) ---
         history = []
@@ -366,11 +384,6 @@ def export_models(conn, output_dir: str) -> None:
             "outages": outages,
         }
 
-    # Recompute cross-model ranks
-    all_composites.sort(key=lambda x: x[1], reverse=True)
-    for rank, (slug, _) in enumerate(all_composites, 1):
-        model_results[slug]["current"]["rank"] = rank
-
     for slug, data in model_results.items():
         _write_json(os.path.join(models_dir, f"{slug}.json"), data)
 
@@ -400,17 +413,25 @@ def _model_current(conn, run: dict, model_id: str) -> dict:
            FROM test_results tr
            JOIN tests t ON tr.test_id = t.id
            JOIN categories c ON tr.category_id = c.id
-           WHERE tr.run_id = ? AND tr.model_id = ? AND tr.score IS NOT NULL""",
+           WHERE tr.run_id = ? AND tr.model_id = ?""",
         (run_id, model_id),
     ).fetchall()
 
     tests_by_cat = defaultdict(list)
+    total_tokens = 0
+    tests_with_tokens = 0
     for tr in test_rows:
+        tc = tr["token_count"] or 0
+        if tr["score"] is not None:
+            total_tokens += tc
+            if tc > 0:
+                tests_with_tokens += 1
         tests_by_cat[tr["category_slug"]].append({
             "testId": _display_test_id(tr["test_id"]),
             "name": tr["test_name"],
-            "score": _round_score(tr["score"]),
+            "score": _round_score(tr["score"]) if tr["score"] is not None else 0,
             "latencyMs": tr["latency_ms"],
+            "tokenCount": tr["token_count"],
         })
 
     categories = {}
@@ -425,6 +446,8 @@ def _model_current(conn, run: dict, model_id: str) -> dict:
     return {
         "compositeScore": _round_score(mc["composite_score"]),
         "rank": mc["rank"],
+        "totalTokens": total_tokens if total_tokens > 0 else None,
+        "avgTokensPerTest": round(total_tokens / tests_with_tokens) if tests_with_tokens > 0 else None,
         "categories": categories,
     }
 
@@ -448,9 +471,16 @@ def _model_history_entry(conn, run: dict, model_id: str) -> dict | None:
 
     cats = {cs["category_slug"]: _round_score(cs["avg_score"]) for cs in cat_rows}
 
+    token_row = conn.execute(
+        "SELECT SUM(token_count) as total_tokens FROM test_results WHERE run_id = ? AND model_id = ? AND token_count > 0",
+        (run["id"], model_id),
+    ).fetchone()
+    total_tokens = token_row["total_tokens"] if token_row and token_row["total_tokens"] else None
+
     return {
         "timestamp": _iso(run["started_at"]),
         "compositeScore": _round_score(mc["composite_score"]),
+        "totalTokens": total_tokens,
         "categories": cats,
     }
 
@@ -462,6 +492,7 @@ def _model_history_entry(conn, run: dict, model_id: str) -> dict | None:
 def export_categories(conn, output_dir: str) -> None:
     """Per-category page: metadata, test list, per-model history."""
     cat_dir = os.path.join(output_dir, "categories")
+    latest_views = _build_latest_model_views(conn)
 
     all_runs = conn.execute(
         """SELECT * FROM benchmark_runs
@@ -496,17 +527,26 @@ def export_categories(conn, output_dir: str) -> None:
         for mcfg in config.MODELS:
             mid = mcfg["id"]
             mslug = mcfg["slug"]
-
-            # Current (from this model's latest run)
-            model_run = _get_latest_run_for_model(conn, mid)
+            current_view = latest_views.get(mslug)
             current_score = None
+            if current_view:
+                current_score = current_view.get("categories", {}).get(cslug, {}).get("avgScore")
+
+            model_run = _get_latest_run_for_model(conn, mid)
+            current_tokens = None
+            current_avg_tokens = None
             if model_run:
-                cs = conn.execute(
-                    "SELECT avg_score FROM run_scores WHERE run_id = ? AND model_id = ? AND category_id = ?",
-                    (model_run["id"], mid, cid),
-                ).fetchone()
-                if cs:
-                    current_score = _round_score(cs["avg_score"])
+                if cid == TOKEN_EFFICIENCY_CATEGORY_ID:
+                    if current_view:
+                        current_tokens = current_view.get("totalTokens")
+                        current_avg_tokens = current_view.get("avgTokensPerTest")
+                else:
+                    tk = conn.execute(
+                        "SELECT SUM(token_count) as total FROM test_results WHERE run_id = ? AND model_id = ? AND category_id = ? AND token_count > 0",
+                        (model_run["id"], mid, cid),
+                    ).fetchone()
+                    if tk and tk["total"]:
+                        current_tokens = tk["total"]
 
             # Full history
             history = []
@@ -524,6 +564,8 @@ def export_categories(conn, output_dir: str) -> None:
 
             models_data[mslug] = {
                 "currentScore": current_score,
+                "totalTokens": current_tokens,
+                "avgTokensPerTest": current_avg_tokens,
                 "history": history,
             }
 
@@ -558,15 +600,34 @@ def _collect_run_composites(conn, days: int) -> list[tuple[dict, list[dict]]]:
 
 
 def _export_daily_trends(conn, trends_dir: str) -> None:
-    """Every run in the last 30 days as a data point."""
+    """One data point per day with all models' latest scores for that day."""
     pairs = _collect_run_composites(conn, days=30)
-    data = []
+    day_runs: dict[str, dict[str, dict]] = {}
+    day_timestamps: dict[str, str] = {}
+
     for run, comps in pairs:
-        models = {}
+        try:
+            dt = datetime.fromisoformat(run["started_at"].replace("Z", "+00:00"))
+        except (ValueError, AttributeError):
+            continue
+        dk = dt.strftime("%Y-%m-%d")
+        if dk not in day_runs:
+            day_runs[dk] = {}
+        if dk not in day_timestamps or run["started_at"] > day_timestamps[dk]:
+            day_timestamps[dk] = run["started_at"]
         for mc in comps:
-            models[mc["model_slug"]] = _round_score(mc["composite_score"])
+            day_runs[dk][mc["model_slug"]] = run
+
+    data = []
+    for dk in sorted(day_runs):
+        model_views = _build_model_views_from_runs(conn, day_runs[dk])
+        models = {
+            slug: view["compositeScore"]
+            for slug, view in model_views.items()
+            if view.get("compositeScore") is not None
+        }
         if models:
-            data.append({"timestamp": _iso(run["started_at"]), "models": models})
+            data.append({"timestamp": _iso(day_timestamps[dk]), "models": models})
 
     _write_json(os.path.join(trends_dir, "daily.json"), {
         "period": "daily",
@@ -826,6 +887,8 @@ def export_evidence(conn, output_dir: str) -> None:
                 "evalDetails": eval_details,
                 "latencyMs": r["latency_ms"],
                 "tokenCount": r.get("token_count"),
+                "promptTokens": r.get("prompt_tokens"),
+                "completionTokens": r.get("completion_tokens"),
                 "error": r.get("error"),
             }
 

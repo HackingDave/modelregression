@@ -52,6 +52,44 @@ benchmark/sandboxes/
 benchmark/*.db
 dogfood-output/
 
+# benchmark prompt work products
+/transform_api.py
+benchmark/all_invalid.csv
+benchmark/bad_parse.csv
+benchmark/converted.js
+benchmark/input.csv
+benchmark/original.js
+benchmark/output_converted.json
+benchmark/output_original.json
+benchmark/test_conversion.js
+benchmark/test_large.csv
+benchmark/test_summary.*
+benchmark/asyncio_race_condition.py
+benchmark/cron_parser.py
+benchmark/duration.py
+benchmark/getPosts_cursor.js
+benchmark/instrumented_order_processor.py
+benchmark/maximal_rectangle.py
+benchmark/priority_task_queue.py
+benchmark/process_large_csv.py
+benchmark/rate-limiter.js
+benchmark/registration_api.py
+benchmark/requirements-secure-registration.txt
+benchmark/robust_image_upload.py
+benchmark/robust_upload_handler.py
+benchmark/secure_file_download.py
+benchmark/secure_registration.py
+benchmark/shopping_cart.py
+benchmark/test_parse_duration.py
+benchmark/test_secure_registration.py
+benchmark/test_user_db.py
+benchmark/test_user_lookup.py
+benchmark/transform_api.py
+benchmark/trie.py
+benchmark/user_db.py
+benchmark/user_lookup.py
+benchmark/verify_logging_addition.py
+
 # IDE
 .vscode/
 .idea/

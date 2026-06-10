@@ -35,7 +35,9 @@
         }
       },
       "latencyMs": 91824,
-      "tokenCount": 0,
+      "tokenCount": 36109,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

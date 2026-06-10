@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The model's output is a near-perfect implementation that satisfies every requirement in the rubric. OFFSET is eliminated entirely in favor of a correct compound WHERE clause `(created_at < $1 OR (created_at = $1 AND id < $2))` that handles the DESC sort order properly. The cursor is opaque base64-encoded JSON (not raw IDs). The response shape exactly matches the spec: `posts`, `pagination.hasMore`, `pagination.nextCursor`, `pagination.limit` \u2014 no totalCount. "
       },
       "latencyMs": 25070,
-      "tokenCount": 0,
+      "tokenCount": 14361,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

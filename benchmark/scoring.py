@@ -10,6 +10,7 @@ import config
 import db as database
 
 logger = logging.getLogger(__name__)
+TOKEN_EFFICIENCY_CATEGORY_ID = "token-efficiency"
 
 
 def aggregate_run_scores(conn, run_id: str) -> None:
@@ -20,12 +21,12 @@ def aggregate_run_scores(conn, run_id: str) -> None:
     """
     rows = conn.execute(
         """SELECT model_id, category_id,
-                  AVG(score) as avg_score,
-                  MIN(score) as min_score,
-                  MAX(score) as max_score,
+                  AVG(COALESCE(score, 0)) as avg_score,
+                  MIN(COALESCE(score, 0)) as min_score,
+                  MAX(COALESCE(score, 0)) as max_score,
                   COUNT(*) as test_count
            FROM test_results
-           WHERE run_id = ? AND score IS NOT NULL
+           WHERE run_id = ?
            GROUP BY model_id, category_id""",
         (run_id,),
     ).fetchall()
@@ -42,7 +43,54 @@ def aggregate_run_scores(conn, run_id: str) -> None:
             test_count=row["test_count"],
         )
 
+    _save_token_efficiency_scores(conn, run_id)
+
     logger.info("Aggregated %d model-category score entries for run %s", len(rows), run_id)
+
+
+def _save_token_efficiency_scores(conn, run_id: str) -> None:
+    """Create a synthetic category score based on average tokens per successful test."""
+    rows = conn.execute(
+        """SELECT model_id,
+                  SUM(token_count) as total_tokens,
+                  COUNT(*) as successful_tests
+           FROM test_results
+           WHERE run_id = ? AND score IS NOT NULL AND token_count > 0
+           GROUP BY model_id""",
+        (run_id,),
+    ).fetchall()
+
+    if not rows:
+        logger.info("No token-usage rows available for synthetic scoring in run %s", run_id)
+        return
+
+    averages = {
+        row["model_id"]: row["total_tokens"] / row["successful_tests"]
+        for row in rows
+        if row["total_tokens"] and row["successful_tests"]
+    }
+    if not averages:
+        return
+
+    best_avg_tokens = min(averages.values())
+
+    for row in rows:
+        avg_tokens = averages.get(row["model_id"])
+        if not avg_tokens or avg_tokens <= 0:
+            continue
+
+        # Lowest average token burn gets 100. Higher usage is penalized proportionally.
+        efficiency_score = round(min(100.0, (best_avg_tokens / avg_tokens) * 100), 1)
+        database.save_run_scores(
+            conn,
+            run_id=run_id,
+            model_id=row["model_id"],
+            category_id=TOKEN_EFFICIENCY_CATEGORY_ID,
+            avg_score=efficiency_score,
+            min_score=efficiency_score,
+            max_score=efficiency_score,
+            test_count=row["successful_tests"],
+        )
 
 
 def compute_composite_scores(conn, run_id: str) -> None:
@@ -78,20 +126,29 @@ def compute_composite_scores(conn, run_id: str) -> None:
             model_scores[model_id] = {}
         model_scores[model_id][row["category_id"]] = row["avg_score"]
 
-    # Compute weighted average for each model
+    categories_in_run = {row["category_id"] for row in rows}
+    weighted_categories = [
+        (cat["id"], cat["weight"])
+        for cat in config.CATEGORIES
+        if cat["id"] in categories_in_run and cat["weight"] > 0
+    ]
+    if not weighted_categories:
+        logger.warning("No weighted category scores available for run %s", run_id)
+        return
+
+    # Compute weighted average for each model. Missing category rows count as 0
+    # if that category was scored by any model in the same run.
     composites: list[tuple[str, float]] = []
     for model_id, cat_scores in model_scores.items():
         weighted_sum = 0.0
         actual_weight = 0.0
-        for cat_id, score in cat_scores.items():
-            w = weight_map.get(cat_id, 0)
+        for cat_id, w in weighted_categories:
+            raw_score = cat_scores.get(cat_id)
+            score = float(raw_score) if raw_score is not None else 0.0
             weighted_sum += score * w
             actual_weight += w
 
-        if actual_weight > 0:
-            composite = round(weighted_sum / actual_weight, 1)
-        else:
-            composite = 0.0
+        composite = round(weighted_sum / actual_weight, 1)
 
         composites.append((model_id, composite))
 

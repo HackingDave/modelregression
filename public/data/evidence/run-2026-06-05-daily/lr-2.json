@@ -15,7 +15,9 @@
         "raw": "```json\n{\n  \"score\": 89,\n  \"reasoning\": \"The model produces a sophisticated, well-structured legal analysis that correctly identifies all four relevant clauses, builds coherent reasoning, and reaches the correct ultimate conclusion (no breach, no penalty). The primary deduction is on Criterion 3: the rubric expects the FM extension to be the full 14-day maximum, making the effective deadline March 29 and delivery on March 22 clearly within bounds. The model instead calculates only the 5-day even"
       },
       "latencyMs": 115152,
-      "tokenCount": 0,
+      "tokenCount": 41023,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 97, \"reasoning\": \"The implementation is nearly perfect. TrieNode is correctly defined with typed children dict and boolean end-of-word flag. Insert correctly traverses/creates nodes char-by-char and marks end-of-word, including the empty string edge case. Search correctly checks is_end_of_word at the terminal node, properly distinguishing 'ap' (False) from 'app' (True). The autocomplete DFS visits children in sorted order for alphabetical results and implements early exit on ma"
       },
       "latencyMs": 83296,
-      "tokenCount": 0,
+      "tokenCount": 28690,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

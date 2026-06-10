@@ -1,10 +1,10 @@
 {
   "test": {
     "id": "bf-2",
-    "name": "Memory Leak Fix",
+    "name": "Race Condition Detection",
     "category": "bug-fixes",
     "categoryName": "Bug Fixes",
-    "description": "Identify and patch a memory leak caused by unclosed event listeners",
+    "description": "Find and fix a subtle race condition in async queue processing",
     "prompt": "The following async Python code has a race condition. When 100 tasks each increment the counter 100 times, the final count should be 10,000 but it often comes out lower (e.g., 9,823 or 9,947). Find the race condition, explain why it happens even with Python's GIL, and fix it.\n\n```python\nimport asyncio\n\nshared_counter = 0\n\nasync def increment(n: int):\n    global shared_counter\n    for _ in range(n):\n        current = shared_counter\n        await asyncio.sleep(0)  # Simulate async work / yield control\n        shared_counter = current + 1\n\nasync def main():\n    tasks = [asyncio.create_task(increment(100)) for _ in range(100)]\n    await asyncio.gather(*tasks)\n    print(f\"Final counter: {shared_counter}\")  # Expected: 10000\n\nasyncio.run(main())\n```\n\nYour response should:\n1. Identify the exact race condition \u2014 which lines form the critical section and where the interleaving occurs.\n2. Explain why Python's GIL does NOT prevent this race condition in asyncio (the key insight is about await points as yield points in cooperative multitasking).\n3. Provide the corrected code using the appropriate asyncio synchronization primitive.\n4. Ensure the lock/synchronization covers the ENTIRE read-modify-write sequence, not just part of it.\n5. Show the corrected `increment` function and explain why the fix works.\n6. Do NOT suggest using threading.Lock \u2014 this is asyncio, not threading."
   },
   "results": {
@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The response is exemplary across all criteria. It precisely identifies the three-line read-modify-write critical section and the exact yield point where interleaving occurs. The GIL explanation is technically accurate \u2014 it correctly distinguishes cooperative multitasking (asyncio, single-threaded) from preemptive multitasking (threads, where GIL applies), and explicitly states the GIL is not involved. The fix uses asyncio.Lock with async with syntax, the lock"
       },
       "latencyMs": 43436,
-      "tokenCount": 0,
+      "tokenCount": 15600,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

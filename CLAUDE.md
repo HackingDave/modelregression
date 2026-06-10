@@ -29,7 +29,7 @@ python export_json.py --output ../public/data  # Export JSON
 
 ## Cron Schedule (DGX)
 
-Single daily run at 3am ET via `benchmark/run_benchmarks.sh`.
+Single daily run at 3am ET via `benchmark/run_benchmarks.sh`. Outage monitor every 30 min. PATH must include `~/.local/bin` and `~/.npm-global/bin` for CLI tools.
 
 ## Project Structure
 

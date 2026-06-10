@@ -8,6 +8,9 @@ scores results, detects regressions, and updates the database.
 import argparse
 import json
 import logging
+import os
+import signal
+import sqlite3
 import subprocess
 import sys
 import threading
@@ -15,6 +18,7 @@ import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
+from urllib.parse import quote
 
 import config
 import db
@@ -28,11 +32,82 @@ logger = logging.getLogger(__name__)
 # CLI-based model calls
 # ---------------------------------------------------------------------------
 
+def _run_cli(cmd, timeout, input=None, **kwargs):
+    """Run a CLI subprocess with process-group isolation so timeouts kill the whole tree."""
+    proc = subprocess.Popen(
+        cmd,
+        stdin=subprocess.PIPE if input is not None else None,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        start_new_session=True,
+        **kwargs,
+    )
+    try:
+        stdout, stderr = proc.communicate(input=input, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        os.killpg(proc.pid, signal.SIGKILL)
+        proc.wait()
+        raise
+    return subprocess.CompletedProcess(cmd, proc.returncode, stdout, stderr)
+
+
+_cli_semaphores_lock = threading.Lock()
+_cli_semaphores: dict[str, threading.Semaphore] = {}
+
+
+def _positive_int(value, default: int) -> int:
+    """Return a positive integer config value, falling back to the provided default."""
+    try:
+        number = int(value)
+    except (TypeError, ValueError):
+        return default
+    return number if number > 0 else default
+
+
+def _model_timeout_seconds(model_config: dict) -> int:
+    """Return the timeout for a model CLI call."""
+    return _positive_int(model_config.get("timeout_seconds"), config.CLI_TIMEOUT)
+
+
+def _model_parallel_tests(model_config: dict) -> int:
+    """Return the model-specific test concurrency."""
+    return _positive_int(model_config.get("parallel_tests"), config.PARALLEL_TESTS)
+
+
+def _get_cli_semaphore(cli: str) -> threading.Semaphore | None:
+    """Return a shared semaphore for a CLI tool when a global limit is configured."""
+    limits = getattr(config, "CLI_CONCURRENCY_LIMITS", {})
+    try:
+        limit = int(limits.get(cli, 0)) if isinstance(limits, dict) else 0
+    except (TypeError, ValueError):
+        limit = 0
+    if limit <= 0:
+        return None
+
+    with _cli_semaphores_lock:
+        semaphore = _cli_semaphores.get(cli)
+        if semaphore is None:
+            semaphore = threading.BoundedSemaphore(limit)
+            _cli_semaphores[cli] = semaphore
+        return semaphore
+
+
+def _run_cli_with_limit(cli: str, cmd, timeout, input=None, **kwargs):
+    """Run a CLI command while respecting the configured global CLI concurrency cap."""
+    semaphore = _get_cli_semaphore(cli)
+    if semaphore is None:
+        return _run_cli(cmd, timeout=timeout, input=input, **kwargs)
+
+    with semaphore:
+        return _run_cli(cmd, timeout=timeout, input=input, **kwargs)
+
+
 def _call_once(
     model_config: dict,
     prompt: str,
     system_prompt: str | None,
-) -> tuple[str | None, int | None, int | None, int | None, str | None]:
+) -> tuple[str | None, int | None, int | None, int | None, int | None, str | None]:
     """Single attempt to call a model CLI. Returns the raw result tuple."""
     cli = model_config["cli"]
 
@@ -43,7 +118,7 @@ def _call_once(
     elif cli == "agent":
         return _call_grok(model_config, prompt, system_prompt)
     else:
-        return (None, None, None, None, f"Unknown CLI tool: {cli}")
+        return (None, None, None, None, None, f"Unknown CLI tool: {cli}")
 
 
 def _is_retryable(error: str | None) -> bool:
@@ -61,10 +136,10 @@ def call_model(
     model_config: dict,
     prompt: str,
     system_prompt: str | None = None,
-) -> tuple[str | None, int | None, int | None, int | None, str | None]:
+) -> tuple[str | None, int | None, int | None, int | None, int | None, str | None]:
     """
     Call a model via its CLI tool and return
-    (response_text, latency_ms, prompt_tokens, completion_tokens, error).
+    (response_text, latency_ms, prompt_tokens, completion_tokens, total_tokens, error).
 
     Retries up to MAX_RETRIES times on transient failures.
     On success, error is None.
@@ -75,22 +150,23 @@ def call_model(
         try:
             result = _call_once(model_config, prompt, system_prompt)
         except subprocess.TimeoutExpired:
-            result = (None, config.CLI_TIMEOUT * 1000, None, None, "CLI call timed out")
+            timeout_ms = _model_timeout_seconds(model_config) * 1000
+            result = (None, timeout_ms, None, None, None, "CLI call timed out")
         except FileNotFoundError as e:
-            return (None, None, None, None, f"CLI tool not found: {e}")
+            return (None, None, None, None, None, f"CLI tool not found: {e}")
         except Exception as e:
             error_msg = f"{type(e).__name__}: {e}"
             logger.error("CLI call failed for %s: %s", model_config["id"], error_msg)
-            result = (None, None, None, None, error_msg)
+            result = (None, None, None, None, None, error_msg)
 
         last_result = result
-        if result[4] is None:
+        if result[5] is None:
             return result
-        if not _is_retryable(result[4]) or attempt == config.MAX_RETRIES:
+        if not _is_retryable(result[5]) or attempt == config.MAX_RETRIES:
             return result
 
         logger.warning("  %s: retry %d/%d after: %s",
-                       model_config["id"], attempt + 1, config.MAX_RETRIES, result[4])
+                       model_config["id"], attempt + 1, config.MAX_RETRIES, result[5])
         time.sleep(config.RETRY_DELAY)
 
     return last_result
@@ -100,7 +176,7 @@ def _call_claude(
     model_config: dict,
     prompt: str,
     system_prompt: str | None,
-) -> tuple[str | None, int, int | None, int | None, str | None]:
+) -> tuple[str | None, int, int | None, int | None, int | None, str | None]:
     """Call Claude via the claude CLI in print mode with JSON output."""
     cmd = [
         "claude", "-p",
@@ -111,22 +187,21 @@ def _call_claude(
         cmd.extend(["--system-prompt", system_prompt])
 
     start = time.monotonic()
-    result = subprocess.run(
+    result = _run_cli_with_limit(
+        model_config["cli"],
         cmd,
         input=prompt,
-        capture_output=True,
-        text=True,
-        timeout=config.CLI_TIMEOUT,
+        timeout=_model_timeout_seconds(model_config),
     )
     elapsed = int((time.monotonic() - start) * 1000)
 
     if result.returncode != 0:
         stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
-        return (None, elapsed, None, None, f"claude exited {result.returncode}: {stderr}")
+        return (None, elapsed, None, None, None, f"claude exited {result.returncode}: {stderr}")
 
     output = result.stdout.strip()
     if not output:
-        return (None, elapsed, None, None, "Empty response from claude")
+        return (None, elapsed, None, None, None, "Empty response from claude")
 
     prompt_tokens = None
     completion_tokens = None
@@ -141,14 +216,15 @@ def _call_claude(
     except (json.JSONDecodeError, AttributeError):
         pass
 
-    return (text, elapsed, prompt_tokens, completion_tokens, None)
+    total_tokens = _combine_token_counts(prompt_tokens, completion_tokens)
+    return (text, elapsed, prompt_tokens, completion_tokens, total_tokens, None)
 
 
 def _call_codex(
     model_config: dict,
     prompt: str,
     system_prompt: str | None,
-) -> tuple[str | None, int, int | None, int | None, str | None]:
+) -> tuple[str | None, int, int | None, int | None, int | None, str | None]:
     """Call a model via the codex CLI in exec mode."""
     full_prompt = prompt
     if system_prompt:
@@ -158,27 +234,203 @@ def _call_codex(
         "codex", "exec",
         "-m", model_config["cli_model"],
         "--sandbox", "read-only",
+        "--json",
     ]
 
     start = time.monotonic()
-    result = subprocess.run(
+    result = _run_cli_with_limit(
+        model_config["cli"],
         cmd,
         input=full_prompt,
-        capture_output=True,
-        text=True,
-        timeout=config.CLI_TIMEOUT,
+        timeout=_model_timeout_seconds(model_config),
     )
     elapsed = int((time.monotonic() - start) * 1000)
 
     if result.returncode != 0:
         stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
-        return (None, elapsed, None, None, f"codex exited {result.returncode}: {stderr}")
+        return (None, elapsed, None, None, None, f"codex exited {result.returncode}: {stderr}")
 
-    text = result.stdout.strip()
+    output = result.stdout.strip()
+    if not output:
+        return (None, elapsed, None, None, None, "Empty response from codex")
+
+    text, prompt_tokens, completion_tokens, total_tokens, thread_id = _parse_codex_exec_json(output)
+    if total_tokens is None and thread_id:
+        prompt_tokens, completion_tokens, total_tokens = _read_codex_usage_from_thread(thread_id)
+
     if not text:
-        return (None, elapsed, None, None, "Empty response from codex")
+        return (None, elapsed, prompt_tokens, completion_tokens, total_tokens, "Empty response from codex")
 
-    return (text, elapsed, None, None, None)
+    return (text, elapsed, prompt_tokens, completion_tokens, total_tokens, None)
+
+
+def _parse_codex_exec_json(
+    output: str,
+) -> tuple[str, int | None, int | None, int | None, str | None]:
+    """Extract the final assistant text and token usage from Codex JSONL."""
+    messages: list[str] = []
+    prompt_tokens = None
+    completion_tokens = None
+    total_tokens = None
+    thread_id = None
+
+    for line in output.splitlines():
+        line = line.strip()
+        if not line.startswith("{"):
+            continue
+        try:
+            data = json.loads(line)
+        except (json.JSONDecodeError, AttributeError):
+            continue
+
+        event_type = data.get("type")
+
+        if event_type == "thread.started":
+            thread_id = data.get("thread_id")
+            continue
+
+        if event_type == "item.completed":
+            item = data.get("item", {})
+            if item.get("type") == "agent_message" and item.get("text"):
+                messages.append(item["text"])
+            continue
+
+        usage = data.get("usage")
+        if usage and event_type in {"turn.completed", "response.completed", "response.complete"}:
+            prompt_tokens, completion_tokens, total_tokens = _extract_usage_fields(usage)
+
+    text = "\n\n".join(msg.strip() for msg in messages if msg and msg.strip())
+    return (text, prompt_tokens, completion_tokens, total_tokens, thread_id)
+
+
+def _combine_token_counts(
+    prompt_tokens: int | None,
+    completion_tokens: int | None,
+) -> int | None:
+    """Return the total token count, or None if usage was not provided."""
+    if prompt_tokens is None and completion_tokens is None:
+        return None
+    return (prompt_tokens or 0) + (completion_tokens or 0)
+
+
+def _extract_usage_fields(
+    usage: dict | None,
+) -> tuple[int | None, int | None, int | None]:
+    """Normalize token usage fields from different CLI event shapes."""
+    if not isinstance(usage, dict):
+        return (None, None, None)
+
+    prompt_tokens = usage.get("input_tokens") or usage.get("prompt_tokens")
+    completion_tokens = usage.get("output_tokens") or usage.get("completion_tokens")
+    total_tokens = usage.get("total_tokens")
+    if total_tokens is None:
+        total_tokens = _combine_token_counts(prompt_tokens, completion_tokens)
+
+    return (prompt_tokens, completion_tokens, total_tokens)
+
+
+def _read_codex_usage_from_thread(
+    thread_id: str,
+) -> tuple[int | None, int | None, int | None]:
+    """Read Codex token usage from the persisted thread rollout when stdout omits it."""
+    db_path = os.path.expanduser("~/.codex/state_5.sqlite")
+    if not os.path.exists(db_path):
+        return (None, None, None)
+
+    try:
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        row = conn.execute(
+            "SELECT rollout_path, tokens_used FROM threads WHERE id = ?",
+            (thread_id,),
+        ).fetchone()
+        if not row:
+            return (None, None, None)
+
+        rollout_path = row["rollout_path"]
+        if rollout_path and os.path.exists(rollout_path):
+            with open(rollout_path) as handle:
+                for line in handle:
+                    try:
+                        event = json.loads(line)
+                    except json.JSONDecodeError:
+                        continue
+                    payload = event.get("payload", {})
+                    if payload.get("type") != "token_count":
+                        continue
+                    info = payload.get("info") or {}
+                    usage = info.get("last_token_usage") or info.get("total_token_usage")
+                    prompt_tokens, completion_tokens, total_tokens = _extract_usage_fields(usage)
+                    if total_tokens is not None:
+                        return (prompt_tokens, completion_tokens, total_tokens)
+
+        total_tokens = row["tokens_used"] if row["tokens_used"] else None
+        return (None, None, total_tokens)
+    except sqlite3.Error as exc:
+        logger.debug("Failed to read Codex usage fallback for %s: %s", thread_id, exc)
+        return (None, None, None)
+    finally:
+        try:
+            conn.close()
+        except UnboundLocalError:
+            pass
+
+
+def _extract_user_query(text: str) -> str:
+    """Extract the wrapped user query body from Grok chat/session content."""
+    start_tag = "<user_query>"
+    end_tag = "</user_query>"
+    start = text.find(start_tag)
+    end = text.find(end_tag)
+    if start == -1 or end == -1 or end <= start:
+        return text.strip()
+    return text[start + len(start_tag):end].strip()
+
+
+def _read_grok_usage_from_session(
+    session_id: str,
+    request_id: str | None,
+    cwd: str | None = None,
+) -> int | None:
+    """Read Grok total token burn for a headless session from its persisted updates."""
+    session_cwd = cwd or os.getcwd()
+    session_root = os.path.expanduser("~/.grok/sessions")
+    session_dir = os.path.join(session_root, quote(session_cwd, safe=""), session_id)
+    updates_path = os.path.join(session_dir, "updates.jsonl")
+    if not os.path.exists(updates_path):
+        return None
+
+    baseline_total = None
+    prompt_total = None
+
+    try:
+        with open(updates_path) as handle:
+            for line in handle:
+                try:
+                    event = json.loads(line)
+                except json.JSONDecodeError:
+                    continue
+
+                meta = event.get("params", {}).get("_meta", {})
+                total_tokens = meta.get("totalTokens")
+                prompt_id = meta.get("promptId")
+                if total_tokens is None:
+                    continue
+
+                if request_id and prompt_id == request_id:
+                    prompt_total = total_tokens if prompt_total is None else max(prompt_total, total_tokens)
+                elif prompt_id is None:
+                    baseline_total = total_tokens if baseline_total is None else max(baseline_total, total_tokens)
+    except OSError as exc:
+        logger.debug("Failed to read Grok usage fallback for %s: %s", session_id, exc)
+        return None
+
+    if prompt_total is None:
+        return None
+
+    baseline_total = baseline_total or 0
+    total_tokens = prompt_total - baseline_total
+    return total_tokens if total_tokens > 0 else prompt_total
 
 
 
@@ -186,7 +438,7 @@ def _call_grok(
     model_config: dict,
     prompt: str,
     system_prompt: str | None,
-) -> tuple[str | None, int, int | None, int | None, str | None]:
+) -> tuple[str | None, int, int | None, int | None, int | None, str | None]:
     """Call Grok via the agent CLI in single-shot mode."""
     import tempfile
     prompt_file = tempfile.NamedTemporaryFile(
@@ -206,39 +458,49 @@ def _call_grok(
             cmd.extend(["--system-prompt", system_prompt])
 
         start = time.monotonic()
-        result = subprocess.run(
+        result = _run_cli_with_limit(
+            model_config["cli"],
             cmd,
-            capture_output=True,
-            text=True,
-            timeout=config.CLI_TIMEOUT,
+            timeout=_model_timeout_seconds(model_config),
         )
         elapsed = int((time.monotonic() - start) * 1000)
 
         if result.returncode != 0:
             stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
-            return (None, elapsed, None, None, f"agent exited {result.returncode}: {stderr}")
+            return (None, elapsed, None, None, None, f"agent exited {result.returncode}: {stderr}")
 
         output = result.stdout.strip()
         if not output:
-            return (None, elapsed, None, None, "Empty response from agent")
+            return (None, elapsed, None, None, None, "Empty response from agent")
 
         text = output
+        prompt_tokens = None
+        completion_tokens = None
+        total_tokens = None
+        session_id = None
+        request_id = None
         try:
             data = json.loads(output)
             text = data.get("text", "")
             if not text and data.get("thought"):
                 text = data["thought"]
             if data.get("stopReason") == "Cancelled":
-                return (None, elapsed, None, None, "Agent run was cancelled (tool approval needed)")
+                return (None, elapsed, None, None, None, "Agent run was cancelled (tool approval needed)")
+            usage = data.get("usage")
+            prompt_tokens, completion_tokens, total_tokens = _extract_usage_fields(usage)
+            session_id = data.get("sessionId")
+            request_id = data.get("requestId")
         except (json.JSONDecodeError, AttributeError):
             pass
 
-        if not text.strip():
-            return (None, elapsed, None, None, "Empty response from agent")
+        if total_tokens is None and session_id:
+            total_tokens = _read_grok_usage_from_session(session_id, request_id, os.getcwd())
 
-        return (text, elapsed, None, None, None)
+        if not text.strip():
+            return (None, elapsed, prompt_tokens, completion_tokens, total_tokens, "Empty response from agent")
+
+        return (text, elapsed, prompt_tokens, completion_tokens, total_tokens, None)
     finally:
-        import os
         os.unlink(prompt_file.name)
 
 
@@ -256,11 +518,10 @@ def _judge_fn(prompt: str) -> str | None:
     """LLM judge callback — uses Claude (via CLI) to evaluate model outputs."""
     cmd = ["claude", "-p", "--model", "sonnet"]
     try:
-        result = subprocess.run(
+        result = _run_cli_with_limit(
+            "claude",
             cmd,
             input=prompt,
-            capture_output=True,
-            text=True,
             timeout=config.CLI_TIMEOUT,
         )
         if result.returncode != 0:
@@ -327,7 +588,7 @@ def _run_single_test(
                  "Provide thorough, correct, and well-structured responses."
         )
 
-        response_text, latency_ms, prompt_tokens, completion_tokens, error = call_model(
+        response_text, latency_ms, prompt_tokens, completion_tokens, total_tokens, error = call_model(
             model_cfg, test_prompt, system_prompt
         )
 
@@ -336,7 +597,7 @@ def _run_single_test(
                 db.save_test_result(
                     conn, run_id, model_id, test_id, category_id,
                     score=None, raw_score=None, latency_ms=latency_ms,
-                    token_count=None, prompt_tokens=prompt_tokens,
+                    token_count=total_tokens, prompt_tokens=prompt_tokens,
                     completion_tokens=completion_tokens,
                     model_output=None, eval_details=None, error=error,
                 )
@@ -344,7 +605,7 @@ def _run_single_test(
             return (False, f"{model_id}/{test_id}: {error}")
 
         score, eval_details = evaluate_response(test_id, response_text)
-        token_count = (prompt_tokens or 0) + (completion_tokens or 0)
+        token_count = total_tokens if total_tokens is not None else _combine_token_counts(prompt_tokens, completion_tokens)
 
         with _db_lock:
             db.save_test_result(
@@ -387,12 +648,13 @@ def _run_model_tests(
     total = len(active_tests)
     passed = 0
     errors = []
+    parallel_tests = _model_parallel_tests(model_cfg)
 
     logger.info("Testing model: %s (%s via %s) — %d tests, %d parallel",
                 model_cfg["name"], model_cfg["cli_model"], model_cfg["cli"],
-                total, config.PARALLEL_TESTS)
+                total, parallel_tests)
 
-    with ThreadPoolExecutor(max_workers=config.PARALLEL_TESTS) as pool:
+    with ThreadPoolExecutor(max_workers=parallel_tests) as pool:
         futures = {
             pool.submit(_run_single_test, model_cfg, test_row, run_id, conn): test_row
             for test_row in active_tests

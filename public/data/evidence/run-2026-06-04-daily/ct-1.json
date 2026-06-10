@@ -16,6 +16,8 @@
       },
       "latencyMs": 42054,
       "tokenCount": 6173,
+      "promptTokens": 2053,
+      "completionTokens": 4120,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 93314,
       "tokenCount": 6927,
+      "promptTokens": 3,
+      "completionTokens": 6924,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 95, \"reasoning\": \"Near-perfect implementation. TrieNode correctly uses a Dict for children and a boolean end-of-word flag. insert traverses character by character and marks the terminal node. search correctly delegates to _find_node and checks is_end_of_word, so prefix-only matches return False. autocomplete uses a proper DFS with sorted children traversal, guaranteeing alphabetical order without a post-sort, and the max_results guard is applied at every step including early ex"
       },
       "latencyMs": 26287,
-      "tokenCount": 0,
+      "tokenCount": 12710,
+      "promptTokens": 11447,
+      "completionTokens": 1263,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 43086,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

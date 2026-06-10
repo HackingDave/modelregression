@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 87, \"reasoning\": \"The implementation file is high quality, but the model's actual text output is a non-answer \u2014 it claims the code was written to a file and shows a bash verification snippet rather than including the implementation inline, making the response non-self-contained. The code itself is very strong: a single shared `parse_cron_field` function handles all 5 fields via a loop, `parse_cron` is a clean orchestrator, `_expand_field_part` is well-commented with explicit br"
       },
       "latencyMs": 286230,
-      "tokenCount": 0,
+      "tokenCount": 73194,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

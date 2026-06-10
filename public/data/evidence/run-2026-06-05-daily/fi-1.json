@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 97, \"reasoning\": \"Near-perfect implementation that satisfies all 9 rubric criteria. Custom debounce hook (useDebouncedValue) is cleanly implemented with useRef+setTimeout, 300ms configurable delay, and no lodash. Controlled input with useState, case-insensitive includes() filtering, useMemo for filteredItems, isSearching indicator, whitespace trimming, regex escaping for special characters, <mark> highlighting with case preservation, and useEffect cleanup on unmount. Minor dedu"
       },
       "latencyMs": 80582,
-      "tokenCount": 0,
+      "tokenCount": 28501,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

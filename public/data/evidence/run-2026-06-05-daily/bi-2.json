@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 97, \"reasoning\": \"The model produces a near-perfect async/await conversion. All callback-based functions are fully converted to async functions, callback hell is completely eliminated in favor of flat sequential awaits, and all error messages are preserved verbatim with identical prefix strings. The order of operations (readFile \u2192 parseData \u2192 validateRecords \u2192 transformRecords \u2192 writeFile) is maintained exactly, all console.log calls appear in correct order, and the return obje"
       },
       "latencyMs": 93319,
-      "tokenCount": 0,
+      "tokenCount": 25630,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

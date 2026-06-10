@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The implementation is a textbook-correct true sliding window rate limiter that fully satisfies every requirement in the rubric. The algorithm tracks per-IP timestamps in a sorted array, computes `cutoff = now - windowMs` on every request, and prunes only entries older than that cutoff \u2014 this is the canonical sliding window approach with no fixed-bucket or periodic-reset approximation. All three rate-limit headers are set on both allowed and rejected paths, wi"
       },
       "latencyMs": 127103,
-      "tokenCount": 0,
+      "tokenCount": 33526,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

@@ -16,6 +16,8 @@
       },
       "latencyMs": 94050,
       "tokenCount": 12162,
+      "promptTokens": 2051,
+      "completionTokens": 10111,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -24,6 +26,8 @@
       "evalDetails": null,
       "latencyMs": 1046,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "claude exited 1: unknown error"
     },
     "gpt-5-5": {
@@ -33,7 +37,9 @@
         "raw": "```json\n{\"score\": 91, \"reasoning\": \"Exceptional code quality with near-perfect decomposition and strong readability. The shared parse_field/parse_field_item/parse_base_item chain cleanly handles all cron syntax without duplication. parse_cron is a pure orchestrator. Every function has a single responsibility. Type hints are complete and precise across all 20+ functions. The main weaknesses are the near-total absence of docstrings (only CronParseError has one; no function explains its contract or"
       },
       "latencyMs": 55128,
-      "tokenCount": 0,
+      "tokenCount": 14364,
+      "promptTokens": 11540,
+      "completionTokens": 2824,
       "error": null
     },
     "grok": {
@@ -42,6 +48,8 @@
       "evalDetails": null,
       "latencyMs": 184236,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

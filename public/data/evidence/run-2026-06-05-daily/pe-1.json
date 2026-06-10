@@ -15,7 +15,9 @@
         "raw": "```json\n{\"score\": 98, \"reasoning\": \"Near-perfect response. The solution is a textbook O(n\u00b2) sort+two-pointer implementation that correctly handles all edge cases and produces bit-identical output to the original. All six provided test cases pass on manual trace. The complexity analysis is rigorous (distinguishes \u0398 vs O, explains amortized pointer movement, notes output-size lower bound), and the optimization strategy explanation is detailed and step-by-step. The only deficiency is that the strat"
       },
       "latencyMs": 73392,
-      "tokenCount": 0,
+      "tokenCount": 21230,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": null
     }
   }

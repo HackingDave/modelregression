@@ -16,6 +16,8 @@
       },
       "latencyMs": 22739,
       "tokenCount": 3938,
+      "promptTokens": 2049,
+      "completionTokens": 1889,
       "error": null
     },
     "claude-sonnet-4-6": {
@@ -26,6 +28,8 @@
       },
       "latencyMs": 57297,
       "tokenCount": 4036,
+      "promptTokens": 3,
+      "completionTokens": 4033,
       "error": null
     },
     "gpt-5-5": {
@@ -35,7 +39,9 @@
         "raw": "```json\n{\"score\": 100, \"reasoning\": \"The solution is essentially perfect. It correctly implements the histogram-based approach with a stack-based O(n) histogram sub-solver, achieves O(rows*cols) time and O(cols) space, handles all required edge cases, passes all five provided assertions, and includes clear comments and docstrings documenting both the algorithm steps and complexity. The sentinel value trick (appending height 0 at the end) cleanly flushes the stack. Width calculation using `i if n"
       },
       "latencyMs": 17547,
-      "tokenCount": 0,
+      "tokenCount": 12191,
+      "promptTokens": 11440,
+      "completionTokens": 751,
       "error": null
     },
     "grok": {
@@ -44,6 +50,8 @@
       "evalDetails": null,
       "latencyMs": 21308,
       "tokenCount": null,
+      "promptTokens": null,
+      "completionTokens": null,
       "error": "Empty response from agent"
     }
   }

@@ -50,6 +50,64 @@ validate_config() {
 # trust-on-first-use, which records the key and verifies it on every later run.
 build_ssh_opts() {
     SSH_OPTS="-p $SERVER_PORT -o ConnectTimeout=10"
+REMOTE_PARENT="$(dirname "$REMOTE_PATH")"
+REMOTE_BASENAME="$(basename "$REMOTE_PATH")"
+TIMESTAMP="$(date +%Y%m%d%H%M%S)"
+REMOTE_RELEASE_PATH="${REMOTE_PARENT}/${REMOTE_BASENAME}_release_${TIMESTAMP}"
+REMOTE_BACKUP_PATH="${REMOTE_PARENT}/${REMOTE_BASENAME}_backup_previous"
+APP_HEALTH_URL="http://127.0.0.1:3002"
+
+echo -e "${GREEN}========================================${NC}"
+echo -e "${GREEN}  ModelRegression.com Deploy${NC}"
+echo -e "${GREEN}========================================${NC}"
+echo ""
+
+# Prepare staged release directory on server
+echo -e "${YELLOW}Preparing staged release directory...${NC}"
+ssh_cmd "
+    set -e
+    rm -rf '$REMOTE_RELEASE_PATH'
+    mkdir -p '$REMOTE_RELEASE_PATH'
+"
+echo -e "${GREEN}Stage prepared${NC}"
+
+# Sync project files (excluding dev/benchmark files)
+echo -e "${YELLOW}Syncing files to staged release...${NC}"
+rsync -avz --progress \
+    -e "$RSYNC_SSH" \
+    --exclude 'node_modules' \
+    --exclude '.next' \
+    --exclude '.env' \
+    --exclude '.env.local' \
+    --exclude '.deploy.env' \
+    --exclude '.git' \
+    --exclude '.venv' \
+    --exclude '.pytest_cache' \
+    --exclude '__pycache__' \
+    --exclude '*.pyc' \
+    --exclude 'benchmark' \
+    --exclude 'dogfood-output' \
+    --exclude '.DS_Store' \
+    --exclude '*.log' \
+    --exclude 'tsconfig.tsbuildinfo' \
+    --exclude 'out' \
+    "$LOCAL_PATH/" "$SERVER_USER@$SERVER_IP:$REMOTE_RELEASE_PATH/"
+
+if [ $? -ne 0 ]; then
+    echo -e "${RED}File sync failed.${NC}"
+    ssh_cmd "rm -rf '$REMOTE_RELEASE_PATH'"
+    exit 1
+fi
+echo -e "${GREEN}Files synced successfully${NC}"
+
+# Install dependencies on server
+echo -e "${YELLOW}Installing dependencies...${NC}"
+ssh_cmd "set -e; cd '$REMOTE_RELEASE_PATH' && npm install --legacy-peer-deps"
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Dependency install failed.${NC}"
+    ssh_cmd "rm -rf '$REMOTE_RELEASE_PATH'"
+    exit 1
+fi
 
     local kh_file=""
     if [ -n "$KNOWN_HOSTS" ]; then

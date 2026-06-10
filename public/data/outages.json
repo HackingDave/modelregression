@@ -1,10 +1,22 @@
 {
   "current": [],
-  "history": [],
+  "history": [
+    {
+      "id": "7f59c626-8b60-41c2-9ebf-5ec2db9aa6ae",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-07T04:01:01.000Z",
+      "endedAt": "2026-06-07T04:30:03.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    }
+  ],
   "uptime": {
     "claude": {
-      "7d": 100,
-      "30d": 100,
+      "7d": 99.7,
+      "30d": 99.9,
       "90d": 100
     },
     "codex": {

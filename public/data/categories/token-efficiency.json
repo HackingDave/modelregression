@@ -1,0 +1,129 @@
+{
+  "category": {
+    "id": "token-efficiency",
+    "name": "Token Efficiency",
+    "slug": "token-efficiency",
+    "description": "Measures how efficiently a model solves tasks by penalizing higher token consumption. Lower usage earns a higher score.",
+    "icon": "hash",
+    "weight": 1
+  },
+  "tests": [],
+  "models": {
+    "claude-opus-4-8": {
+      "currentScore": 100,
+      "totalTokens": 229491,
+      "avgTokensPerTest": 7650,
+      "history": [
+        {
+          "timestamp": "2026-06-04T21:11:08.000Z",
+          "score": 83.8
+        },
+        {
+          "timestamp": "2026-06-05T16:17:31.000Z",
+          "score": 68.3
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 56.6
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 100
+        }
+      ]
+    },
+    "claude-sonnet-4-6": {
+      "currentScore": 74.3,
+      "totalTokens": 298595,
+      "avgTokensPerTest": 10296,
+      "history": [
+        {
+          "timestamp": "2026-06-04T21:11:08.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-05T16:17:31.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 95.3
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 74.3
+        }
+      ]
+    },
+    "gpt-5-5": {
+      "currentScore": 53.6,
+      "totalTokens": 428407,
+      "avgTokensPerTest": 14280,
+      "history": [
+        {
+          "timestamp": "2026-06-04T21:11:08.000Z",
+          "score": 41
+        },
+        {
+          "timestamp": "2026-06-05T16:17:31.000Z",
+          "score": 36.8
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 29.2
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 51.9
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 53.6
+        }
+      ]
+    },
+    "grok": {
+      "currentScore": 24.5,
+      "totalTokens": 937342,
+      "avgTokensPerTest": 31245,
+      "history": [
+        {
+          "timestamp": "2026-06-04T21:11:08.000Z",
+          "score": 27.2
+        },
+        {
+          "timestamp": "2026-06-05T16:17:31.000Z",
+          "score": 18.9
+        },
+        {
+          "timestamp": "2026-06-05T19:40:39.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-05T20:40:18.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-06-06T13:35:00.000Z",
+          "score": 13.2
+        },
+        {
+          "timestamp": "2026-06-07T03:00:29.000Z",
+          "score": 26.1
+        },
+        {
+          "timestamp": "2026-06-08T03:00:24.000Z",
+          "score": 24.5
+        }
+      ]
+    }
+  }
+}

@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { formatScore, getScoreColor, getTrendIcon, getTrendColor } from "@/lib/utils";
+import { formatScore, formatTokens, getScoreColor, getTrendIcon } from "@/lib/utils";
+import { TOKEN_EFFICIENCY_CATEGORY_ID } from "@/lib/categories";
 import { Sparkline } from "@/components/charts/sparkline";
 import { AnimatedCounter } from "@/components/shared/animated-counter";
 import { TrendingUp, TrendingDown, Minus } from "lucide-react";
-import type { ModelInfo, ModelRunResult, HistoryEntry } from "@/lib/types";
+import type { ModelInfo, ModelRunResult } from "@/lib/types";
 
 interface ModelOverviewCardProps {
   model: ModelInfo;
@@ -24,6 +25,8 @@ export function ModelOverviewCard({
   const trend = getTrendIcon(change);
   const TrendIcon =
     trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
+  const tokenBenchmark =
+    result.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? null;
 
   return (
     <Link href={`/models/${model.slug}`} className="block group">
@@ -75,7 +78,7 @@ export function ModelOverviewCard({
         <div className="flex items-end justify-between mb-4">
           <div>
             <AnimatedCounter
-              value={result.compositeScore}
+              value={result.compositeScore ?? 0}
               className={cn("text-3xl font-bold", getScoreColor(result.compositeScore))}
             />
             <span className="text-sm text-muted-foreground font-mono ml-1">
@@ -84,8 +87,27 @@ export function ModelOverviewCard({
           </div>
           <div className="text-right">
             <span className="text-2xl font-bold font-mono text-muted-foreground">
-              #{result.rank}
+              {result.rank != null ? `#${result.rank}` : "—"}
             </span>
+          </div>
+        </div>
+
+        <div className="mb-4 grid grid-cols-2 gap-2">
+          <div className="rounded-lg border border-border/30 bg-background/20 p-3">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              Token Benchmark
+            </p>
+            <p className={cn("mt-1 font-mono text-sm font-semibold", getScoreColor(tokenBenchmark))}>
+              {formatScore(tokenBenchmark)}
+            </p>
+          </div>
+          <div className="rounded-lg border border-border/30 bg-background/20 p-3">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              Avg Tokens/Test
+            </p>
+            <p className="mt-1 font-mono text-sm font-semibold text-foreground">
+              {formatTokens(result.avgTokensPerTest)}
+            </p>
           </div>
         </div>
 
