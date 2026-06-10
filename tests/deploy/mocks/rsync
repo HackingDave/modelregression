@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Mock rsync: log argv (incl. the -e transport string) and succeed.
+log="${MOCK_LOG_DIR:?MOCK_LOG_DIR not set}/rsync"
+{ printf 'rsync'; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\n'; } >> "$log.log"
+for a in "$@"; do printf '%s\n' "$a" >> "$log.argv"; done
+exit 0

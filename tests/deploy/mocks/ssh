@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Mock ssh: log argv, then emit canned output for the remote command so the
+# real deploy.sh control flow (health check, pm2 status) runs to completion.
+log="${MOCK_LOG_DIR:?MOCK_LOG_DIR not set}/ssh"
+{ printf 'ssh'; for a in "$@"; do printf ' [%s]' "$a"; done; printf '\n'; } >> "$log.log"
+for a in "$@"; do printf '%s\n' "$a" >> "$log.argv"; done
+
+remote="${@: -1}"
+if [[ "$remote" == *'%{http_code}'* || "$remote" == *'curl '* ]]; then
+    printf '200'
+elif [[ "$remote" == *'pm2 jlist'* ]]; then
+    printf '"name":"modelregression","status":"online"\n'
+fi
+exit 0

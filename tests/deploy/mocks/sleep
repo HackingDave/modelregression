@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# Mock sleep: no-op so the health-check loop doesn't slow the suite.
+exit 0
