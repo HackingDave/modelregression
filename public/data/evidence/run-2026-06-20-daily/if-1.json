@@ -1,0 +1,156 @@
+{
+  "test": {
+    "id": "if-1",
+    "name": "Structured Output Compliance",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Produce JSON matching an exact schema with no extra fields",
+    "prompt": "List exactly 7 programming languages that were first released after the year 2010.\n\nYou MUST follow this exact format for each item:\n<number>. <LanguageName> (<year>) - <one sentence description>\n\nRules:\n1. List EXACTLY 7 languages \u2014 not 6, not 8.\n2. Each language must have been first released (v1.0 or initial public release) AFTER 2010, meaning 2011 or later.\n3. Each item must be on its own line.\n4. The format must be exactly: number, period, space, language name, space, year in parentheses, space, dash, space, one sentence description.\n5. Each description must be exactly ONE sentence (one period at the end, no additional sentences).\n6. Do NOT include any text before the list (no introduction, no \"Here are...\" preamble).\n7. Do NOT include any text after the list (no summary, no notes, no caveats).\n8. Output ONLY the 7 numbered items, nothing else.\n\nExample of the correct format (do NOT use this language, it's just to show format):\n1. ExampleLang (2015) - A language designed for example purposes only."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed language for the JVM developed by JetBrains and widely used for Android development.\n2. Dart (2011) - A client-optimized language from Google designed for building fast apps across mobile, web, and desktop.\n3. Elixir (2012) - A functional, concurrent language built on the Erlang virtual machine for scalable and maintainable applications.\n4. TypeScript (2012) - A typed superset of JavaScript developed by Microsoft that compiles to plain JavaScript.\n5. Julia (2012) - A high-performance dynamic language created for numerical and scientific computing.\n6. Swift (2014) - A general-purpose language developed by Apple for building apps across its platforms.\n7. Zig (2016) - A low-level systems language focused on simplicity, performance, and explicit memory control.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 108322,
+      "tokenCount": 3428,
+      "promptTokens": 2713,
+      "completionTokens": 715,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed programming language developed by JetBrains that targets the JVM and is now Google's officially preferred language for Android development.\n2. Dart (2011) - A client-optimized, object-oriented language developed by Google designed for building fast, cross-platform applications, widely used with the Flutter framework.\n3. Elixir (2012) - A functional, concurrent programming language built on the Erlang VM designed for building scalable, fault-tolerant, and distributed systems.\n4. TypeScript (2012) - A strongly typed superset of JavaScript developed by Microsoft that adds optional static typing and compiles down to plain JavaScript.\n5. Julia (2012) - A high-level, high-performance dynamic programming language designed primarily for numerical analysis and scientific computing.\n6. Swift (2014) - Apple's compiled, general-purpose programming language introduced as a safer and more expressive successor to Objective-C for Apple platform development.\n7. Crystal (2014) - A statically typed, compiled language with Ruby-inspired syntax that aims to combine the productivity of a high-level language with native C-like performance.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 288987,
+      "tokenCount": 1931,
+      "promptTokens": 3,
+      "completionTokens": 1928,
+      "error": null
+    },
+    "gpt-5-5": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed language designed for concise and interoperable JVM, Android, and multiplatform development.\n2. TypeScript (2012) - A typed superset of JavaScript that adds static checking for large-scale web development.\n3. Elm (2012) - A functional language that compiles to JavaScript and emphasizes reliable browser user interfaces.\n4. Julia (2012) - A high-performance dynamic language built for numerical computing, data science, and scientific programming.\n5. Swift (2014) - A modern systems and application language developed by Apple for iOS, macOS, and related platforms.\n6. Hack (2014) - A gradually typed language derived from PHP and designed to run on the HHVM virtual machine.\n7. Crystal (2014) - A statically typed compiled language with Ruby-inspired syntax and native-code performance.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014",
+            "2014"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014",
+            "2014"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 15638,
+      "tokenCount": 12616,
+      "promptTokens": 11914,
+      "completionTokens": 702,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed programming language developed by JetBrains that targets the JVM and compiles to native code.\n2. Julia (2012) - A high-level dynamic programming language designed for high-performance numerical and scientific computing.\n3. Swift (2014) - A compiled programming language developed by Apple for building applications on iOS, macOS, and other Apple platforms.\n4. Rust (2015) - A multi-paradigm systems programming language focused on safety, speed, and concurrency.\n5. Elixir (2012) - A functional programming language that runs on the Erlang virtual machine and is designed for building scalable applications.\n6. Crystal (2014) - A statically typed programming language with a Ruby-like syntax that compiles directly to native machine code.\n7. Raku (2015) - A dynamic programming language that is the successor to Perl with many modern features.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2012",
+            "2014",
+            "2015",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2012",
+            "2014",
+            "2015",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 29155,
+      "tokenCount": 18337,
+      "promptTokens": null,
+      "completionTokens": null,
+      "error": null
+    }
+  }
+}

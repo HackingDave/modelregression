@@ -26,8 +26,8 @@
   ],
   "models": {
     "claude-opus-4-8": {
-      "currentScore": 68.2,
-      "totalTokens": 22584,
+      "currentScore": 66.3,
+      "totalTokens": 22576,
       "avgTokensPerTest": null,
       "history": [
         {
@@ -49,12 +49,100 @@
         {
           "timestamp": "2026-06-08T03:00:24.000Z",
           "score": 68.2
+        },
+        {
+          "timestamp": "2026-06-09T03:00:23.000Z",
+          "score": 63.9
+        },
+        {
+          "timestamp": "2026-06-10T03:00:30.000Z",
+          "score": 70.3
+        },
+        {
+          "timestamp": "2026-06-11T03:00:24.000Z",
+          "score": 66.3
+        },
+        {
+          "timestamp": "2026-06-12T03:00:21.000Z",
+          "score": 66.3
+        },
+        {
+          "timestamp": "2026-06-13T03:00:25.000Z",
+          "score": 65.7
+        },
+        {
+          "timestamp": "2026-06-14T03:00:25.000Z",
+          "score": 67.4
+        },
+        {
+          "timestamp": "2026-06-15T03:00:21.000Z",
+          "score": 68.4
+        },
+        {
+          "timestamp": "2026-06-16T03:00:23.000Z",
+          "score": 70
+        },
+        {
+          "timestamp": "2026-06-17T03:00:20.000Z",
+          "score": 68.7
+        },
+        {
+          "timestamp": "2026-06-18T03:00:21.000Z",
+          "score": 68.5
+        },
+        {
+          "timestamp": "2026-06-19T03:00:21.000Z",
+          "score": 70.2
+        },
+        {
+          "timestamp": "2026-06-20T03:00:22.000Z",
+          "score": 68.8
+        },
+        {
+          "timestamp": "2026-06-21T03:00:22.000Z",
+          "score": 65.7
+        },
+        {
+          "timestamp": "2026-06-22T03:00:18.000Z",
+          "score": 72.6
+        },
+        {
+          "timestamp": "2026-06-23T03:00:23.000Z",
+          "score": 68.6
+        },
+        {
+          "timestamp": "2026-06-24T03:00:20.000Z",
+          "score": 70.8
+        },
+        {
+          "timestamp": "2026-06-25T03:00:22.000Z",
+          "score": 69.6
+        },
+        {
+          "timestamp": "2026-06-26T03:00:26.000Z",
+          "score": 67.8
+        },
+        {
+          "timestamp": "2026-06-27T03:00:19.000Z",
+          "score": 64.9
+        },
+        {
+          "timestamp": "2026-06-28T03:00:21.000Z",
+          "score": 68
+        },
+        {
+          "timestamp": "2026-06-29T03:00:25.000Z",
+          "score": 70.3
+        },
+        {
+          "timestamp": "2026-06-30T03:00:22.000Z",
+          "score": 66.3
         }
       ]
     },
     "claude-sonnet-4-6": {
-      "currentScore": 72.4,
-      "totalTokens": 30534,
+      "currentScore": 68.6,
+      "totalTokens": 34361,
       "avgTokensPerTest": null,
       "history": [
         {
@@ -76,12 +164,100 @@
         {
           "timestamp": "2026-06-08T03:00:24.000Z",
           "score": 72.4
+        },
+        {
+          "timestamp": "2026-06-09T03:00:23.000Z",
+          "score": 69.5
+        },
+        {
+          "timestamp": "2026-06-10T03:00:30.000Z",
+          "score": 70.7
+        },
+        {
+          "timestamp": "2026-06-11T03:00:24.000Z",
+          "score": 71.9
+        },
+        {
+          "timestamp": "2026-06-12T03:00:21.000Z",
+          "score": 57.9
+        },
+        {
+          "timestamp": "2026-06-13T03:00:25.000Z",
+          "score": 68.4
+        },
+        {
+          "timestamp": "2026-06-14T03:00:25.000Z",
+          "score": 69.9
+        },
+        {
+          "timestamp": "2026-06-15T03:00:21.000Z",
+          "score": 67.9
+        },
+        {
+          "timestamp": "2026-06-16T03:00:23.000Z",
+          "score": 68.7
+        },
+        {
+          "timestamp": "2026-06-17T03:00:20.000Z",
+          "score": 65.9
+        },
+        {
+          "timestamp": "2026-06-18T03:00:21.000Z",
+          "score": 66.7
+        },
+        {
+          "timestamp": "2026-06-19T03:00:21.000Z",
+          "score": 69.3
+        },
+        {
+          "timestamp": "2026-06-20T03:00:22.000Z",
+          "score": 69.3
+        },
+        {
+          "timestamp": "2026-06-21T03:00:22.000Z",
+          "score": 69.3
+        },
+        {
+          "timestamp": "2026-06-22T03:00:18.000Z",
+          "score": 66.2
+        },
+        {
+          "timestamp": "2026-06-23T03:00:23.000Z",
+          "score": 69.4
+        },
+        {
+          "timestamp": "2026-06-24T03:00:20.000Z",
+          "score": 72.1
+        },
+        {
+          "timestamp": "2026-06-25T03:00:22.000Z",
+          "score": 66.9
+        },
+        {
+          "timestamp": "2026-06-26T03:00:26.000Z",
+          "score": 68.6
+        },
+        {
+          "timestamp": "2026-06-27T03:00:19.000Z",
+          "score": 67.3
+        },
+        {
+          "timestamp": "2026-06-28T03:00:21.000Z",
+          "score": 68.5
+        },
+        {
+          "timestamp": "2026-06-29T03:00:25.000Z",
+          "score": 70.9
+        },
+        {
+          "timestamp": "2026-06-30T03:00:22.000Z",
+          "score": 68.6
         }
       ]
     },
     "gpt-5-5": {
-      "currentScore": 66.6,
-      "totalTokens": 38063,
+      "currentScore": 69.6,
+      "totalTokens": 39181,
       "avgTokensPerTest": null,
       "history": [
         {
@@ -103,12 +279,100 @@
         {
           "timestamp": "2026-06-08T03:00:24.000Z",
           "score": 66.6
+        },
+        {
+          "timestamp": "2026-06-09T03:00:23.000Z",
+          "score": 60.9
+        },
+        {
+          "timestamp": "2026-06-10T03:00:30.000Z",
+          "score": 63.4
+        },
+        {
+          "timestamp": "2026-06-11T03:00:24.000Z",
+          "score": 63.8
+        },
+        {
+          "timestamp": "2026-06-12T03:00:21.000Z",
+          "score": 60.9
+        },
+        {
+          "timestamp": "2026-06-13T03:00:25.000Z",
+          "score": 63.2
+        },
+        {
+          "timestamp": "2026-06-14T03:00:25.000Z",
+          "score": 63.5
+        },
+        {
+          "timestamp": "2026-06-15T03:00:21.000Z",
+          "score": 62
+        },
+        {
+          "timestamp": "2026-06-16T03:00:23.000Z",
+          "score": 62.5
+        },
+        {
+          "timestamp": "2026-06-17T03:00:20.000Z",
+          "score": 64
+        },
+        {
+          "timestamp": "2026-06-18T03:00:21.000Z",
+          "score": 63.6
+        },
+        {
+          "timestamp": "2026-06-19T03:00:21.000Z",
+          "score": 61.8
+        },
+        {
+          "timestamp": "2026-06-20T03:00:22.000Z",
+          "score": 61.6
+        },
+        {
+          "timestamp": "2026-06-21T03:00:22.000Z",
+          "score": 60.8
+        },
+        {
+          "timestamp": "2026-06-22T03:00:18.000Z",
+          "score": 60.8
+        },
+        {
+          "timestamp": "2026-06-23T03:00:23.000Z",
+          "score": 63.1
+        },
+        {
+          "timestamp": "2026-06-24T03:00:20.000Z",
+          "score": 65.8
+        },
+        {
+          "timestamp": "2026-06-25T03:00:22.000Z",
+          "score": 63.6
+        },
+        {
+          "timestamp": "2026-06-26T03:00:26.000Z",
+          "score": 60
+        },
+        {
+          "timestamp": "2026-06-27T03:00:19.000Z",
+          "score": 60.4
+        },
+        {
+          "timestamp": "2026-06-28T03:00:21.000Z",
+          "score": 66
+        },
+        {
+          "timestamp": "2026-06-29T03:00:25.000Z",
+          "score": 59.2
+        },
+        {
+          "timestamp": "2026-06-30T03:00:22.000Z",
+          "score": 69.6
         }
       ]
     },
     "grok": {
-      "currentScore": 76.7,
-      "totalTokens": 90568,
+      "currentScore": 67.7,
+      "totalTokens": 106257,
       "avgTokensPerTest": null,
       "history": [
         {
@@ -138,6 +402,94 @@
         {
           "timestamp": "2026-06-08T03:00:24.000Z",
           "score": 76.7
+        },
+        {
+          "timestamp": "2026-06-09T03:00:23.000Z",
+          "score": 73.1
+        },
+        {
+          "timestamp": "2026-06-10T03:00:30.000Z",
+          "score": 68.4
+        },
+        {
+          "timestamp": "2026-06-11T03:00:24.000Z",
+          "score": 68.8
+        },
+        {
+          "timestamp": "2026-06-12T03:00:21.000Z",
+          "score": 68.7
+        },
+        {
+          "timestamp": "2026-06-13T03:00:25.000Z",
+          "score": 74.5
+        },
+        {
+          "timestamp": "2026-06-14T03:00:25.000Z",
+          "score": 71.2
+        },
+        {
+          "timestamp": "2026-06-15T03:00:21.000Z",
+          "score": 73.6
+        },
+        {
+          "timestamp": "2026-06-16T03:00:23.000Z",
+          "score": 74.3
+        },
+        {
+          "timestamp": "2026-06-17T03:00:20.000Z",
+          "score": 74.3
+        },
+        {
+          "timestamp": "2026-06-18T03:00:21.000Z",
+          "score": 76.5
+        },
+        {
+          "timestamp": "2026-06-19T03:00:21.000Z",
+          "score": 71.6
+        },
+        {
+          "timestamp": "2026-06-20T03:00:22.000Z",
+          "score": 74.9
+        },
+        {
+          "timestamp": "2026-06-21T03:00:22.000Z",
+          "score": 69.8
+        },
+        {
+          "timestamp": "2026-06-22T03:00:18.000Z",
+          "score": 74.3
+        },
+        {
+          "timestamp": "2026-06-23T03:00:23.000Z",
+          "score": 74.7
+        },
+        {
+          "timestamp": "2026-06-24T03:00:20.000Z",
+          "score": 69.3
+        },
+        {
+          "timestamp": "2026-06-25T03:00:22.000Z",
+          "score": 71.6
+        },
+        {
+          "timestamp": "2026-06-26T03:00:26.000Z",
+          "score": 70.2
+        },
+        {
+          "timestamp": "2026-06-27T03:00:19.000Z",
+          "score": 75.4
+        },
+        {
+          "timestamp": "2026-06-28T03:00:21.000Z",
+          "score": 73.1
+        },
+        {
+          "timestamp": "2026-06-29T03:00:25.000Z",
+          "score": 67.7
+        },
+        {
+          "timestamp": "2026-06-30T03:00:22.000Z",
+          "score": 67.7
         }
       ]
     }

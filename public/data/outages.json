@@ -1,6 +1,535 @@
 {
-  "current": [],
+  "current": [
+    {
+      "id": "41ae5d74-f733-4a79-a90c-440e1eb15a38",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-30T17:00:07.000Z",
+      "endedAt": null,
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 117
+    },
+    {
+      "id": "f6944107-ef33-49ea-a9aa-60db39830c64",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-30T17:00:04.000Z",
+      "endedAt": null,
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 117
+    }
+  ],
   "history": [
+    {
+      "id": "54149f61-6092-4903-b047-299da216cc21",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-02T18:30:15.000Z",
+      "endedAt": "2026-07-02T19:00:14.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "62af7eb4-7a9e-47b7-ac49-7103a8a58ae5",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-02T01:00:10.000Z",
+      "endedAt": "2026-07-02T02:00:11.000Z",
+      "errorType": "error",
+      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.142.5\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019f2072-9384-7da0-ba6d-aba558c4da6c\n--------\nuse",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "9dd91e2e-eabd-4112-b00a-d6c9a58a4fe0",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-01T14:00:14.000Z",
+      "endedAt": "2026-07-01T14:30:14.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "a7473080-92bc-4135-8335-71cf5f03e549",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-01T12:30:15.000Z",
+      "endedAt": "2026-07-01T13:00:15.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "38185bd7-74a3-432a-8bad-17efa56f3851",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-01T00:30:13.000Z",
+      "endedAt": "2026-07-01T01:30:16.000Z",
+      "errorType": "error",
+      "errorMessage": "agent exited 1: \u001b[2m2026-07-01T01:00:11.313066Z\u001b[0m \u001b[31mERROR\u001b[0m responses API error \u001b[3mstatus\u001b[0m\u001b[2m=\u001b[0m403 Forbidden \u001b[3merror_message\u001b[0m\u001b[2m=\u001b[0mpersonal-team-blocked:spending-limit: You have run out of credits or need a Grok subscription. Add credits at https://grok.com/?_s=usage or upgrade at https://gro",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "7fab54be-b874-428d-a525-aa935061659f",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-30T20:00:14.000Z",
+      "endedAt": "2026-06-30T20:30:17.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "504d783c-ce9a-43b0-a872-2fc8c7c45dad",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-30T17:00:14.000Z",
+      "endedAt": "2026-06-30T17:30:20.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "c76e962c-9fbf-4246-8f6e-81ebcca5de2d",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-30T09:30:13.000Z",
+      "endedAt": "2026-06-30T10:00:14.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "270a2f27-d3ec-46b2-8399-7f80f3ca2a5c",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-30T04:31:09.000Z",
+      "endedAt": "2026-06-30T05:00:15.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "448a5aea-83fe-4f32-b9b7-21c8960c3118",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-29T21:30:13.000Z",
+      "endedAt": "2026-06-29T22:00:13.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "98ebe2d5-69f3-4372-aa17-114678c22148",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-28T06:30:02.000Z",
+      "endedAt": "2026-06-28T08:00:04.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "3db0a906-6743-497c-858d-c7dc6f7b44b3",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-28T06:00:04.000Z",
+      "endedAt": "2026-06-28T07:30:04.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "40c3e082-59c2-4cce-bbe1-4309fa6ed5cd",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-27T05:30:03.000Z",
+      "endedAt": "2026-06-27T07:00:05.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "078ec938-59ce-478a-afec-f38d7637bdab",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-27T05:30:03.000Z",
+      "endedAt": "2026-06-27T07:00:03.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "35235482-289d-44ea-b20a-a373d85e9d49",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-26T23:00:25.000Z",
+      "endedAt": "2026-06-26T23:30:13.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "1c0cac0a-fc1e-43d9-a437-8817d9409d9a",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-26T12:00:16.000Z",
+      "endedAt": "2026-06-26T12:30:23.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "11b1f268-8194-48ca-ba3c-384db0104d2a",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-26T00:30:16.000Z",
+      "endedAt": "2026-06-26T01:00:15.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "b9c19139-48d6-4632-b896-d45a7c231d6b",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-24T18:00:15.000Z",
+      "endedAt": "2026-06-24T18:30:13.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "b37ed313-1b32-4e4a-89b8-69a172388f7c",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-06-24T17:30:10.000Z",
+      "endedAt": "2026-06-24T18:00:10.000Z",
+      "errorType": "error",
+      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.142.0\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019efaae-a01b-7503-945c-f7afd532f1eb\n--------\nuse",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "bee30bbb-9ccc-4d9d-aeba-43edd9cbd8bf",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-24T14:01:01.000Z",
+      "endedAt": "2026-06-24T14:30:09.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "b816a37a-cd75-40e7-b60d-e3bd03fbf5de",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-23T23:00:15.000Z",
+      "endedAt": "2026-06-23T23:30:14.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "069c8b20-1c9a-4410-b9c2-aecb32624531",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-23T14:31:03.000Z",
+      "endedAt": "2026-06-23T15:01:06.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "79b0c0c9-82ab-4b27-805d-ae841320da85",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-23T14:30:03.000Z",
+      "endedAt": "2026-06-23T15:30:04.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "7ae72e2e-e0a3-4551-9f2a-81497c4043cb",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-23T05:00:04.000Z",
+      "endedAt": "2026-06-23T08:00:17.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 6
+    },
+    {
+      "id": "79b161db-bf67-42ef-9bd8-8beac8f0567c",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-23T05:00:03.000Z",
+      "endedAt": "2026-06-23T08:00:15.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 6
+    },
+    {
+      "id": "d440828a-196f-45a4-b5f7-0ea30c716ae2",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-22T08:31:01.000Z",
+      "endedAt": "2026-06-22T09:00:04.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "6331d1b4-ef8e-42bd-bfc8-f50aa2cd62ea",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-22T05:00:04.000Z",
+      "endedAt": "2026-06-22T07:00:08.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 4
+    },
+    {
+      "id": "4f72c664-7000-45b6-8f17-cba2f4a6a04f",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-22T05:00:03.000Z",
+      "endedAt": "2026-06-22T07:00:03.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 4
+    },
+    {
+      "id": "fa615167-a3d3-4709-a4b3-d793db9508c7",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-22T01:31:11.000Z",
+      "endedAt": "2026-06-22T02:00:14.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "2ab6c766-b8af-4c63-987c-0c2cac5106f8",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-21T18:00:14.000Z",
+      "endedAt": "2026-06-21T18:30:17.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "93deb535-d7eb-4dae-bacb-890c4583f58a",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-21T05:00:03.000Z",
+      "endedAt": "2026-06-21T06:00:05.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "045770b4-f325-4907-a8d6-c4540ad025dd",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-21T05:00:02.000Z",
+      "endedAt": "2026-06-21T06:00:03.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "78ae91b3-30bd-48cc-b508-a67979df7452",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-19T18:00:15.000Z",
+      "endedAt": "2026-06-19T18:30:16.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "28426635-c2b8-441a-8787-5f18045ed5a8",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-06-18T17:30:08.000Z",
+      "endedAt": "2026-06-18T18:30:11.000Z",
+      "errorType": "error",
+      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.140.0\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019edbe3-e507-79b1-a432-1ae29040ce75\n--------\nuse",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "6bf4bfd9-4c0a-4f97-ab80-2a2245583561",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-18T05:00:03.000Z",
+      "endedAt": "2026-06-18T06:30:06.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "1ee10c55-adb1-4f48-80e8-9e313345f7d1",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-18T05:00:02.000Z",
+      "endedAt": "2026-06-18T06:30:04.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 3
+    },
+    {
+      "id": "0cadd64a-d541-42bc-a593-1dde132137a9",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-17T21:00:17.000Z",
+      "endedAt": "2026-06-17T21:30:12.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "5e01e470-77de-43fe-9bdd-0c49b2af9a2b",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-06-17T08:30:18.000Z",
+      "endedAt": "2026-06-17T09:00:21.000Z",
+      "errorType": "error",
+      "errorMessage": "Empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "dc365033-b9d3-4633-a923-0941c545b323",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-06-16T03:00:06.000Z",
+      "endedAt": "2026-06-16T03:00:17.000Z",
+      "errorType": "error",
+      "errorMessage": "CLI tool 'codex' not found",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "79d28fe6-a4b9-4e59-ac88-fd0681b0a3fb",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-15T07:01:01.000Z",
+      "endedAt": "2026-06-15T07:30:03.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "4f5e5ecb-6800-42e9-abcd-09fce0b1f1de",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-14T05:30:04.000Z",
+      "endedAt": "2026-06-14T07:30:06.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 4
+    },
+    {
+      "id": "a438c279-0c8e-4b46-b68d-177a0af69f80",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-14T05:30:03.000Z",
+      "endedAt": "2026-06-14T07:30:04.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 4
+    },
+    {
+      "id": "70cdbfdd-c46c-4d03-9e7d-cb943833d084",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-11T16:30:03.000Z",
+      "endedAt": "2026-06-11T19:00:06.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 5
+    },
+    {
+      "id": "c27d9107-a56d-4bdf-94dd-713d26408ab9",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-11T16:30:02.000Z",
+      "endedAt": "2026-06-11T19:00:04.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 5
+    },
+    {
+      "id": "49e516e6-c667-4899-a8f6-015cd9e7d672",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-09T05:00:03.000Z",
+      "endedAt": "2026-06-09T06:00:14.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 2
+    },
+    {
+      "id": "742e460e-f416-4192-a8e0-fb18cf7d1010",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-09T05:00:02.000Z",
+      "endedAt": "2026-06-09T06:00:12.000Z",
+      "errorType": "error",
+      "errorMessage": "claude exited 1: unknown error",
+      "httpStatus": null,
+      "checkCount": 2
+    },
     {
       "id": "7f59c626-8b60-41c2-9ebf-5ec2db9aa6ae",
       "provider": "claude",
@@ -15,19 +544,19 @@
   ],
   "uptime": {
     "claude": {
-      "7d": 99.7,
-      "30d": 99.9,
-      "90d": 100
+      "7d": 28.6,
+      "30d": 79.2,
+      "90d": 93.1
     },
     "codex": {
-      "7d": 100,
-      "30d": 100,
-      "90d": 100
+      "7d": 99.4,
+      "30d": 99.7,
+      "90d": 99.9
     },
     "agent": {
-      "7d": 100,
-      "30d": 100,
-      "90d": 100
+      "7d": 96.4,
+      "30d": 98.6,
+      "90d": 99.5
     }
   }
 }

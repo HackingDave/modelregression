@@ -1,0 +1,116 @@
+{
+  "test": {
+    "id": "lr-3",
+    "name": "Mathematical Proof",
+    "category": "long-reasoning",
+    "categoryName": "Long Reasoning",
+    "description": "Prove divisibility properties using induction and modular arithmetic",
+    "prompt": "Provide a complete, rigorous mathematical proof of the following statement:\n\nFor any prime number p greater than 3, the quantity (p\u00b2 \u2212 1) is divisible by 24.\n\nYour proof must:\n1. Start by clearly stating what you are proving.\n2. Show the algebraic factorization of p\u00b2 \u2212 1.\n3. Prove that the factored form is divisible by 8 (i.e., contains at least three factors of 2).\n4. Prove that the factored form is divisible by 3.\n5. Combine these to conclude divisibility by 24.\n6. Be rigorous \u2014 every claim must be justified, not just asserted. For example, if you claim that \"one of two consecutive even numbers is divisible by 4,\" explain why.\n7. Verify your proof with at least two concrete examples (e.g., p = 5 and p = 7).\n\nWrite the proof in a clear, structured format suitable for an undergraduate mathematics course."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 79.9,
+      "modelOutput": "# Theorem\n\n**For every prime number $p > 3$, the integer $p^2 - 1$ is divisible by 24.**\n\nIn symbols: if $p$ is prime and $p > 3$, then $24 \\mid (p^2 - 1)$.\n\n---\n\n## Strategy\n\nSince $24 = 8 \\times 3$ and $\\gcd(8, 3) = 1$, it suffices to prove two separate divisibility claims:\n\n1. $8 \\mid (p^2 - 1)$, and\n2. $3 \\mid (p^2 - 1)$.\n\nBecause $8$ and $3$ share no common prime factor, an integer divisible by both must be divisible by their product. (Justification: if $8 \\mid n$ and $3 \\mid n$, then the prime $3$ divides $n$, and $2^3 \\mid n$; combining the prime factorizations, $n$ contains at least three factors of $2$ and one factor of $3$, hence $2^3 \\cdot 3 = 24 \\mid n$. This is the standard fact that $\\operatorname{lcm}(8,3) = 24$ when the moduli are coprime.)\n\n---\n\n## Step 1 \u2014 Algebraic Factorization\n\nWe factor $p^2 - 1$ as a difference of two squares:\n$$\np^2 - 1 = (p-1)(p+1).\n$$\nNote that $p-1$ and $p+1$ are the two integers immediately adjacent to $p$. Since $p > 3$ is prime, $p$ is odd, so both $p-1$ and $p+1$ are **even** consecutive integers (they differ by $2$). We will analyze this factored form.\n\n---\n\n## Step 2 \u2014 Divisibility by 8\n\nSince $p$ is odd, write $p = 2k + 1$ for some integer $k \\geq 2$ (as $p > 3$). Then:\n$$\np - 1 = 2k, \\qquad p + 1 = 2k + 2 = 2(k+1).\n$$\nTherefore:\n$$\np^2 - 1 = (p-1)(p+1) = (2k)\\bigl(2(k+1)\\bigr) = 4\\,k(k+1).\n$$\n\nNow observe that $k$ and $k+1$ are **two consecutive integers**. Among any two consecutive integers, exactly one is even and one is odd, because they differ by $1$ and parity alternates. Hence the product $k(k+1)$ is even, i.e. $2 \\mid k(k+1)$.\n\nWrite $k(k+1) = 2m$ for some integer $m$. Substituting:\n$$\np^2 - 1 = 4 \\cdot k(k+1) = 4 \\cdot 2m = 8m.\n$$\n\nTherefore $8 \\mid (p^2 - 1)$. $\\quad\\blacksquare$\n\n> **Remark (the \"consecutive even numbers\" intuition).** Equivalently: $p-1$ and $p+1$ are consecutive *even* numbers, so one of them is a multiple of $4$ while the other is a multiple of $2$. Reason: among the multiples of $2$, every other one is a multiple of $4$ (the even numbers go $2, 4, 6, 8, \\dots$, alternating between \"$\\equiv 2 \\pmod 4$\" and \"$\\equiv 0 \\pmod 4$\"). Two consecutive even numbers therefore land on opposite classes, so one is $\\equiv 0 \\pmod 4$. Their product carries a factor of $4$ from one and a factor of $2$ from the other, giving $4 \\times 2 = 8$. This matches the computation above.\n\n---\n\n## Step 3 \u2014 Divisibility by 3\n\nConsider the **three consecutive integers** $p-1$, $p$, $p+1$. Among any three consecutive integers, exactly one is divisible by $3$. (Justification: the residues of three consecutive integers modulo $3$ are three consecutive values mod $3$, which cover all of $\\{0, 1, 2\\}$ exactly once; in particular, one residue is $0$.)\n\nNow, $p$ itself is **not** divisible by $3$: since $p$ is prime and $p > 3$, its only positive divisors are $1$ and $p$, and $3 \\neq 1, p$, so $3 \\nmid p$.\n\nTherefore the integer among $\\{p-1, p, p+1\\}$ that is divisible by $3$ must be either $p-1$ or $p+1$. In either case, $3$ divides the product $(p-1)(p+1) = p^2 - 1$.\n\nTherefore $3 \\mid (p^2 - 1)$. $\\quad\\blacksquare$\n\n---\n\n## Step 4 \u2014 Combining the Results\n\nFrom Step 2, $8 \\mid (p^2 - 1)$, and from Step 3, $3 \\mid (p^2 - 1)$.\n\nSince $\\gcd(8, 3) = 1$, the two divisibilities combine: an integer divisible by both coprime numbers $8$ and $3$ is divisible by their product $8 \\times 3 = 24$. Concretely, $p^2 - 1 = 8m$ from Step 2, and $3 \\mid 8m$; since $\\gcd(3, 8) = 1$, Euclid's lemma forces $3 \\mid m$, say $m = 3t$. Then:\n$$\np^2 - 1 = 8m = 8 \\cdot 3t = 24t.\n$$\n\nTherefore:\n$$\n\\boxed{\\,24 \\mid (p^2 - 1) \\quad \\text{for every prime } p > 3.\\,}\n$$\n$\\blacksquare$\n\n---\n\n## Step 5 \u2014 Verification with Concrete Examples\n\n| $p$ | $p^2 - 1$ | $\\div 24$ | Integer? |\n|----|-----------|-----------|----------|\n| $5$  | $25 - 1 = 24$    | $24/24 = 1$    | \u2713 |\n| $7$  | $49 - 1 = 48$    | $48/24 = 2$    | \u2713 |\n| $11$ | $121 - 1 = 120$  | $120/24 = 5$   | \u2713 |\n| $13$ | $169 - 1 = 168$  | $168/24 = 7$   | \u2713 |\n\n**Detailed check for $p = 7$:** Factor as $p^2 - 1 = (7-1)(7+1) = 6 \\cdot 8 = 48$.\n- *Divisibility by 8:* $6 \\cdot 8$ \u2014 the factor $8$ alone gives it; indeed $48 = 8 \\cdot 6$. \u2713\n- *Divisibility by 3:* of $\\{6, 7, 8\\}$, the multiple of $3$ is $6 = p - 1$, and $6 \\mid 48$. \u2713\n- *Combined:* $48 = 24 \\cdot 2$. \u2713\n\nAll examples confirm the theorem.\n\n---\n\n## Summary\n\nThe proof rests on three facts about the factorization $p^2 - 1 = (p-1)(p+1)$:\n- $p$ odd $\\Rightarrow p^2 - 1 = 4k(k+1)$, and $k(k+1)$ is even, yielding a factor of $8$;\n- among the three consecutive integers $p-1, p, p+1$ one is a multiple of $3$, and it cannot be the prime $p > 3$, yielding a factor of $3$;\n- coprimality of $8$ and $3$ upgrades these to divisibility by $24$.\n\nThe hypothesis $p > 3$ is essential: it guarantees $p$ is odd (used in Step 2) and not divisible by $3$ (used in Step 3). Indeed the result holds more generally for *any* integer coprime to $6$, not just primes.",
+      "evalDetails": {
+        "regex_score": 49.800000000000004,
+        "judge_score": 100.0,
+        "regex_details": {
+          "checks": {
+            "factorization": true,
+            "6k_form": false,
+            "divisible_by_8": false,
+            "divisible_by_3": false,
+            "consecutive_integers": true,
+            "mentions_24": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 100, \"reasoning\": \"This is an essentially perfect proof that satisfies every rubric criterion with rigorous justification and exceeds requirements in several ways. The factorization is stated and derived cleanly. Oddness of p > 3 is correctly established (only even prime is 2). Divisibility by 8 is proven via the algebraic substitution p = 2k+1, yielding 4k(k+1), then noting consecutive integers k and k+1 must include one even factor, giving 8 \u2014 and the model adds a supplementa"
+        }
+      },
+      "latencyMs": 234365,
+      "tokenCount": 5283,
+      "promptTokens": 2713,
+      "completionTokens": 2570,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": 86,
+      "modelOutput": "# Theorem and Proof: 24 | (p\u00b2 \u2212 1) for All Primes p > 3\n\n---\n\n## Statement\n\n**Theorem.** Let p be a prime number with p > 3. Then 24 divides p\u00b2 \u2212 1.\n\n---\n\n## Preliminary Lemma\n\nBefore the main proof, we establish a lemma used in Step 3.\n\n**Lemma.** Among any two consecutive even integers, at least one is divisible by 4.\n\n**Proof of Lemma.** Any two consecutive even integers may be written as 2m and 2(m + 1) for some integer m. Since m and m + 1 are consecutive integers, exactly one of them is even. If m is even, write m = 2j; then 2m = 4j, which is divisible by 4. If m + 1 is even, write m + 1 = 2j; then 2(m + 1) = 4j, which is divisible by 4. In either case, one of 2m or 2(m + 1) is divisible by 4. \u25a1\n\n---\n\n## Main Proof\n\nSince 24 = 8 \u00b7 3, and gcd(8, 3) = 1, it suffices to show separately that 8 | (p\u00b2 \u2212 1) and 3 | (p\u00b2 \u2212 1), and then conclude 24 | (p\u00b2 \u2212 1).\n\n---\n\n### Step 1 \u2014 Algebraic Factorization\n\nBy the difference of squares identity:\n\n$$p^2 - 1 = (p - 1)(p + 1)$$\n\nNote that p \u2212 1 and p + 1 are the two integers immediately below and above p, respectively, and that they are consecutive even integers (shown in Step 2).\n\n---\n\n### Step 2 \u2014 Divisibility by 8\n\n**Claim:** 8 | (p \u2212 1)(p + 1).\n\n**Proof.** Since p is a prime greater than 3, p is not equal to 2, so p must be **odd**. (The only even prime is 2, and p > 3 rules that out.) Every odd integer can be written as p = 2k + 1 for some integer k. Therefore:\n\n$$p - 1 = 2k \\qquad \\text{and} \\qquad p + 1 = 2k + 2 = 2(k+1)$$\n\nBoth p \u2212 1 and p + 1 are **even**, contributing a factor of 2 each to the product. Thus:\n\n$$2 \\mid (p-1) \\quad \\text{and} \\quad 2 \\mid (p+1) \\quad \\Longrightarrow \\quad 4 \\mid (p-1)(p+1)$$\n\nTo establish divisibility by 8, we need one more factor of 2. Observe that p \u2212 1 = 2k and p + 1 = 2(k + 1) are **consecutive even integers** (they differ by 2). By the Lemma above, one of them is divisible by 4. Call it 4j. The other is divisible by 2. Therefore:\n\n$$(p-1)(p+1) = 4j \\cdot 2(\\ldots) = 8(\\ldots)$$\n\nMore explicitly:\n- **Case A:** k is even. Write k = 2j. Then p \u2212 1 = 4j, so (p\u22121)(p+1) = 4j \u00b7 2(k+1) = 8j(k+1).\n- **Case B:** k is odd, so k + 1 is even. Write k + 1 = 2j. Then p + 1 = 4j, so (p\u22121)(p+1) = 2k \u00b7 4j = 8kj.\n\nIn both cases, 8 | (p \u2212 1)(p + 1). \u25a1\n\n---\n\n### Step 3 \u2014 Divisibility by 3\n\n**Claim:** 3 | (p \u2212 1)(p + 1).\n\n**Proof.** Since p > 3 is prime, p is **not divisible by 3** (if it were, p would equal 3, contradicting p > 3). By the Division Algorithm, every integer falls into exactly one of three residue classes modulo 3:\n\n$$p \\equiv 0, \\quad p \\equiv 1, \\quad \\text{or} \\quad p \\equiv 2 \\pmod{3}$$\n\nWe have already ruled out p \u2261 0 (mod 3), so only two cases remain:\n\n- **Case 1:** p \u2261 1 (mod 3). Then p \u2212 1 \u2261 0 (mod 3), so **3 | (p \u2212 1)**, which means 3 | (p\u22121)(p+1).\n\n- **Case 2:** p \u2261 2 (mod 3). Then p + 1 \u2261 3 \u2261 0 (mod 3), so **3 | (p + 1)**, which means 3 | (p\u22121)(p+1).\n\nIn both cases, 3 | (p \u2212 1)(p + 1). \u25a1\n\n---\n\n### Step 4 \u2014 Conclusion\n\nFrom Steps 2 and 3:\n\n$$8 \\mid (p-1)(p+1) \\qquad \\text{and} \\qquad 3 \\mid (p-1)(p+1)$$\n\nSince gcd(8, 3) = 1 (8 and 3 share no common prime factors), it follows by a standard theorem of arithmetic that:\n\n$$\\text{lcm}(8, 3) = 24 \\mid (p-1)(p+1)$$\n\nTherefore, for every prime p > 3:\n\n$$\\boxed{24 \\mid (p^2 - 1)}$$\n\u220e\n\n---\n\n## Concrete Verification\n\n**Example 1: p = 5**\n\n$$p^2 - 1 = 25 - 1 = 24 = 24 \\times 1 \\checkmark$$\n\nFactored: (5 \u2212 1)(5 + 1) = 4 \u00b7 6 = 24. Divisibility by 8: 4 and 6 are consecutive even integers; 4 = 4\u00b71 is divisible by 4, so the product is 4 \u00b7 6 = 8 \u00b7 3. Divisibility by 3: 6 = 3 \u00b7 2. \u2713\n\n---\n\n**Example 2: p = 7**\n\n$$p^2 - 1 = 49 - 1 = 48 = 24 \\times 2 \\checkmark$$\n\nFactored: (7 \u2212 1)(7 + 1) = 6 \u00b7 8. Divisibility by 8: 8 = 4\u00b72 is divisible by 4 (and in fact by 8 alone), giving factor of at least 8. Divisibility by 3: 6 = 3 \u00b7 2. \u2713\n\n---\n\n**Bonus \u2014 Example 3: p = 11**\n\n$$p^2 - 1 = 121 - 1 = 120 = 24 \\times 5 \\checkmark$$\n\nFactored: (11 \u2212 1)(11 + 1) = 10 \u00b7 12. Divisibility by 8: 10 = 2\u00b75 and 12 = 4\u00b73 are consecutive even integers; 12 is divisible by 4, so 10 \u00b7 12 = 2 \u00b7 4 \u00b7 15 = 8 \u00b7 15. Divisibility by 3: 12 = 3\u00b74. \u2713\n\n---\n\n## Summary of Proof Strategy\n\n| Property | Key Observation | Result |\n|---|---|---|\n| p is odd | p > 3 is prime \u27f9 p \u2260 2 | Both p\u00b11 are even |\n| Extra factor of 2 | p\u22121, p+1 are consecutive evens; one is \u2261 0 (mod 4) | 8 \\| (p\u22121)(p+1) |\n| Divisibility by 3 | p > 3 prime \u27f9 p \u2262 0 (mod 3), so p \u2261 1 or 2 | 3 \\| (p\u22121)(p+1) |\n| Combine | gcd(8, 3) = 1 | 24 \\| (p\u00b2\u22121) |",
+      "evalDetails": {
+        "regex_score": 66.4,
+        "judge_score": 99.0,
+        "regex_details": {
+          "checks": {
+            "factorization": true,
+            "6k_form": false,
+            "divisible_by_8": false,
+            "divisible_by_3": true,
+            "consecutive_integers": true,
+            "mentions_24": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 99, \"reasoning\": \"This is an exceptionally rigorous and complete proof that meets or exceeds every criterion. It includes a formal preliminary lemma (with proof) for the key step about consecutive even integers and divisibility by 4, which goes beyond what was required. The algebraic factorization is clean, both the divisibility-by-8 and divisibility-by-3 arguments cover all cases explicitly, and the conclusion correctly invokes gcd(8,3)=1 to combine the results. Three concrete"
+        }
+      },
+      "latencyMs": 718457,
+      "tokenCount": 2975,
+      "promptTokens": 3,
+      "completionTokens": 2972,
+      "error": null
+    },
+    "gpt-5-5": {
+      "score": 78.7,
+      "modelOutput": "We prove: for every prime number `p > 3`, the integer `p\u00b2 - 1` is divisible by `24`.\n\n**Proof.**\n\nLet `p` be a prime number with `p > 3`.\n\nFirst, factor:\n\n```text\np\u00b2 - 1 = (p - 1)(p + 1).\n```\n\nSo it is enough to prove that `(p - 1)(p + 1)` is divisible by both `8` and `3`.\n\n**Divisibility by 8.**\n\nSince `p > 3` is prime, `p` is not divisible by `2`; otherwise `p` would be an even prime greater than `2`, impossible. Hence `p` is odd.\n\nTherefore both `p - 1` and `p + 1` are even. Write\n\n```text\np = 2k + 1\n```\n\nfor some integer `k`. Then\n\n```text\np - 1 = 2k,\np + 1 = 2k + 2 = 2(k + 1).\n```\n\nThe integers `k` and `k + 1` are consecutive, so one of them is even. To justify this: if `k` is even, then we are done; if `k` is odd, then `k + 1` is even.\n\nThus one of `2k` and `2(k + 1)` is divisible by `4`, while the other is at least divisible by `2`. Therefore their product is divisible by\n\n```text\n4 \u00b7 2 = 8.\n```\n\nHence\n\n```text\n8 | (p - 1)(p + 1).\n```\n\n**Divisibility by 3.**\n\nSince `p` is prime and `p > 3`, we know `p` is not divisible by `3`.\n\nBy the division algorithm, every integer is congruent to exactly one of `0, 1, 2` modulo `3`. Since `p` is not divisible by `3`, we cannot have `p \u2261 0 mod 3`. Therefore either\n\n```text\np \u2261 1 mod 3\n```\n\nor\n\n```text\np \u2261 2 mod 3.\n```\n\nIf `p \u2261 1 mod 3`, then `p - 1 \u2261 0 mod 3`, so `3 | (p - 1)`.\n\nIf `p \u2261 2 mod 3`, then `p + 1 \u2261 0 mod 3`, so `3 | (p + 1)`.\n\nIn either case,\n\n```text\n3 | (p - 1)(p + 1).\n```\n\n**Combining the divisibility.**\n\nWe have shown that\n\n```text\n8 | (p - 1)(p + 1)\n```\n\nand\n\n```text\n3 | (p - 1)(p + 1).\n```\n\nSince `8` and `3` are relatively prime, any integer divisible by both `8` and `3` is divisible by their product `24`. Therefore\n\n```text\n24 | (p - 1)(p + 1).\n```\n\nUsing the factorization `p\u00b2 - 1 = (p - 1)(p + 1)`, we conclude that\n\n```text\n24 | (p\u00b2 - 1).\n```\n\nThus, for every prime number `p > 3`, the quantity `p\u00b2 - 1` is divisible by `24`.\n\n**Examples.**\n\nFor `p = 5`:\n\n```text\np\u00b2 - 1 = 5\u00b2 - 1 = 25 - 1 = 24,\n```\n\nwhich is divisible by `24`.\n\nFor `p = 7`:\n\n```text\np\u00b2 - 1 = 7\u00b2 - 1 = 49 - 1 = 48,\n```\n\nand `48 = 24 \u00b7 2`, so it is divisible by `24`.",
+      "evalDetails": {
+        "regex_score": 49.800000000000004,
+        "judge_score": 98.0,
+        "regex_details": {
+          "checks": {
+            "factorization": true,
+            "6k_form": false,
+            "divisible_by_8": false,
+            "divisible_by_3": false,
+            "consecutive_integers": true,
+            "mentions_24": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 98, \"reasoning\": \"The proof is essentially complete and rigorous, satisfying every criterion in the rubric. It correctly factors p\u00b2-1, establishes p is odd with clear justification (even prime > 2 is impossible), proves divisibility by 8 using the consecutive-integer argument with explicit case split (k even vs. k odd), proves divisibility by 3 via exhaustive modular arithmetic covering all residue classes, combines using relative primality of 8 and 3, and verifies with p=5 and"
+        }
+      },
+      "latencyMs": 28762,
+      "tokenCount": 13227,
+      "promptTokens": 11867,
+      "completionTokens": 1360,
+      "error": null
+    },
+    "grok": {
+      "score": 78.1,
+      "modelOutput": "**Theorem.** Let \\( p \\) be a prime number with \\( p > 3 \\). Then \\( 24 \\) divides \\( p^2 - 1 \\).\n\n**Proof.**\n\nWe must show that \\( p^2 - 1 \\) is divisible by \\( 24 \\), i.e., \\( p^2 - 1 \\equiv 0 \\pmod{24} \\), or equivalently, that \\( 24 \\mid (p^2 - 1) \\).\n\n**Step 1: Algebraic factorization.**  \nBy the difference of squares,\n\\[\np^2 - 1 = (p - 1)(p + 1).\n\\]\nIt suffices to show that \\( 24 \\) divides the product \\( (p - 1)(p + 1) \\). Since \\( 24 = 8 \\times 3 \\) and \\( 8 \\) and \\( 3 \\) are coprime, it is enough (by the fundamental theorem of arithmetic or unique factorization) to prove separately that \\( 8 \\) divides the product and that \\( 3 \\) divides the product.\n\n**Step 2: \\( p \\) is odd and not divisible by \\( 3 \\).**  \nSince \\( p > 3 \\) is prime, \\( p \\neq 2 \\) and \\( p \\neq 3 \\). Thus \\( p \\) is not divisible by \\( 2 \\), so \\( p \\) is odd. Equivalently,\n\\[\np \\equiv 1 \\pmod{2} \\quad \\text{or} \\quad p \\equiv 1 \\pmod{2}.\n\\]\nMoreover, \\( p \\) is not divisible by \\( 3 \\), so by the division algorithm the possible residues of \\( p \\) modulo \\( 3 \\) are \\( 1 \\) or \\( 2 \\):\n\\[\np \\not\\equiv 0 \\pmod{3}.\n\\]\n\n**Step 3: The product is divisible by \\( 8 \\).**  \nBecause \\( p \\) is odd, both \\( p - 1 \\) and \\( p + 1 \\) are even. In other words, \\( 2 \\) divides \\( p - 1 \\) and \\( 2 \\) divides \\( p + 1 \\). Moreover, \\( p - 1 \\) and \\( p + 1 \\) are *consecutive* even integers: they differ by \\( 2 \\).\n\nWe claim that among any two consecutive even integers, at least one is divisible by \\( 4 \\). To see why, consider the possible residues of an odd integer modulo \\( 4 \\). Any odd integer is congruent to either \\( 1 \\) or \\( 3 \\) modulo \\( 4 \\):\n- If \\( p \\equiv 1 \\pmod{4} \\), then \\( p - 1 \\equiv 0 \\pmod{4} \\) and \\( p + 1 \\equiv 2 \\pmod{4} \\). Thus \\( 4 \\) divides \\( p - 1 \\).\n- If \\( p \\equiv 3 \\pmod{4} \\), then \\( p - 1 \\equiv 2 \\pmod{4} \\) and \\( p + 1 \\equiv 0 \\pmod{4} \\). Thus \\( 4 \\) divides \\( p + 1 \\).\n\nIn either case, one factor is divisible by \\( 4 = 2^2 \\) and the other factor is divisible by \\( 2 \\). Therefore the product \\( (p - 1)(p + 1) \\) is divisible by\n\\[\n2^2 \\times 2 = 2^3 = 8.\n\\]\n(This is the minimal guaranteed power; in some cases more factors of \\( 2 \\) appear, but three suffice.)\n\n**Step 4: The product is divisible by \\( 3 \\).**  \nWe consider the two possible cases for the residue of \\( p \\) modulo \\( 3 \\):\n- If \\( p \\equiv 1 \\pmod{3} \\), then \\( p - 1 \\equiv 0 \\pmod{3} \\), so \\( 3 \\) divides \\( p - 1 \\).\n- If \\( p \\equiv 2 \\pmod{3} \\), then \\( p + 1 \\equiv 2 + 1 \\equiv 3 \\equiv 0 \\pmod{3} \\), so \\( 3 \\) divides \\( p + 1 \\).\n\nIn either case, \\( 3 \\) divides one of the factors, hence \\( 3 \\) divides the product \\( (p - 1)(p + 1) \\).\n\n**Step 5: Conclusion.**  \nWe have established that \\( 8 \\mid (p - 1)(p + 1) \\) and \\( 3 \\mid (p - 1)(p + 1) \\). Since \\( 8 \\) and \\( 3 \\) are coprime (their greatest common divisor is \\( 1 \\)), it follows that their product divides the integer:\n\\[\n24 = 8 \\times 3 \\mid (p - 1)(p + 1) = p^2 - 1.\n\\]\nThis completes the proof.\n\n**Verification with concrete examples.**\n\n- Let \\( p = 5 \\) (prime, \\( > 3 \\)). Then\n  \\[\n  p^2 - 1 = 25 - 1 = 24, \\qquad 24 \\div 24 = 1.\n  \\]\n  Indeed \\( 24 \\mid 24 \\).\n\n- Let \\( p = 7 \\) (prime, \\( > 3 \\)). Then\n  \\[\n  p^2 - 1 = 49 - 1 = 48, \\qquad 48 \\div 24 = 2.\n  \\]\n  Indeed \\( 24 \\mid 48 \\).\n\nFor additional illustration, the next two primes yield \\( 11^2 - 1 = 120 \\) (and \\( 120 / 24 = 5 \\)) and \\( 13^2 - 1 = 168 \\) (and \\( 168 / 24 = 7 \\)), both integers.\n\nThe proof is therefore verified for the required cases and holds in general.",
+      "evalDetails": {
+        "regex_score": 49.800000000000004,
+        "judge_score": 97.0,
+        "regex_details": {
+          "checks": {
+            "factorization": true,
+            "6k_form": false,
+            "divisible_by_8": false,
+            "divisible_by_3": false,
+            "consecutive_integers": true,
+            "mentions_24": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\n  \"score\": 97,\n  \"reasoning\": \"This is a nearly flawless, well-structured proof that satisfies every requirement in the rubric. It correctly factors via difference of squares, establishes p is odd (hence both p-1 and p+1 are even), rigorously shows one of the two consecutive even numbers is divisible by 4 via a clean mod-4 case analysis, and handles divisibility by 3 through an exhaustive mod-3 case analysis. The conclusion properly invokes coprimality of 8 and 3. Two required examples"
+        }
+      },
+      "latencyMs": 18254,
+      "tokenCount": 16031,
+      "promptTokens": null,
+      "completionTokens": null,
+      "error": null
+    }
+  }
+}

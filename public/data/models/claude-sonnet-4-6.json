@@ -8,283 +8,283 @@
     "icon": "zap"
   },
   "current": {
-    "compositeScore": 89.2,
-    "rank": 2,
-    "totalTokens": 298595,
-    "avgTokensPerTest": 10296,
+    "compositeScore": 86.2,
+    "rank": 3,
+    "totalTokens": 318697,
+    "avgTokensPerTest": 10990,
     "categories": {
       "bug-fixes": {
-        "avgScore": 96.7,
+        "avgScore": 96.5,
         "testCount": 3,
         "tests": [
           {
             "testId": "bf-1",
             "name": "Off-by-One Boundary Fix",
-            "score": 90,
-            "latencyMs": 52337,
-            "tokenCount": 3240
+            "score": 89.4,
+            "latencyMs": 366944,
+            "tokenCount": 3297
           },
           {
             "testId": "bf-2",
             "name": "Race Condition Detection",
             "score": 100,
-            "latencyMs": 50284,
-            "tokenCount": 2817
+            "latencyMs": 212174,
+            "tokenCount": 2678
           },
           {
             "testId": "bf-3",
             "name": "Memory Leak Fix",
             "score": 100,
-            "latencyMs": 49728,
-            "tokenCount": 2830
+            "latencyMs": 176977,
+            "tokenCount": 2865
           }
         ]
       },
       "bug-introduction-rate": {
-        "avgScore": 96.3,
+        "avgScore": 97,
         "testCount": 3,
         "tests": [
           {
             "testId": "bi-1",
             "name": "Refactor Without Regression",
-            "score": 94,
-            "latencyMs": 45170,
-            "tokenCount": 2826
+            "score": 98,
+            "latencyMs": 676035,
+            "tokenCount": 5487
           },
           {
             "testId": "bi-2",
             "name": "Merge Conflict Resolution",
-            "score": 98,
-            "latencyMs": 97829,
-            "tokenCount": 7275
+            "score": 96,
+            "latencyMs": 199198,
+            "tokenCount": 3235
           },
           {
             "testId": "bi-3",
             "name": "Dependency Upgrade Safety",
             "score": 97,
-            "latencyMs": 126918,
-            "tokenCount": 9198
+            "latencyMs": 219336,
+            "tokenCount": 11936
           }
         ]
       },
       "code-quality": {
-        "avgScore": 98,
+        "avgScore": 96.7,
         "testCount": 3,
         "tests": [
           {
             "testId": "cq-1",
             "name": "Idiomatic Python",
-            "score": 99,
-            "latencyMs": 218780,
-            "tokenCount": 16614
+            "score": 97,
+            "latencyMs": 254846,
+            "tokenCount": 12172
           },
           {
             "testId": "cq-2",
             "name": "TypeScript Best Practices",
-            "score": 98,
-            "latencyMs": 488207,
-            "tokenCount": 36364
+            "score": 96,
+            "latencyMs": 604478,
+            "tokenCount": 37802
           },
           {
             "testId": "cq-3",
             "name": "Clean Architecture Patterns",
             "score": 97,
-            "latencyMs": 495402,
-            "tokenCount": 36228
+            "latencyMs": 694671,
+            "tokenCount": 39086
           }
         ]
       },
       "code-thoroughness": {
-        "avgScore": 60.8,
+        "avgScore": 92.3,
         "testCount": 3,
         "tests": [
+          {
+            "testId": "th-2",
+            "name": "Error Path Completeness",
+            "score": 98.8,
+            "latencyMs": 1186926,
+            "tokenCount": 52879
+          },
           {
             "testId": "th-3",
             "name": "Test Suite Completeness",
             "score": 83,
-            "latencyMs": 112926,
-            "tokenCount": 8420
-          },
-          {
-            "testId": "th-2",
-            "name": "Error Path Completeness",
-            "score": 99.4,
-            "latencyMs": 569591,
-            "tokenCount": 39479
+            "latencyMs": 422791,
+            "tokenCount": 13348
           },
           {
             "testId": "th-1",
             "name": "Edge Case Coverage",
-            "score": 0,
-            "latencyMs": 600000,
-            "tokenCount": null
+            "score": 95,
+            "latencyMs": 982989,
+            "tokenCount": 43814
           }
         ]
       },
       "coding-tasks": {
-        "avgScore": 99.3,
+        "avgScore": 100,
         "testCount": 3,
         "tests": [
+          {
+            "testId": "ct-1",
+            "name": "Graph Algorithm Implementation",
+            "score": 100,
+            "latencyMs": 285394,
+            "tokenCount": 4952
+          },
           {
             "testId": "ct-2",
             "name": "REST API Design",
             "score": 100,
-            "latencyMs": 17549,
-            "tokenCount": 1195
-          },
-          {
-            "testId": "ct-1",
-            "name": "Graph Algorithm Implementation",
-            "score": 98,
-            "latencyMs": 79040,
-            "tokenCount": 5284
+            "latencyMs": 196476,
+            "tokenCount": 1182
           },
           {
             "testId": "ct-3",
             "name": "Concurrent Data Pipeline",
             "score": 100,
-            "latencyMs": 85837,
-            "tokenCount": 5980
+            "latencyMs": 184385,
+            "tokenCount": 5822
           }
         ]
       },
       "feature-implementation": {
-        "avgScore": 96.7,
+        "avgScore": 97.7,
         "testCount": 3,
         "tests": [
           {
-            "testId": "fi-1",
-            "name": "OAuth2 Integration",
-            "score": 90,
-            "latencyMs": 68686,
-            "tokenCount": 5207
+            "testId": "fi-2",
+            "name": "Search Autocomplete",
+            "score": 100,
+            "latencyMs": 370791,
+            "tokenCount": 5313
           },
           {
             "testId": "fi-3",
             "name": "Webhook System",
             "score": 100,
-            "latencyMs": 70751,
-            "tokenCount": 4483
+            "latencyMs": 412023,
+            "tokenCount": 1981
           },
           {
-            "testId": "fi-2",
-            "name": "Search Autocomplete",
-            "score": 100,
-            "latencyMs": 219216,
-            "tokenCount": 11988
+            "testId": "fi-1",
+            "name": "OAuth2 Integration",
+            "score": 93,
+            "latencyMs": 1013059,
+            "tokenCount": 5592
           }
         ]
       },
       "instruction-following": {
-        "avgScore": 96.7,
+        "avgScore": 100,
         "testCount": 3,
         "tests": [
           {
             "testId": "if-1",
             "name": "Structured Output Compliance",
             "score": 100,
-            "latencyMs": 20815,
-            "tokenCount": 1259
+            "latencyMs": 212999,
+            "tokenCount": 1303
           },
           {
             "testId": "if-2",
             "name": "Constraint Adherence",
             "score": 100,
-            "latencyMs": 14149,
-            "tokenCount": 843
+            "latencyMs": 121496,
+            "tokenCount": 1112
           },
           {
             "testId": "if-3",
             "name": "Multi-step Instruction Chain",
-            "score": 90,
-            "latencyMs": 23931,
-            "tokenCount": 1740
+            "score": 100,
+            "latencyMs": 46806,
+            "tokenCount": 990
           }
         ]
       },
       "long-reasoning": {
-        "avgScore": 72.4,
+        "avgScore": 68.6,
         "testCount": 3,
         "tests": [
           {
-            "testId": "lr-3",
-            "name": "Mathematical Proof",
-            "score": 93.2,
-            "latencyMs": 38122,
-            "tokenCount": 2884
-          },
-          {
             "testId": "lr-2",
             "name": "Legal Reasoning Chain",
-            "score": 71,
-            "latencyMs": 81397,
-            "tokenCount": 4119
+            "score": 68,
+            "latencyMs": 84133,
+            "tokenCount": 4464
           },
           {
             "testId": "lr-1",
             "name": "Multi-step Logic Puzzle",
-            "score": 53,
-            "latencyMs": 359571,
-            "tokenCount": 23531
+            "score": 51.8,
+            "latencyMs": 421833,
+            "tokenCount": 26934
+          },
+          {
+            "testId": "lr-3",
+            "name": "Mathematical Proof",
+            "score": 86,
+            "latencyMs": 451154,
+            "tokenCount": 2963
           }
         ]
       },
       "performance-efficiency": {
-        "avgScore": 94.3,
+        "avgScore": 33.3,
         "testCount": 3,
         "tests": [
           {
             "testId": "pe-1",
             "name": "Algorithm Complexity",
-            "score": 98,
-            "latencyMs": 69155,
-            "tokenCount": 4579
-          },
-          {
-            "testId": "pe-3",
-            "name": "Query Optimization",
-            "score": 87,
-            "latencyMs": 161732,
-            "tokenCount": 10249
+            "score": 100,
+            "latencyMs": 264218,
+            "tokenCount": 5317
           },
           {
             "testId": "pe-2",
             "name": "Memory-efficient Processing",
-            "score": 98,
-            "latencyMs": 566351,
-            "tokenCount": 35145
+            "score": 0,
+            "latencyMs": 860,
+            "tokenCount": null
+          },
+          {
+            "testId": "pe-3",
+            "name": "Query Optimization",
+            "score": 0,
+            "latencyMs": 132760,
+            "tokenCount": 8382
           }
         ]
       },
       "security-awareness": {
-        "avgScore": 95.7,
+        "avgScore": 96.3,
         "testCount": 3,
         "tests": [
           {
             "testId": "sa-1",
             "name": "SQL Injection Prevention",
             "score": 100,
-            "latencyMs": 61375,
-            "tokenCount": 3790
-          },
-          {
-            "testId": "sa-3",
-            "name": "Secret Management",
-            "score": 87.2,
-            "latencyMs": 73292,
-            "tokenCount": 4434
+            "latencyMs": 153326,
+            "tokenCount": 2591
           },
           {
             "testId": "sa-2",
             "name": "XSS Mitigation",
             "score": 100,
-            "latencyMs": 112665,
-            "tokenCount": 6594
+            "latencyMs": 185389,
+            "tokenCount": 6720
+          },
+          {
+            "testId": "sa-3",
+            "name": "Secret Management",
+            "score": 89,
+            "latencyMs": 203471,
+            "tokenCount": 4480
           }
         ]
       },
       "token-efficiency": {
-        "avgScore": 74.3,
+        "avgScore": 70.3,
         "testCount": 29,
         "tests": []
       }
@@ -380,9 +380,482 @@
         "security-awareness": 95.7,
         "token-efficiency": 74.3
       }
+    },
+    {
+      "timestamp": "2026-06-09T03:00:23.000Z",
+      "compositeScore": 85.4,
+      "totalTokens": 313286,
+      "categories": {
+        "bug-fixes": 100,
+        "bug-introduction-rate": 96.3,
+        "code-quality": 64.3,
+        "code-thoroughness": 91.5,
+        "coding-tasks": 99.3,
+        "feature-implementation": 96.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 69.5,
+        "performance-efficiency": 65,
+        "security-awareness": 91.7,
+        "token-efficiency": 68.8
+      }
+    },
+    {
+      "timestamp": "2026-06-10T03:00:30.000Z",
+      "compositeScore": 92.1,
+      "totalTokens": 346128,
+      "categories": {
+        "bug-fixes": 96.5,
+        "bug-introduction-rate": 98.7,
+        "code-quality": 97.7,
+        "code-thoroughness": 95.8,
+        "coding-tasks": 99.7,
+        "feature-implementation": 96.7,
+        "instruction-following": 100,
+        "long-reasoning": 70.7,
+        "performance-efficiency": 95.3,
+        "security-awareness": 95.5,
+        "token-efficiency": 66
+      }
+    },
+    {
+      "timestamp": "2026-06-11T03:00:24.000Z",
+      "compositeScore": 90.7,
+      "totalTokens": 393821,
+      "categories": {
+        "bug-fixes": 96.3,
+        "bug-introduction-rate": 96.3,
+        "code-quality": 99.3,
+        "code-thoroughness": 93.7,
+        "coding-tasks": 97.3,
+        "feature-implementation": 96.3,
+        "instruction-following": 100,
+        "long-reasoning": 71.9,
+        "performance-efficiency": 95.3,
+        "security-awareness": 96.1,
+        "token-efficiency": 54.7
+      }
+    },
+    {
+      "timestamp": "2026-06-12T03:00:21.000Z",
+      "compositeScore": 84.8,
+      "totalTokens": 360967,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 96.7,
+        "code-quality": 98.7,
+        "code-thoroughness": 61.6,
+        "coding-tasks": 99.7,
+        "feature-implementation": 97,
+        "instruction-following": 100,
+        "long-reasoning": 57.9,
+        "performance-efficiency": 66.3,
+        "security-awareness": 95.7,
+        "token-efficiency": 62.2
+      }
+    },
+    {
+      "timestamp": "2026-06-13T03:00:25.000Z",
+      "compositeScore": 91.1,
+      "totalTokens": 349962,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98,
+        "code-quality": 98,
+        "code-thoroughness": 91.7,
+        "coding-tasks": 99.3,
+        "feature-implementation": 96.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 68.4,
+        "performance-efficiency": 94.7,
+        "security-awareness": 95.7,
+        "token-efficiency": 66.5
+      }
+    },
+    {
+      "timestamp": "2026-06-14T03:00:25.000Z",
+      "compositeScore": 79.8,
+      "totalTokens": 235245,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98.3,
+        "code-quality": 39.3,
+        "code-thoroughness": 61.6,
+        "coding-tasks": 100,
+        "feature-implementation": 95.7,
+        "instruction-following": 100,
+        "long-reasoning": 69.9,
+        "performance-efficiency": 33.3,
+        "security-awareness": 95.7,
+        "token-efficiency": 87
+      }
+    },
+    {
+      "timestamp": "2026-06-15T03:00:21.000Z",
+      "compositeScore": 91,
+      "totalTokens": 388458,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98.3,
+        "code-quality": 98.3,
+        "code-thoroughness": 92.7,
+        "coding-tasks": 99.3,
+        "feature-implementation": 97.3,
+        "instruction-following": 96.7,
+        "long-reasoning": 67.9,
+        "performance-efficiency": 94.7,
+        "security-awareness": 95.7,
+        "token-efficiency": 63.7
+      }
+    },
+    {
+      "timestamp": "2026-06-16T03:00:23.000Z",
+      "compositeScore": 92.1,
+      "totalTokens": 303758,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98,
+        "code-quality": 95.7,
+        "code-thoroughness": 93.4,
+        "coding-tasks": 99,
+        "feature-implementation": 96.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 68.7,
+        "performance-efficiency": 95,
+        "security-awareness": 92.3,
+        "token-efficiency": 80.5
+      }
+    },
+    {
+      "timestamp": "2026-06-17T03:00:20.000Z",
+      "compositeScore": 83.9,
+      "totalTokens": 283198,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 96.7,
+        "code-quality": 98.7,
+        "code-thoroughness": 60,
+        "coding-tasks": 100,
+        "feature-implementation": 96.7,
+        "instruction-following": 100,
+        "long-reasoning": 65.9,
+        "performance-efficiency": 33.3,
+        "security-awareness": 95.5,
+        "token-efficiency": 79.6
+      }
+    },
+    {
+      "timestamp": "2026-06-18T03:00:21.000Z",
+      "compositeScore": 86.5,
+      "totalTokens": 311587,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97.7,
+        "code-quality": 65.3,
+        "code-thoroughness": 93.5,
+        "coding-tasks": 100,
+        "feature-implementation": 96.3,
+        "instruction-following": 100,
+        "long-reasoning": 66.7,
+        "performance-efficiency": 65.3,
+        "security-awareness": 95.7,
+        "token-efficiency": 74.3
+      }
+    },
+    {
+      "timestamp": "2026-06-19T03:00:21.000Z",
+      "compositeScore": 90.4,
+      "totalTokens": 381860,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98,
+        "code-quality": 97.3,
+        "code-thoroughness": 90.5,
+        "coding-tasks": 99.3,
+        "feature-implementation": 96.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 69.3,
+        "performance-efficiency": 94.7,
+        "security-awareness": 95.5,
+        "token-efficiency": 59.8
+      }
+    },
+    {
+      "timestamp": "2026-06-20T03:00:22.000Z",
+      "compositeScore": 91,
+      "totalTokens": 385131,
+      "categories": {
+        "bug-fixes": 96.5,
+        "bug-introduction-rate": 97.3,
+        "code-quality": 98,
+        "code-thoroughness": 93.5,
+        "coding-tasks": 100,
+        "feature-implementation": 96,
+        "instruction-following": 96.7,
+        "long-reasoning": 69.3,
+        "performance-efficiency": 94.7,
+        "security-awareness": 94.7,
+        "token-efficiency": 64.3
+      }
+    },
+    {
+      "timestamp": "2026-06-21T03:00:22.000Z",
+      "compositeScore": 87,
+      "totalTokens": 316479,
+      "categories": {
+        "bug-fixes": 96.5,
+        "bug-introduction-rate": 99,
+        "code-quality": 65.3,
+        "code-thoroughness": 96.3,
+        "coding-tasks": 99,
+        "feature-implementation": 96.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 69.3,
+        "performance-efficiency": 66,
+        "security-awareness": 95.7,
+        "token-efficiency": 76.2
+      }
+    },
+    {
+      "timestamp": "2026-06-22T03:00:18.000Z",
+      "compositeScore": 85.3,
+      "totalTokens": 349260,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97,
+        "code-quality": 98.3,
+        "code-thoroughness": 93.8,
+        "coding-tasks": 98.3,
+        "feature-implementation": 97.7,
+        "instruction-following": 96.7,
+        "long-reasoning": 66.2,
+        "performance-efficiency": 32.7,
+        "security-awareness": 96.3,
+        "token-efficiency": 64.1
+      }
+    },
+    {
+      "timestamp": "2026-06-23T03:00:23.000Z",
+      "compositeScore": 83,
+      "totalTokens": 328579,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98,
+        "code-quality": 65,
+        "code-thoroughness": 91.1,
+        "coding-tasks": 99.3,
+        "feature-implementation": 97.7,
+        "instruction-following": 100,
+        "long-reasoning": 69.4,
+        "performance-efficiency": 33,
+        "security-awareness": 95.5,
+        "token-efficiency": 67.8
+      }
+    },
+    {
+      "timestamp": "2026-06-24T03:00:20.000Z",
+      "compositeScore": 91.7,
+      "totalTokens": 361396,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97.3,
+        "code-quality": 98,
+        "code-thoroughness": 92.7,
+        "coding-tasks": 100,
+        "feature-implementation": 97.3,
+        "instruction-following": 100,
+        "long-reasoning": 72.1,
+        "performance-efficiency": 94.7,
+        "security-awareness": 95.7,
+        "token-efficiency": 63.7
+      }
+    },
+    {
+      "timestamp": "2026-06-25T03:00:22.000Z",
+      "compositeScore": 91.1,
+      "totalTokens": 351897,
+      "categories": {
+        "bug-fixes": 96.1,
+        "bug-introduction-rate": 97,
+        "code-quality": 98.3,
+        "code-thoroughness": 92.7,
+        "coding-tasks": 100,
+        "feature-implementation": 97,
+        "instruction-following": 100,
+        "long-reasoning": 66.9,
+        "performance-efficiency": 95,
+        "security-awareness": 95.7,
+        "token-efficiency": 63.5
+      }
+    },
+    {
+      "timestamp": "2026-06-26T03:00:26.000Z",
+      "compositeScore": 91.9,
+      "totalTokens": 320073,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 98.7,
+        "code-quality": 97.7,
+        "code-thoroughness": 92.1,
+        "coding-tasks": 98.3,
+        "feature-implementation": 96.7,
+        "instruction-following": 100,
+        "long-reasoning": 68.6,
+        "performance-efficiency": 93,
+        "security-awareness": 95.7,
+        "token-efficiency": 73.9
+      }
+    },
+    {
+      "timestamp": "2026-06-27T03:00:19.000Z",
+      "compositeScore": 77.8,
+      "totalTokens": 226482,
+      "categories": {
+        "bug-fixes": 96.3,
+        "bug-introduction-rate": 98.3,
+        "code-quality": 33,
+        "code-thoroughness": 90.7,
+        "coding-tasks": 99.3,
+        "feature-implementation": 97.3,
+        "instruction-following": 100,
+        "long-reasoning": 67.3,
+        "performance-efficiency": 0,
+        "security-awareness": 88.1,
+        "token-efficiency": 85.5
+      }
+    },
+    {
+      "timestamp": "2026-06-28T03:00:21.000Z",
+      "compositeScore": 91.7,
+      "totalTokens": 368169,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97.3,
+        "code-quality": 97.3,
+        "code-thoroughness": 94.6,
+        "coding-tasks": 100,
+        "feature-implementation": 96.3,
+        "instruction-following": 100,
+        "long-reasoning": 68.5,
+        "performance-efficiency": 96.3,
+        "security-awareness": 94.1,
+        "token-efficiency": 67.9
+      }
+    },
+    {
+      "timestamp": "2026-06-29T03:00:25.000Z",
+      "compositeScore": 91.6,
+      "totalTokens": 351778,
+      "categories": {
+        "bug-fixes": 96.7,
+        "bug-introduction-rate": 97.3,
+        "code-quality": 97.3,
+        "code-thoroughness": 94.5,
+        "coding-tasks": 98.3,
+        "feature-implementation": 96.3,
+        "instruction-following": 96.7,
+        "long-reasoning": 70.9,
+        "performance-efficiency": 95.3,
+        "security-awareness": 94.7,
+        "token-efficiency": 69.4
+      }
+    },
+    {
+      "timestamp": "2026-06-30T03:00:22.000Z",
+      "compositeScore": 86.2,
+      "totalTokens": 318697,
+      "categories": {
+        "bug-fixes": 96.5,
+        "bug-introduction-rate": 97,
+        "code-quality": 96.7,
+        "code-thoroughness": 92.3,
+        "coding-tasks": 100,
+        "feature-implementation": 97.7,
+        "instruction-following": 100,
+        "long-reasoning": 68.6,
+        "performance-efficiency": 33.3,
+        "security-awareness": 96.3,
+        "token-efficiency": 70.3
+      }
     }
   ],
   "regressions": [
+    {
+      "id": "789f8630-89d3-4b8d-a9f4-4774c0a12a82",
+      "categoryId": "security-awareness",
+      "categoryName": "Security Awareness",
+      "detectedAt": "2026-06-27T05:03:07.000Z",
+      "previousAvg": 95.6,
+      "currentScore": 88.1,
+      "dropPct": -7.9,
+      "severity": "moderate",
+      "resolvedAt": "2026-06-27T05:03:07.000Z"
+    },
+    {
+      "id": "e7489485-53b3-4c4b-b95e-68ae8b5e4146",
+      "categoryId": "security-awareness",
+      "categoryName": "Security Awareness",
+      "detectedAt": "2026-06-16T05:17:29.000Z",
+      "previousAvg": 95.2,
+      "currentScore": 92.3,
+      "dropPct": -3,
+      "severity": "minor",
+      "resolvedAt": "2026-06-16T05:17:29.000Z"
+    },
+    {
+      "id": "c591aafd-b231-4d2e-bf41-c1eac3722b2c",
+      "categoryId": null,
+      "categoryName": null,
+      "detectedAt": "2026-06-14T05:05:24.000Z",
+      "previousAvg": 88.4,
+      "currentScore": 79.8,
+      "dropPct": -9.7,
+      "severity": "moderate",
+      "resolvedAt": null
+    },
+    {
+      "id": "e2227a28-f80b-4076-8370-20559d92ae89",
+      "categoryId": "code-thoroughness",
+      "categoryName": "Code Thoroughness",
+      "detectedAt": "2026-06-14T05:05:24.000Z",
+      "previousAvg": 74.9,
+      "currentScore": 61.6,
+      "dropPct": -17.8,
+      "severity": "major",
+      "resolvedAt": null
+    },
+    {
+      "id": "b162ff89-2f3c-4b49-a411-fa52288a3315",
+      "categoryId": "code-quality",
+      "categoryName": "Code Quality",
+      "detectedAt": "2026-06-14T05:05:24.000Z",
+      "previousAvg": 88.7,
+      "currentScore": 39.3,
+      "dropPct": -55.7,
+      "severity": "major",
+      "resolvedAt": null
+    },
+    {
+      "id": "3118a9ad-3516-4c09-8722-0ac1390c2408",
+      "categoryId": "performance-efficiency",
+      "categoryName": "Performance Efficiency",
+      "detectedAt": "2026-06-12T05:04:37.000Z",
+      "previousAvg": 81.5,
+      "currentScore": 66.3,
+      "dropPct": -18.7,
+      "severity": "major",
+      "resolvedAt": null
+    },
+    {
+      "id": "c838bc2f-4f7c-49eb-8664-132c0fdb9abe",
+      "categoryId": "long-reasoning",
+      "categoryName": "Long Reasoning",
+      "detectedAt": "2026-06-12T05:04:37.000Z",
+      "previousAvg": 67.9,
+      "currentScore": 57.9,
+      "dropPct": -14.8,
+      "severity": "moderate",
+      "resolvedAt": "2026-06-28T04:54:39.000Z"
+    },
     {
       "id": "df79f0f3-4401-433f-b257-20c9c7b65bc3",
       "categoryId": "token-efficiency",
@@ -406,5 +879,83 @@
       "resolvedAt": "2026-06-07T03:42:20.000Z"
     }
   ],
-  "outages": []
+  "outages": [
+    {
+      "id": "41ae5d74-f733-4a79-a90c-440e1eb15a38",
+      "startedAt": "2026-06-30T17:00:07.000Z",
+      "endedAt": null,
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "3db0a906-6743-497c-858d-c7dc6f7b44b3",
+      "startedAt": "2026-06-28T06:00:04.000Z",
+      "endedAt": "2026-06-28T07:30:04.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "40c3e082-59c2-4cce-bbe1-4309fa6ed5cd",
+      "startedAt": "2026-06-27T05:30:03.000Z",
+      "endedAt": "2026-06-27T07:00:05.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "069c8b20-1c9a-4410-b9c2-aecb32624531",
+      "startedAt": "2026-06-23T14:31:03.000Z",
+      "endedAt": "2026-06-23T15:01:06.000Z",
+      "errorType": "timeout",
+      "httpStatus": null
+    },
+    {
+      "id": "7ae72e2e-e0a3-4551-9f2a-81497c4043cb",
+      "startedAt": "2026-06-23T05:00:04.000Z",
+      "endedAt": "2026-06-23T08:00:17.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "6331d1b4-ef8e-42bd-bfc8-f50aa2cd62ea",
+      "startedAt": "2026-06-22T05:00:04.000Z",
+      "endedAt": "2026-06-22T07:00:08.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "93deb535-d7eb-4dae-bacb-890c4583f58a",
+      "startedAt": "2026-06-21T05:00:03.000Z",
+      "endedAt": "2026-06-21T06:00:05.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "6bf4bfd9-4c0a-4f97-ab80-2a2245583561",
+      "startedAt": "2026-06-18T05:00:03.000Z",
+      "endedAt": "2026-06-18T06:30:06.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "4f5e5ecb-6800-42e9-abcd-09fce0b1f1de",
+      "startedAt": "2026-06-14T05:30:04.000Z",
+      "endedAt": "2026-06-14T07:30:06.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "70cdbfdd-c46c-4d03-9e7d-cb943833d084",
+      "startedAt": "2026-06-11T16:30:03.000Z",
+      "endedAt": "2026-06-11T19:00:06.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "49e516e6-c667-4899-a8f6-015cd9e7d672",
+      "startedAt": "2026-06-09T05:00:03.000Z",
+      "endedAt": "2026-06-09T06:00:14.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    }
+  ]
 }

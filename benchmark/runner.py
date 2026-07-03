@@ -514,6 +514,48 @@ from tests import ALL_TESTS
 TEST_REGISTRY: dict = {t.id: t for t in ALL_TESTS}
 
 
+class EvaluationFailed(RuntimeError):
+    """Raised when a benchmark response cannot be scored reliably."""
+
+    def __init__(self, reason: str, details: dict | None = None):
+        super().__init__(reason)
+        self.reason = reason
+        self.details = details or {"error": reason}
+
+
+def _details_contain_error(details: object, error_code: str) -> bool:
+    """Return True if nested evaluation details contain a specific error code."""
+    if isinstance(details, dict):
+        if details.get("error") == error_code:
+            return True
+        return any(_details_contain_error(value, error_code) for value in details.values())
+    if isinstance(details, list):
+        return any(_details_contain_error(value, error_code) for value in details)
+    return False
+
+
+def _test_requires_judge(test_row: dict) -> bool:
+    eval_type = test_row.get("eval_type")
+    if eval_type in {"llm_judge", "composite"}:
+        return True
+    test_instance = TEST_REGISTRY.get(test_row.get("id"))
+    return bool(test_instance and test_instance.eval_type in {"llm_judge", "composite"})
+
+
+def _judge_preflight() -> tuple[bool, str | None]:
+    """Verify that the Claude judge is available before spending model calls."""
+    prompt = (
+        'Respond with ONLY this JSON object and no markdown: '
+        '{"score": 100, "reasoning": "ok", "breakdown": {"available": 100}}'
+    )
+    response = _judge_fn(prompt)
+    if response is None:
+        return (False, "judge preflight failed: Claude judge unavailable")
+    if '"score"' not in response:
+        return (False, "judge preflight failed: malformed judge response")
+    return (True, None)
+
+
 def _judge_fn(prompt: str) -> str | None:
     """LLM judge callback — uses Claude (via CLI) to evaluate model outputs."""
     cmd = ["claude", "-p", "--model", "sonnet"]
@@ -525,7 +567,8 @@ def _judge_fn(prompt: str) -> str | None:
             timeout=config.CLI_TIMEOUT,
         )
         if result.returncode != 0:
-            logger.warning("Judge returned exit code %d", result.returncode)
+            stderr = result.stderr.strip()[:500] if result.stderr else "no stderr"
+            logger.warning("Judge returned exit code %d: %s", result.returncode, stderr)
             return None
         return result.stdout.strip() or None
     except Exception as e:
@@ -550,6 +593,10 @@ def evaluate_response(test_id: str, model_output: str) -> tuple[float, dict]:
         return (round(base_score, 1), {"eval_type": "fallback", "output_length": len(model_output)})
 
     eval_result = test_instance.evaluate(model_output, judge_fn=_judge_fn)
+    if _details_contain_error(eval_result.details, "judge_call_failed"):
+        raise EvaluationFailed("judge_call_failed", eval_result.details)
+    if _details_contain_error(eval_result.details, "parse_failed"):
+        raise EvaluationFailed("judge_parse_failed", eval_result.details)
     return (round(eval_result.score, 1), eval_result.details)
 
 
@@ -604,8 +651,22 @@ def _run_single_test(
             logger.error("  %s/%s: FAILED - %s", model_id, test_id, error)
             return (False, f"{model_id}/{test_id}: {error}")
 
-        score, eval_details = evaluate_response(test_id, response_text)
         token_count = total_tokens if total_tokens is not None else _combine_token_counts(prompt_tokens, completion_tokens)
+
+        try:
+            score, eval_details = evaluate_response(test_id, response_text)
+        except EvaluationFailed as e:
+            with _db_lock:
+                db.save_test_result(
+                    conn, run_id, model_id, test_id, category_id,
+                    score=None, raw_score=None, latency_ms=latency_ms,
+                    token_count=token_count, prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    model_output=response_text, eval_details=e.details,
+                    error=f"evaluation_failed:{e.reason}",
+                )
+            logger.error("  %s/%s: EVALUATION FAILED - %s", model_id, test_id, e.reason)
+            return (False, f"{model_id}/{test_id}: evaluation_failed:{e.reason}")
 
         with _db_lock:
             db.save_test_result(
@@ -699,6 +760,14 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
             conn.close()
             return
 
+    if any(_test_requires_judge(test_row) for test_row in active_tests):
+        ok, judge_error = _judge_preflight()
+        if not ok:
+            logger.error(judge_error)
+            db.fail_run(conn, run_id, judge_error or "judge preflight failed")
+            conn.close()
+            return
+
     total_tests = 0
     passed_tests = 0
     all_errors = []
@@ -732,6 +801,19 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
                 except Exception as e:
                     logger.error("Model %s crashed: %s", name, e)
                     all_errors.append(f"{name}: {e}")
+
+        evaluation_errors = [
+            err for err in all_errors
+            if "evaluation_failed:" in err
+        ]
+        if evaluation_errors:
+            error_log = "\n".join(all_errors)
+            logger.error(
+                "Benchmark run has %d evaluation failure(s); marking run failed to avoid bogus scores",
+                len(evaluation_errors),
+            )
+            db.fail_run(conn, run_id, error_log)
+            return
 
         logger.info("Aggregating scores...")
         aggregate_run_scores(conn, run_id)

@@ -4,6 +4,8 @@ import sqlite3
 import sys
 from types import SimpleNamespace
 
+import pytest
+
 BENCHMARK_DIR = Path(__file__).resolve().parent
 if str(BENCHMARK_DIR) not in sys.path:
     sys.path.insert(0, str(BENCHMARK_DIR))
@@ -181,3 +183,36 @@ def test_model_parallel_tests_uses_model_override():
     assert runner._model_parallel_tests({"parallel_tests": 2}) == 2
     assert runner._model_parallel_tests({"parallel_tests": 0}) == runner.config.PARALLEL_TESTS
     assert runner._model_parallel_tests({}) == runner.config.PARALLEL_TESTS
+
+
+def test_details_contain_error_finds_nested_judge_failure():
+    details = {
+        "regex_score": 100.0,
+        "judge_details": {
+            "error": "judge_call_failed",
+        },
+    }
+
+    assert runner._details_contain_error(details, "judge_call_failed")
+
+
+def test_evaluate_response_raises_when_judge_fails(monkeypatch):
+    class FakeTest:
+        eval_type = "composite"
+
+        def evaluate(self, _model_output, judge_fn=None):
+            return SimpleNamespace(
+                score=40.0,
+                details={
+                    "regex_score": 100.0,
+                    "judge_score": 0.0,
+                    "judge_details": {"error": "judge_call_failed"},
+                },
+            )
+
+    monkeypatch.setitem(runner.TEST_REGISTRY, "fake-judge-test", FakeTest())
+
+    with pytest.raises(runner.EvaluationFailed) as exc:
+        runner.evaluate_response("fake-judge-test", "model output long enough")
+
+    assert exc.value.reason == "judge_call_failed"

@@ -1,0 +1,156 @@
+{
+  "test": {
+    "id": "if-1",
+    "name": "Structured Output Compliance",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Produce JSON matching an exact schema with no extra fields",
+    "prompt": "List exactly 7 programming languages that were first released after the year 2010.\n\nYou MUST follow this exact format for each item:\n<number>. <LanguageName> (<year>) - <one sentence description>\n\nRules:\n1. List EXACTLY 7 languages \u2014 not 6, not 8.\n2. Each language must have been first released (v1.0 or initial public release) AFTER 2010, meaning 2011 or later.\n3. Each item must be on its own line.\n4. The format must be exactly: number, period, space, language name, space, year in parentheses, space, dash, space, one sentence description.\n5. Each description must be exactly ONE sentence (one period at the end, no additional sentences).\n6. Do NOT include any text before the list (no introduction, no \"Here are...\" preamble).\n7. Do NOT include any text after the list (no summary, no notes, no caveats).\n8. Output ONLY the 7 numbered items, nothing else.\n\nExample of the correct format (do NOT use this language, it's just to show format):\n1. ExampleLang (2015) - A language designed for example purposes only."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed language for the JVM that emphasizes conciseness and full interoperability with Java.\n2. Dart (2011) - A client-optimized language developed by Google for building cross-platform applications, notably with Flutter.\n3. Elixir (2011) - A functional, concurrent language built on the Erlang virtual machine for scalable and fault-tolerant systems.\n4. TypeScript (2012) - A typed superset of JavaScript that compiles to plain JavaScript for safer large-scale development.\n5. Julia (2012) - A high-performance dynamic language designed primarily for numerical and scientific computing.\n6. Swift (2014) - A language created by Apple for building apps across its platforms with a focus on safety and speed.\n7. Rust (2015) - A systems programming language focused on memory safety and concurrency without a garbage collector.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 143175,
+      "tokenCount": 3243,
+      "promptTokens": 2713,
+      "completionTokens": 530,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed, JVM-based language developed by JetBrains that is fully interoperable with Java while offering more concise and expressive syntax.\n2. Dart (2011) - A client-optimized, object-oriented language created by Google primarily used for building cross-platform mobile and web applications with Flutter.\n3. TypeScript (2012) - A strongly typed superset of JavaScript developed by Microsoft that compiles to plain JavaScript and adds optional static typing.\n4. Elixir (2012) - A functional, concurrent language built on top of the Erlang VM designed for building scalable and fault-tolerant distributed systems.\n5. Julia (2012) - A high-performance dynamic language designed specifically for numerical and scientific computing, combining the speed of C with the ease of Python.\n6. Swift (2014) - A compiled, statically typed language introduced by Apple as a modern replacement for Objective-C for building apps across Apple platforms.\n7. Crystal (2014) - A statically typed, compiled language with Ruby-inspired syntax designed to achieve the productivity of Ruby with the performance of C.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2014"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 22175,
+      "tokenCount": 1316,
+      "promptTokens": 3,
+      "completionTokens": 1313,
+      "error": null
+    },
+    "gpt-5-5": {
+      "score": 100,
+      "modelOutput": "1. Dart (2011) - A Google language used to build client applications across web, mobile, and server environments.\n2. Elixir (2011) - A functional language that runs on the Erlang VM and emphasizes concurrency and fault tolerance.\n3. TypeScript (2012) - A typed superset of JavaScript that compiles to plain JavaScript.\n4. Julia (2012) - A high performance language designed for numerical computing, data science, and scientific programming.\n5. Elm (2012) - A functional language for building reliable browser based user interfaces.\n6. Swift (2014) - An Apple language designed for safe and expressive app development across its platforms.\n7. Zig (2016) - A systems programming language focused on explicit control, portability, and simple tooling.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 14843,
+      "tokenCount": 12599,
+      "promptTokens": 11914,
+      "completionTokens": 685,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed programming language developed by JetBrains that targets the JVM, JavaScript, and native platforms.\n2. Dart (2011) - A client-optimized programming language created by Google for building fast apps on web, mobile, and desktop platforms.\n3. Elixir (2012) - A functional concurrent programming language that runs on the Erlang VM for building scalable applications.\n4. Julia (2012) - A high-level high-performance dynamic programming language designed for technical and scientific computing.\n5. TypeScript (2012) - A typed superset of JavaScript developed by Microsoft that compiles to plain JavaScript.\n6. Swift (2014) - A compiled multi-paradigm programming language created by Apple for iOS, macOS, and other Apple platforms.\n7. Rust (2015) - A systems programming language focused on memory safety, performance, and concurrency with its first stable release.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 28473,
+      "tokenCount": 34067,
+      "promptTokens": null,
+      "completionTokens": null,
+      "error": null
+    }
+  }
+}

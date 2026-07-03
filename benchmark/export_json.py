@@ -24,6 +24,7 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import sys
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
@@ -842,6 +843,13 @@ def export_evidence(conn, output_dir: str) -> None:
     """Full test evidence for runs within the last 30 days."""
     evidence_dir = os.path.join(output_dir, "evidence")
     runs = database.get_all_runs(conn, days=30)
+    valid_run_dirs = {_run_label(run) for run in runs}
+
+    if os.path.isdir(evidence_dir):
+        for entry in os.listdir(evidence_dir):
+            entry_path = os.path.join(evidence_dir, entry)
+            if entry.startswith("run-") and entry not in valid_run_dirs and os.path.isdir(entry_path):
+                shutil.rmtree(entry_path)
 
     for run in runs:
         run_id = run["id"]

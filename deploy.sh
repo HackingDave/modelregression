@@ -75,6 +75,9 @@ rsync -avz --progress \
     --exclude '.env' \
     --exclude '.env.local' \
     --exclude '.deploy.env' \
+    --exclude 'ssl.zip' \
+    --exclude 'rate-limiter.js' \
+    --exclude 'rateLimiter.js' \
     --exclude '.git' \
     --exclude '.venv' \
     --exclude '.pytest_cache' \
@@ -194,7 +197,20 @@ if [ "$HEALTH_OK" -ne 1 ]; then
 fi
 
 # Verify PM2 status
-PM2_STATUS=$(ssh_cmd "pm2 jlist" 2>/dev/null | grep -o "\"name\":\"$APP_NAME\"[^}]*\"status\":\"[^\"]*\"" | grep -o '"status":"[^"]*"' | head -1 || echo "unknown")
+PM2_STATUS=$(
+    ssh_cmd "pm2 jlist" 2>/dev/null | node -e '
+let input = "";
+process.stdin.on("data", (chunk) => (input += chunk));
+process.stdin.on("end", () => {
+  try {
+    const app = JSON.parse(input).find((entry) => entry.name === process.argv[1]);
+    console.log(app?.pm2_env?.status || "unknown");
+  } catch {
+    console.log("unknown");
+  }
+});
+' "$APP_NAME"
+)
 echo -e "${GREEN}PM2 status: $PM2_STATUS${NC}"
 
 echo ""

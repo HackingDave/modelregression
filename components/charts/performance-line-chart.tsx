@@ -87,9 +87,12 @@ export function PerformanceLineChart({
             fontFamily: "JetBrains Mono, monospace",
             fontSize: 12,
           }}
-          formatter={(value: number, name: string) => {
-            const model = MODELS.find((m) => m.id === name);
-            return [value.toFixed(1), model?.name || name];
+          formatter={(value, name) => {
+            const numericValue =
+              typeof value === "number" ? value : Number(value ?? 0);
+            const modelId = String(name);
+            const model = MODELS.find((m) => m.id === modelId);
+            return [numericValue.toFixed(1), model?.name || modelId];
           }}
         />
         {showLegend && (

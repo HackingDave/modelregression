@@ -1,0 +1,128 @@
+{
+  "test": {
+    "id": "if-2",
+    "name": "Constraint Adherence",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Follow explicit constraints like max line length and naming conventions",
+    "prompt": "Write a Python function that meets ALL of the following constraints. Every constraint is mandatory \u2014 violating any one of them reduces your score.\n\nConstraint 1 \u2014 Name: The function MUST be named exactly `transform_records`.\n\nConstraint 2 \u2014 Parameters: The function MUST take exactly 2 parameters:\n  - `records: list[dict]` \u2014 a list of dictionaries\n  - `key: str` \u2014 a dictionary key to extract\n\nConstraint 3 \u2014 Return type: The return type annotation MUST be `list[str]`.\n\nConstraint 4 \u2014 Implementation: The core logic MUST use a list comprehension. Do NOT use a for loop with .append().\n\nConstraint 5 \u2014 Comments: The function body MUST contain EXACTLY 3 comment lines (lines starting with #). Not 2, not 4 \u2014 exactly 3.\n\nConstraint 6 \u2014 Length: The function body (everything after the def line, excluding blank lines) MUST be 10 lines or fewer.\n\nThe function should:\n- Extract the value of `key` from each dictionary in `records`\n- Convert each value to a string\n- Skip dictionaries that don't have the key (don't include them in output)\n- Return the list of string values\n\nInclude a docstring (this does not count toward the comment lines or the line limit).\n\nOutput ONLY the function definition \u2014 no explanation, no usage examples, no test code. Just the function."
+  },
+  "results": {
+    "claude-opus-4-8": {
+      "score": 100,
+      "modelOutput": "```python\ndef transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract `key` from each dict in `records`, converting values to strings.\n\n    Dictionaries lacking `key` are skipped. Returns the list of string values.\n    \"\"\"\n    # Iterate over each record in the input list\n    # Keep only records that contain the requested key\n    # Convert each extracted value to a string\n    return [str(record[key]) for record in records if key in record]\n```",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 8,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 100, \"reasoning\": \"The model's output satisfies every constraint perfectly. The function is named exactly `transform_records`, has the correct parameter signatures (`records: list[dict]`, `key: str`), annotates the return type as `list[str]`, uses a list comprehension with an inline filter (`if key in record`) rather than a loop with `.append()`, contains exactly 3 comment lines inside the function body, has a non-blank function body of 8 lines (well within the 10-line limit), "
+        }
+      },
+      "latencyMs": 657355,
+      "tokenCount": 2863,
+      "promptTokens": 2713,
+      "completionTokens": 150,
+      "error": null
+    },
+    "claude-sonnet-4-6": {
+      "score": 100,
+      "modelOutput": "```python\ndef transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract values for a given key from each record, converting them to strings.\"\"\"\n    # Skip any record that does not contain the specified key\n    # Convert each extracted value to a string type\n    # Build and return the result using a list comprehension\n    return [str(record[key]) for record in records if key in record]\n```",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 6,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 100, \"reasoning\": \"The model's output satisfies every constraint perfectly. Function is named `transform_records`, parameters are exactly `records: list[dict]` and `key: str`, return type is `list[str]`, core logic uses a list comprehension (not a for loop with .append), there are exactly 3 comment lines in the function body, the function body is 5 non-blank lines (well within the 10-line limit), and a docstring is present.\", \"breakdown\": {\"function_name\": 15, \"parameters\": 15,"
+        }
+      },
+      "latencyMs": 13645,
+      "tokenCount": 756,
+      "promptTokens": 3,
+      "completionTokens": 753,
+      "error": null
+    },
+    "gpt-5-5": {
+      "score": 100,
+      "modelOutput": "def transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract string values for key from records.\"\"\"\n    # Keep only dictionaries that contain the requested key.\n    # Convert each selected value to its string representation.\n    # Return the collected string values in input order.\n    return [str(record[key]) for record in records if key in record]",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 5,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 100, \"reasoning\": \"All constraints are fully satisfied. The function is named exactly 'transform_records', has the correct parameter signatures (records: list[dict], key: str), correct return type annotation (list[str]), uses a list comprehension for core logic, contains exactly 3 comment lines in the body, the function body is only 5 non-blank lines (well under 10), and includes a docstring. The implementation is also functionally correct \u2014 it filters missing keys, converts va"
+        }
+      },
+      "latencyMs": 10312,
+      "tokenCount": 12380,
+      "promptTokens": 11950,
+      "completionTokens": 430,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "def transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract string values for the given key from a list of records.\"\"\"\n    # handle only records that contain the key\n    # safely extract and stringify the value\n    # build result via list comprehension\n    return [str(r[key]) for r in records if key in r]",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 5,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "raw": "```json\n{\"score\": 100, \"reasoning\": \"The function satisfies every constraint perfectly. It is named exactly 'transform_records', has the correct parameters with proper type annotations, return type is 'list[str]', uses a list comprehension with an inline filter (no .append loop), contains exactly 3 comment lines inside the function body, the function body is only 5 non-blank lines (well under 10), and includes a docstring.\", \"breakdown\": {\"function_name\": 15, \"parameters\": 15, \"return_type\": 15,"
+        }
+      },
+      "latencyMs": 32046,
+      "tokenCount": 20427,
+      "promptTokens": null,
+      "completionTokens": null,
+      "error": null
+    }
+  }
+}
