@@ -1,9 +1,9 @@
 {
   "day": {
-    "modelId": null,
-    "name": null,
-    "score": null,
-    "change": 0
+    "modelId": "claude-opus-4-8",
+    "name": "Claude Opus 4.8",
+    "score": 92.3,
+    "change": -2.0
   },
   "week": {
     "modelId": "claude-opus-4-8",

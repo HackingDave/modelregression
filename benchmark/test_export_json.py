@@ -301,3 +301,54 @@ def test_export_daily_trends_recomputes_composed_day_snapshot(tmp_path):
 
     assert day["claude-opus-4-8"] == 95
     assert day["grok"] == 60
+
+
+def test_export_synopsis_day_uses_latest_valid_run_when_recent_runs_failed(tmp_path):
+    conn = db.init_db(str(tmp_path / "benchmarks.db"))
+    db.seed_models_and_categories(conn)
+
+    prev_run = db.create_run(conn, "daily")
+    db.save_model_run_score(conn, prev_run, "claude-opus-4-8", 90, 1)
+    db.save_model_run_score(conn, prev_run, "gpt-5-5", 80, 2)
+    db.complete_run(conn, prev_run, total_tests=2, passed_tests=2)
+    conn.execute(
+        "UPDATE benchmark_runs SET started_at = ?, completed_at = ? WHERE id = ?",
+        ("2026-06-29T03:00:00+00:00", "2026-06-29T04:00:00+00:00", prev_run),
+    )
+
+    latest_valid = db.create_run(conn, "daily")
+    db.save_model_run_score(conn, latest_valid, "claude-opus-4-8", 92.3, 1)
+    db.save_model_run_score(conn, latest_valid, "gpt-5-5", 89.3, 2)
+    db.complete_run(conn, latest_valid, total_tests=2, passed_tests=2)
+    conn.execute(
+        "UPDATE benchmark_runs SET started_at = ?, completed_at = ? WHERE id = ?",
+        ("2026-06-30T03:00:00+00:00", "2026-06-30T04:00:00+00:00", latest_valid),
+    )
+
+    failed_run = db.create_run(conn, "daily")
+    conn.execute(
+        """UPDATE benchmark_runs
+           SET started_at = ?, completed_at = ?, status = ?, total_tests = ?, passed_tests = ?
+           WHERE id = ?""",
+        (
+            "2026-07-02T03:00:00+00:00",
+            "2026-07-02T03:05:00+00:00",
+            "failed",
+            2,
+            0,
+            failed_run,
+        ),
+    )
+    conn.commit()
+
+    output_dir = tmp_path / "out"
+    export_json.export_synopsis(conn, str(output_dir))
+
+    data = json.loads((output_dir / "synopsis.json").read_text())
+
+    assert data["day"] == {
+        "modelId": "claude-opus-4-8",
+        "name": "Claude Opus 4.8",
+        "score": 92.3,
+        "change": 2.3,
+    }

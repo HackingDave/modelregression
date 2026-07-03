@@ -72,6 +72,13 @@ def _iso(dt_str: str | None) -> str | None:
     return base + ".000Z"
 
 
+def _parse_dt(dt_str: str) -> datetime:
+    dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt
+
+
 def _round_score(val) -> float | int | None:
     """Round a score to one decimal, returning int when the decimal is .0.
 
@@ -242,26 +249,74 @@ def export_latest(conn, output_dir: str) -> None:
 
 def export_synopsis(conn, output_dir: str) -> None:
     """Best model per day / week / month windows."""
-    now = datetime.now(timezone.utc)
+    latest = database.get_latest_run(conn)
+    if not latest:
+        _write_json(os.path.join(output_dir, "synopsis.json"), {
+            "day": {"modelId": None, "name": None, "score": None, "change": 0},
+            "week": {"modelId": None, "name": None, "score": None, "change": 0},
+            "month": {"modelId": None, "name": None, "score": None, "change": 0},
+            "updatedAt": None,
+        })
+        return
+
+    anchor = _parse_dt(latest["started_at"])
+
+    def _best_latest_run() -> dict:
+        row = conn.execute(
+            """SELECT m.slug, m.name, mrs.composite_score
+               FROM model_run_scores mrs
+               JOIN models m ON mrs.model_id = m.id
+               WHERE mrs.run_id = ?
+               ORDER BY mrs.composite_score DESC LIMIT 1""",
+            (latest["id"],),
+        ).fetchone()
+        if not row:
+            return {"modelId": None, "name": None, "score": None, "change": 0}
+
+        prev = conn.execute(
+            """SELECT mrs.composite_score
+               FROM model_run_scores mrs
+               JOIN benchmark_runs br ON mrs.run_id = br.id
+               WHERE mrs.model_id = (
+                   SELECT id FROM models WHERE slug = ?
+               )
+                 AND br.id != ?
+                 AND br.started_at < ?
+                 AND br.status IN ('completed', 'completed_with_errors')
+               ORDER BY br.started_at DESC LIMIT 1""",
+            (row["slug"], latest["id"], latest["started_at"]),
+        ).fetchone()
+        change = 0
+        if prev and prev["composite_score"]:
+            change = round(row["composite_score"] - prev["composite_score"], 1)
+
+        return {
+            "modelId": row["slug"],
+            "name": row["name"],
+            "score": _round_score(row["composite_score"]),
+            "change": change,
+        }
 
     def _best_in_period(days: int) -> dict:
-        cutoff = (now - timedelta(days=days)).isoformat()
+        cutoff = (anchor - timedelta(days=days)).isoformat()
+        end = (anchor + timedelta(seconds=1)).isoformat()
         row = conn.execute(
             """SELECT m.slug, m.name, AVG(mrs.composite_score) as avg_score
                FROM model_run_scores mrs
                JOIN models m ON mrs.model_id = m.id
                JOIN benchmark_runs br ON mrs.run_id = br.id
                WHERE br.started_at >= ?
+                 AND br.started_at < ?
                  AND br.status IN ('completed', 'completed_with_errors')
                GROUP BY m.slug
                ORDER BY avg_score DESC LIMIT 1""",
-            (cutoff,),
+            (cutoff, end),
         ).fetchone()
         if not row:
             return {"modelId": None, "name": None, "score": None, "change": 0}
 
         # Change vs previous identical window
-        prev_cutoff = (now - timedelta(days=days * 2)).isoformat()
+        prev_cutoff = (anchor - timedelta(days=days * 2)).isoformat()
         prev = conn.execute(
             """SELECT AVG(mrs.composite_score) as avg_score
                FROM model_run_scores mrs
@@ -283,11 +338,10 @@ def export_synopsis(conn, output_dir: str) -> None:
         }
 
     # Use latest completed_at as updatedAt
-    latest = database.get_latest_run(conn)
-    updated_at = _iso(latest["completed_at"]) if latest and latest.get("completed_at") else _iso(now.isoformat())
+    updated_at = _iso(latest["completed_at"]) if latest.get("completed_at") else _iso(anchor.isoformat())
 
     _write_json(os.path.join(output_dir, "synopsis.json"), {
-        "day": _best_in_period(1),
+        "day": _best_latest_run(),
         "week": _best_in_period(7),
         "month": _best_in_period(30),
         "updatedAt": updated_at,
