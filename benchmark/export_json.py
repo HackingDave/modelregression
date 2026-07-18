@@ -645,8 +645,29 @@ def export_trends(conn, output_dir: str) -> None:
 
 
 def _collect_run_composites(conn, days: int) -> list[tuple[dict, list[dict]]]:
-    """Return [(run, [model_run_scores])] for runs in the last *days*."""
-    runs = database.get_all_runs(conn, days=days)
+    """Return recent run composites, anchored to the latest stored run.
+
+    Benchmark databases are also exported from snapshots and fixtures. Using
+    the wall clock makes an unchanged snapshot silently lose all trend data
+    once it becomes older than the requested window.
+    """
+    latest = database.get_latest_run(conn)
+    if not latest:
+        return []
+
+    anchor = _parse_dt(latest["started_at"])
+    cutoff = (anchor - timedelta(days=days)).isoformat()
+    runs = [
+        dict(row)
+        for row in conn.execute(
+            """SELECT * FROM benchmark_runs
+               WHERE status IN ('completed', 'completed_with_errors')
+                 AND started_at >= ?
+                 AND started_at <= ?
+               ORDER BY started_at ASC""",
+            (cutoff, latest["started_at"]),
+        ).fetchall()
+    ]
     result = []
     for run in runs:
         comps = database.get_model_run_scores_for_run(conn, run["id"])
