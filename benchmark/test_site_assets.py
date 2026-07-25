@@ -27,3 +27,16 @@ def test_mobile_navigation_closes_on_escape_and_restores_button_focus():
     assert 'document.addEventListener("keydown", closeOnEscape)' in navbar_text
     assert 'document.removeEventListener("keydown", closeOnEscape)' in navbar_text
     assert "mobileMenuButtonRef.current?.focus()" in navbar_text
+
+
+def test_performance_timeline_renders_single_run_models_as_markers():
+    chart_text = (
+        REPO_ROOT / "components" / "charts" / "performance-line-chart.tsx"
+    ).read_text()
+    timeline_text = (
+        REPO_ROOT / "components" / "dashboard" / "performance-timeline.tsx"
+    ).read_text()
+
+    assert "modelPointCounts[model.id] <= 1" in chart_text
+    assert "{ r: 5, strokeWidth: 2, fill: model.color }" in chart_text
+    assert "one completed run are shown as colored" in timeline_text

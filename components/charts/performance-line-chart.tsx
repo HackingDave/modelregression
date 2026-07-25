@@ -45,6 +45,12 @@ export function PerformanceLineChart({
     label: formatDateTime(d.timestamp),
     ...d.models,
   }));
+  const modelPointCounts = Object.fromEntries(
+    modelsToShow.map((model) => [
+      model.id,
+      chartData.filter((point) => typeof point[model.id] === "number").length,
+    ])
+  );
 
   const visibleValues = chartData.flatMap((point) =>
     modelsToShow
@@ -110,7 +116,11 @@ export function PerformanceLineChart({
             dataKey={model.id}
             stroke={model.color}
             strokeWidth={2}
-            dot={false}
+            dot={
+              modelPointCounts[model.id] <= 1
+                ? { r: 5, strokeWidth: 2, fill: model.color }
+                : false
+            }
             activeDot={{ r: 4, strokeWidth: 2 }}
             connectNulls
           />
