@@ -63,8 +63,8 @@ def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
         elif cli == "gemini":
             cmd = ["gemini", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model]
             result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
-        elif cli == "agent":
-            cmd = ["agent", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
+        elif cli in {"agent", "grok"}:
+            cmd = [cli, "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
             result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
         else:
             return (False, f"Unknown CLI tool: {cli}", None)

@@ -1,7 +1,7 @@
 """
 Main benchmark orchestrator.
 
-Runs all tests against all active models via CLI tools (claude, codex, agent),
+Runs all tests against all active models via CLI tools (claude, codex, agent/grok),
 scores results, detects regressions, and updates the database.
 """
 
@@ -115,7 +115,7 @@ def _call_once(
         return _call_claude(model_config, prompt, system_prompt)
     elif cli == "codex":
         return _call_codex(model_config, prompt, system_prompt)
-    elif cli == "agent":
+    elif cli in {"agent", "grok"}:
         return _call_grok(model_config, prompt, system_prompt)
     else:
         return (None, None, None, None, None, f"Unknown CLI tool: {cli}")
@@ -439,7 +439,7 @@ def _call_grok(
     prompt: str,
     system_prompt: str | None,
 ) -> tuple[str | None, int, int | None, int | None, int | None, str | None]:
-    """Call Grok via the agent CLI in single-shot mode."""
+    """Call Grok via the Grok Build CLI in single-shot mode."""
     import tempfile
     prompt_file = tempfile.NamedTemporaryFile(
         mode="w", suffix=".txt", delete=False,
@@ -448,7 +448,7 @@ def _call_grok(
         prompt_file.write(prompt)
         prompt_file.close()
         cmd = [
-            "agent",
+            model_config["cli"],
             "--prompt-file", prompt_file.name,
             "-m", model_config["cli_model"],
             "--output-format", "json",
@@ -467,11 +467,11 @@ def _call_grok(
 
         if result.returncode != 0:
             stderr = result.stderr.strip()[:500] if result.stderr else "unknown error"
-            return (None, elapsed, None, None, None, f"agent exited {result.returncode}: {stderr}")
+            return (None, elapsed, None, None, None, f"{model_config['cli']} exited {result.returncode}: {stderr}")
 
         output = result.stdout.strip()
         if not output:
-            return (None, elapsed, None, None, None, "Empty response from agent")
+            return (None, elapsed, None, None, None, f"Empty response from {model_config['cli']}")
 
         text = output
         prompt_tokens = None
@@ -497,7 +497,7 @@ def _call_grok(
             total_tokens = _read_grok_usage_from_session(session_id, request_id, os.getcwd())
 
         if not text.strip():
-            return (None, elapsed, prompt_tokens, completion_tokens, total_tokens, "Empty response from agent")
+            return (None, elapsed, prompt_tokens, completion_tokens, total_tokens, f"Empty response from {model_config['cli']}")
 
         return (text, elapsed, prompt_tokens, completion_tokens, total_tokens, None)
     finally:
@@ -731,8 +731,8 @@ def _run_model_tests(
     return (total, passed, errors)
 
 
-def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
-    """Execute a full benchmark run with parallel test execution."""
+def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
+    """Execute a benchmark run and return whether it completed without errors."""
     logger.info("Starting benchmark run (schedule=%s, parallel=%d, model=%s)",
                 schedule, config.PARALLEL_TESTS, model_filter or "all")
 
@@ -756,9 +756,9 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
         active_models = [m for m in active_models if m["id"] == model_filter]
         if not active_models:
             logger.error("Model %s not found or not active", model_filter)
-            db.complete_run(conn, run_id, 0, 0, f"Model {model_filter} not found")
+            db.fail_run(conn, run_id, f"Model {model_filter} not found")
             conn.close()
-            return
+            return False
 
     if any(_test_requires_judge(test_row) for test_row in active_tests):
         ok, judge_error = _judge_preflight()
@@ -766,7 +766,7 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
             logger.error(judge_error)
             db.fail_run(conn, run_id, judge_error or "judge preflight failed")
             conn.close()
-            return
+            return False
 
     total_tests = 0
     passed_tests = 0
@@ -781,11 +781,13 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
                 model_cfg = config.get_model_by_id(model_id)
                 if not model_cfg:
                     logger.error("No config found for model %s", model_id)
+                    all_errors.append(f"{model_id}: no matching runtime configuration")
                     continue
 
                 open_outage = db.get_open_outage(conn, model_id)
                 if open_outage and open_outage["check_count"] >= 3:
                     logger.warning("Skipping model %s (in outage since %s)", model_id, open_outage["started_at"])
+                    all_errors.append(f"{model_id}: skipped due to confirmed outage")
                     continue
 
                 future = model_pool.submit(_run_model_tests, model_cfg, active_tests, run_id, conn)
@@ -813,7 +815,7 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
                 len(evaluation_errors),
             )
             db.fail_run(conn, run_id, error_log)
-            return
+            return False
 
         logger.info("Aggregating scores...")
         aggregate_run_scores(conn, run_id)
@@ -831,9 +833,10 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> None:
             "Benchmark run complete: %d/%d tests passed (%d errors)",
             passed_tests, total_tests, len(all_errors),
         )
+        return not all_errors
     except Exception as e:
         logger.error("Benchmark run crashed: %s", e)
-        db.complete_run(conn, run_id, total_tests, passed_tests, str(e))
+        db.fail_run(conn, run_id, str(e))
         raise
     finally:
         conn.close()
@@ -854,7 +857,7 @@ def main() -> None:
     parser.add_argument(
         "--model",
         default=None,
-        help="Run only a specific model by ID (e.g., grok, claude-opus-4-8)",
+        help="Run only a specific model by ID (e.g., grok, claude-opus-5)",
     )
     parser.add_argument(
         "--verbose", "-v",
@@ -871,7 +874,9 @@ def main() -> None:
     )
 
     try:
-        run_benchmarks(args.schedule, model_filter=args.model)
+        if not run_benchmarks(args.schedule, model_filter=args.model):
+            logger.critical("Benchmark run did not complete cleanly")
+            sys.exit(1)
     except Exception as e:
         logger.critical("Benchmark run failed: %s", e)
         logger.debug(traceback.format_exc())

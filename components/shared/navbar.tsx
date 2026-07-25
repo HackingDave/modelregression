@@ -86,6 +86,9 @@ export function Navbar() {
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
             className="md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -95,7 +98,7 @@ export function Navbar() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-border/50 glass">
+        <div id="mobile-navigation" className="md:hidden border-t border-border/50 glass">
           <nav className="px-4 py-3 space-y-1">
             {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
               const isActive =

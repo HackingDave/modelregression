@@ -27,12 +27,19 @@ AI model providers update their models constantly, and sometimes performance deg
 
 ## Models Tracked
 
-- **Claude Opus 4.8** (Anthropic) — via `claude` CLI
-- **Claude Sonnet 4.6** (Anthropic) — via `claude` CLI
-- **GPT-5.5** (OpenAI) — via `codex` CLI
-- **Grok** (xAI) — via `agent` CLI
+- **Claude Opus 5** (Anthropic) — via the rolling `opus` alias in Claude Code
+- **Claude Sonnet 5** (Anthropic) — via the rolling `sonnet` alias in Claude Code
+- **GPT-5.6 Sol** (OpenAI) — resolved from the current Codex model catalog
+- **Grok 4.5** (xAI) — resolved from the Grok CLI default
 
 Models are tested through their official CLI tools, not direct API calls. This tests the full stack that developers actually use.
+
+Scheduled runs update the CLIs and resolve provider-maintained aliases/catalog
+defaults at runtime, so the suite follows new frontier releases automatically.
+For reproducible one-off runs, the model arguments can be pinned with
+`MODELREGRESSION_CODEX_MODEL`, `MODELREGRESSION_GROK_MODEL`,
+`MODELREGRESSION_CLAUDE_OPUS_MODEL`, or
+`MODELREGRESSION_CLAUDE_SONNET_MODEL`.
 
 ## Architecture
 
@@ -160,7 +167,7 @@ The benchmark engine calls models through their official CLI tools. You need the
 
 - **[Claude Code](https://docs.anthropic.com/en/docs/claude-code)** (`claude`) — for Anthropic models
 - **[Codex CLI](https://github.com/openai/codex)** (`codex`) — for OpenAI models
-- **[Grok Agent](https://docs.x.ai/docs/grok-agent)** (`agent`) — for xAI models
+- **[Grok Build](https://docs.x.ai/build/overview)** (`grok`, or legacy `agent`) — for xAI models
 
 ### Deployment
 

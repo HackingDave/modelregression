@@ -7,10 +7,13 @@ import { CATEGORIES } from "@/lib/categories";
 import { formatScore } from "@/lib/utils";
 
 interface HeatmapGridProps {
-  scores: Record<string, Record<string, number>>;
+  scores: Record<string, Record<string, number | null>>;
 }
 
-function getCellColor(score: number): string {
+function getCellColor(score: number | null): string {
+  if (score == null) {
+    return "bg-muted/20 text-muted-foreground border-border/40";
+  }
   if (score >= 90) return "bg-green-500/20 text-green-400 border-green-500/30";
   if (score >= 80) return "bg-lime-500/15 text-lime-400 border-lime-500/25";
   if (score >= 70)
@@ -37,7 +40,7 @@ export function HeatmapGrid({ scores }: HeatmapGridProps) {
             </Link>
             <div className="mt-3 grid grid-cols-2 gap-2">
               {MODELS.map((model) => {
-                const score = scores[model.id]?.[category.id] ?? 0;
+                const score = scores[model.id]?.[category.id] ?? null;
                 return (
                   <Link
                     key={model.id}
@@ -94,7 +97,7 @@ export function HeatmapGrid({ scores }: HeatmapGridProps) {
                   </Link>
                 </td>
                 {MODELS.map((model) => {
-                  const score = scores[model.id]?.[category.id] ?? 0;
+                  const score = scores[model.id]?.[category.id] ?? null;
                   return (
                     <td key={model.id} className="py-1.5 px-1.5">
                       <Link

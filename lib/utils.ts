@@ -59,7 +59,8 @@ export function formatDate(dateStr: string): string {
   });
 }
 
-export function formatDateTime(dateStr: string): string {
+export function formatDateTime(dateStr: string | null | undefined): string {
+  if (!dateStr) return "Not yet run";
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-US", {
     month: "short",

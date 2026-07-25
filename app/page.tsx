@@ -15,14 +15,14 @@ export default function HomePage() {
   const regressions = getRegressions();
   const trends = getTrends("daily");
 
-  const heatmapScores: Record<string, Record<string, number>> = {};
+  const heatmapScores: Record<string, Record<string, number | null>> = {};
   for (const model of MODELS) {
     heatmapScores[model.id] = {};
     const modelResult = latest.models[model.id];
     if (modelResult) {
       for (const cat of CATEGORIES) {
         heatmapScores[model.id][cat.id] =
-          modelResult.categories[cat.id]?.avgScore ?? 0;
+          modelResult.categories[cat.id]?.avgScore ?? null;
       }
     }
   }

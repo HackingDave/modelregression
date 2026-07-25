@@ -12,14 +12,17 @@ import { Check } from "lucide-react";
 import type { TrendData, LatestRun } from "@/lib/types";
 
 interface CompareClientProps {
-  scores: Record<string, Record<string, number>>;
+  scores: Record<string, Record<string, number | null>>;
   trends: TrendData;
   latest: LatestRun;
 }
 
 export function CompareClient({ scores, trends, latest }: CompareClientProps) {
+  const availableModelIds = MODELS.filter(
+    (model) => latest.models[model.id]?.compositeScore != null
+  ).map((model) => model.id);
   const [selected, setSelected] = useState<string[]>(
-    MODELS.map((m) => m.id)
+    availableModelIds
   );
   const selectedModels = MODELS.filter((m) => selected.includes(m.id));
   const metricCards = [
@@ -63,14 +66,15 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
   ];
 
   const toggle = (id: string) => {
+    if (!availableModelIds.includes(id)) return;
     setSelected((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
-  const filteredScores: Record<string, Record<string, number>> = {};
+  const filteredScores: Record<string, Record<string, number | null>> = {};
   for (const id of selected) {
-    filteredScores[id] = scores[id];
+    filteredScores[id] = scores[id] ?? {};
   }
 
   return (
@@ -84,12 +88,16 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
           <div className="flex flex-wrap gap-2">
             {MODELS.map((model) => {
               const isSelected = selected.includes(model.id);
+              const isAvailable = availableModelIds.includes(model.id);
               return (
                 <button
                   key={model.id}
                   onClick={() => toggle(model.id)}
+                  disabled={!isAvailable}
+                  aria-pressed={isSelected}
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all",
+                    !isAvailable && "cursor-not-allowed opacity-50",
                     isSelected
                       ? "border-opacity-60 bg-opacity-10"
                       : "border-border/50 bg-transparent text-muted-foreground hover:bg-muted/30"
@@ -108,12 +116,28 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                     style={{ backgroundColor: model.color }}
                   />
                   {model.name}
+                  {!isAvailable && (
+                    <span className="text-[10px] font-normal text-muted-foreground">
+                      Awaiting run
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
         </div>
       </ScrollReveal>
+
+      {selected.length === 0 && (
+        <div className="rounded-xl border border-dashed border-border/60 bg-muted/10 p-8 text-center">
+          <h3 className="text-sm font-semibold text-foreground">
+            Select at least one model
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Choose a model with benchmark data to display its scores and trends.
+          </p>
+        </div>
+      )}
 
       {/* Radar Chart */}
       {selected.length > 0 && (
@@ -201,9 +225,12 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
               ))}
 
               {CATEGORIES.map((cat) => {
-                const bestScore = Math.max(
-                  ...selectedModels.map((model) => scores[model.id]?.[cat.id] ?? 0)
-                );
+                const categoryScores = selectedModels
+                  .map((model) => scores[model.id]?.[cat.id] ?? null)
+                  .filter((score): score is number => score != null);
+                const bestScore = categoryScores.length
+                  ? Math.max(...categoryScores)
+                  : null;
 
                 return (
                   <div
@@ -220,8 +247,9 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                     </div>
                     <div className="mt-3 grid grid-cols-2 gap-2">
                       {selectedModels.map((model) => {
-                        const score = scores[model.id]?.[cat.id] ?? 0;
-                        const isBest = score === bestScore && score > 0;
+                        const score = scores[model.id]?.[cat.id] ?? null;
+                        const isBest =
+                          score != null && bestScore != null && score === bestScore;
 
                         return (
                           <div
@@ -275,10 +303,12 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                 </thead>
                 <tbody>
                   {CATEGORIES.map((cat) => {
-                    const catScores = selectedModels.map(
-                      (m) => scores[m.id]?.[cat.id] ?? 0
-                    );
-                    const maxScore = Math.max(...catScores);
+                    const catScores = selectedModels
+                      .map((m) => scores[m.id]?.[cat.id] ?? null)
+                      .filter((score): score is number => score != null);
+                    const maxScore = catScores.length
+                      ? Math.max(...catScores)
+                      : null;
 
                     return (
                       <tr
@@ -289,8 +319,9 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                           {cat.name}
                         </td>
                         {selectedModels.map((model) => {
-                          const score = scores[model.id]?.[cat.id] ?? 0;
-                          const isBest = score === maxScore && score > 0;
+                          const score = scores[model.id]?.[cat.id] ?? null;
+                          const isBest =
+                            score != null && maxScore != null && score === maxScore;
                           return (
                             <td key={model.id} className="text-center py-3 px-3">
                               <span
@@ -330,12 +361,12 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                             className={cn(
                               "font-mono text-sm font-bold",
                               getScoreColor(
-                                result?.compositeScore ?? 0
+                                result?.compositeScore ?? null
                               )
                             )}
                           >
                             {formatScore(
-                              result?.compositeScore ?? 0
+                              result?.compositeScore ?? null
                             )}
                           </span>
                         </td>
@@ -391,7 +422,7 @@ export function CompareClient({ scores, trends, latest }: CompareClientProps) {
                     {selectedModels.map((model) => {
                       const result = latest.models[model.id];
                       const tokenBenchmark =
-                        result?.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? 0;
+                        result?.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? null;
 
                       return (
                         <td

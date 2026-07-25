@@ -859,6 +859,83 @@
   ],
   "outages": [
     {
+      "id": "6c57fef2-d458-47f4-bd81-206e339d0223",
+      "startedAt": "2026-07-18T22:00:10.000Z",
+      "endedAt": null,
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "fe1aa31d-a779-4d48-9e37-ceed33c6cad8",
+      "startedAt": "2026-07-17T03:00:06.000Z",
+      "endedAt": "2026-07-17T03:00:21.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "4695c70f-fc09-41f3-8c6c-61b79811533e",
+      "startedAt": "2026-07-12T18:30:09.000Z",
+      "endedAt": "2026-07-13T23:30:09.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "42bd0684-569f-4eb6-b232-4ad9fc6e5b23",
+      "startedAt": "2026-07-12T03:00:07.000Z",
+      "endedAt": "2026-07-12T03:00:17.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "baa5cd1f-8de9-448e-babd-478d05376869",
+      "startedAt": "2026-07-11T03:00:07.000Z",
+      "endedAt": "2026-07-11T03:00:18.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "d64013aa-932e-4a4a-816e-94e2940d13ad",
+      "startedAt": "2026-07-10T03:00:06.000Z",
+      "endedAt": "2026-07-10T03:00:19.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "de6c62b6-d84d-47dc-ab1d-4919e08f6702",
+      "startedAt": "2026-07-09T19:00:09.000Z",
+      "endedAt": "2026-07-09T19:30:10.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "e46dd2e0-7702-44ea-b140-401961116cf1",
+      "startedAt": "2026-07-09T03:00:06.000Z",
+      "endedAt": "2026-07-09T03:00:23.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "00710a25-1a1d-459f-b687-1af113b31ef2",
+      "startedAt": "2026-07-08T03:00:06.000Z",
+      "endedAt": "2026-07-08T03:00:17.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "a709fe89-ad16-4747-8570-379d25649e92",
+      "startedAt": "2026-07-07T03:00:06.000Z",
+      "endedAt": "2026-07-07T03:00:19.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "c9e4a079-1cf5-4164-b51c-cc489421960a",
+      "startedAt": "2026-07-03T22:30:08.000Z",
+      "endedAt": "2026-07-04T00:00:09.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
       "id": "62af7eb4-7a9e-47b7-ac49-7103a8a58ae5",
       "startedAt": "2026-07-02T01:00:10.000Z",
       "endedAt": "2026-07-02T02:00:11.000Z",

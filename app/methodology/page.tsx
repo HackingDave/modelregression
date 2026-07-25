@@ -64,7 +64,7 @@ export default function MethodologyPage() {
             </div>
             <div>
               <span className="text-3xl font-bold font-mono text-primary">
-                10
+                {CATEGORIES.length}
               </span>
               <p className="text-sm text-muted-foreground mt-1">
                 Benchmark categories
@@ -111,10 +111,11 @@ export default function MethodologyPage() {
             ))}
           </div>
           <p className="text-xs text-muted-foreground mt-4">
-            All models are called via their official APIs with temperature set to
-            0.0 for maximum reproducibility. When a new frontier model is
-            released, it is added to the benchmark suite and begins tracking
-            immediately.
+            Models are exercised through their official Claude, Codex, and Grok
+            CLI tools. Provider-maintained aliases and catalogs are resolved at
+            runtime so new frontier releases enter the active lineup
+            automatically while historical results keep their original model
+            identity.
           </p>
         </div>
       </ScrollReveal>

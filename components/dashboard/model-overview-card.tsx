@@ -27,6 +27,7 @@ export function ModelOverviewCard({
     trend === "up" ? TrendingUp : trend === "down" ? TrendingDown : Minus;
   const tokenBenchmark =
     result.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? null;
+  const hasResults = result.compositeScore != null;
 
   return (
     <Link href={`/models/${model.slug}`} className="block group">
@@ -50,20 +51,26 @@ export function ModelOverviewCard({
               {model.provider}
             </span>
           </div>
-          <div
-            className={cn(
-              "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium",
-              change > 2
-                ? "bg-green-500/10 text-green-400"
-                : change < -2
-                  ? "bg-red-500/10 text-red-400"
-                  : "bg-yellow-500/10 text-yellow-400"
-            )}
-          >
-            <TrendIcon className="w-3 h-3" />
-            {change > 0 ? "+" : ""}
-            {change.toFixed(1)}%
-          </div>
+          {hasResults ? (
+            <div
+              className={cn(
+                "flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-mono font-medium",
+                change > 2
+                  ? "bg-green-500/10 text-green-400"
+                  : change < -2
+                    ? "bg-red-500/10 text-red-400"
+                    : "bg-yellow-500/10 text-yellow-400"
+              )}
+            >
+              <TrendIcon className="w-3 h-3" />
+              {change > 0 ? "+" : ""}
+              {change.toFixed(1)}%
+            </div>
+          ) : (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-mono text-muted-foreground">
+              Awaiting run
+            </span>
+          )}
         </div>
 
         {/* Model name */}
@@ -77,13 +84,22 @@ export function ModelOverviewCard({
         {/* Score + Rank */}
         <div className="flex items-end justify-between mb-4">
           <div>
-            <AnimatedCounter
-              value={result.compositeScore ?? 0}
-              className={cn("text-3xl font-bold", getScoreColor(result.compositeScore))}
-            />
-            <span className="text-sm text-muted-foreground font-mono ml-1">
-              /100
-            </span>
+            {hasResults ? (
+              <>
+                <AnimatedCounter
+                  value={result.compositeScore as number}
+                  className={cn(
+                    "text-3xl font-bold",
+                    getScoreColor(result.compositeScore)
+                  )}
+                />
+                <span className="text-sm text-muted-foreground font-mono ml-1">
+                  /100
+                </span>
+              </>
+            ) : (
+              <span className="text-2xl font-bold text-muted-foreground">—</span>
+            )}
           </div>
           <div className="text-right">
             <span className="text-2xl font-bold font-mono text-muted-foreground">
@@ -97,7 +113,12 @@ export function ModelOverviewCard({
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
               Token Benchmark
             </p>
-            <p className={cn("mt-1 font-mono text-sm font-semibold", getScoreColor(tokenBenchmark))}>
+            <p
+              className={cn(
+                "mt-1 font-mono text-sm font-semibold",
+                getScoreColor(tokenBenchmark)
+              )}
+            >
               {formatScore(tokenBenchmark)}
             </p>
           </div>

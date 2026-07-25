@@ -56,14 +56,14 @@ source "$VENV_DIR/bin/activate"
 echo "Python: $(python --version)  ($(which python))"
 
 # ---------------------------------------------------------------------------
-# Step 0: Auto-update CLI tools (claude, codex, agent)
+# Step 0: Auto-update CLI tools (claude, codex, grok/agent)
 # ---------------------------------------------------------------------------
 echo ""
 echo "--- Step 0: Updating CLI tools ---"
 
 if command -v claude &>/dev/null; then
     echo "Updating Claude Code..."
-    claude update --yes 2>&1 || echo "  (claude update skipped or already latest)"
+    claude update 2>&1 || echo "  (claude update skipped or already latest)"
 else
     echo "  WARNING: claude CLI not found"
 fi
@@ -82,11 +82,14 @@ else
     echo "  WARNING: gemini CLI not found"
 fi
 
-if command -v agent &>/dev/null; then
-    echo "Updating Grok Agent..."
+if command -v grok &>/dev/null; then
+    echo "Updating Grok Build..."
+    grok update 2>&1 || echo "  (grok update skipped or already latest)"
+elif command -v agent &>/dev/null; then
+    echo "Updating Grok Build (legacy agent command)..."
     agent update 2>&1 || echo "  (agent update skipped or already latest)"
 else
-    echo "  WARNING: agent CLI not found"
+    echo "  WARNING: grok/agent CLI not found"
 fi
 
 echo "CLI tools updated."

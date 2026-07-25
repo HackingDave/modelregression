@@ -56,7 +56,10 @@ export async function generateMetadata({
 // Helpers
 // ---------------------------------------------------------------------------
 
-function getRankBadge(rank: number) {
+function getRankBadge(rank: number | null) {
+  if (rank == null) {
+    return "bg-muted/30 text-muted-foreground border-border/40";
+  }
   switch (rank) {
     case 1:
       return "bg-yellow-500/15 text-yellow-400 border-yellow-500/30";
@@ -134,10 +137,17 @@ export default async function CategoryDetailPage({
       score: data.currentScore,
       totalTokens: data.totalTokens,
       avgTokensPerTest: data.avgTokensPerTest,
+      testScores: data.testScores ?? {},
       sparkline: data.history.slice(-7).map((h) => h.score ?? 0),
     }))
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1))
-    .map((m, i) => ({ ...m, rank: i + 1 }));
+    .map((model, index, sorted) => ({
+      ...model,
+      rank:
+        model.score == null
+          ? null
+          : sorted.slice(0, index + 1).filter((item) => item.score != null).length,
+    }));
 
   // ---- Best average score across all models ----
   const scoredModels = rankedModels.filter((m) => m.score != null);
@@ -262,7 +272,7 @@ export default async function CategoryDetailPage({
             {rankedModels.map((rm) => {
               const info = rm.info;
               if (!info) return null;
-              const delta = (rm.score ?? 0) - bestScore;
+              const delta = rm.score == null ? null : rm.score - bestScore;
 
               return (
                 <div
@@ -277,7 +287,7 @@ export default async function CategoryDetailPage({
                           getRankBadge(rm.rank)
                         )}
                       >
-                        {rm.rank}
+                        {rm.rank ?? "—"}
                       </span>
                       <div>
                         <div
@@ -304,7 +314,7 @@ export default async function CategoryDetailPage({
                     <span
                       className={cn(
                         "font-mono text-2xl font-bold",
-                        getScoreColor(rm.score ?? 0)
+                        getScoreColor(rm.score)
                       )}
                     >
                       {formatScore(rm.score)}
@@ -315,7 +325,11 @@ export default async function CategoryDetailPage({
                         delta === 0 ? "text-yellow-400" : "text-muted-foreground"
                       )}
                     >
-                      {delta === 0 ? "BEST" : `${delta.toFixed(1)} pts`}
+                      {delta == null
+                        ? "Awaiting run"
+                        : delta === 0
+                          ? "BEST"
+                          : `${delta.toFixed(1)} pts`}
                     </span>
                   </div>
 
@@ -380,7 +394,7 @@ export default async function CategoryDetailPage({
                   {rankedModels.map((rm) => {
                     const info = rm.info;
                     if (!info) return null;
-                  const delta = (rm.score ?? 0) - bestScore;
+                  const delta = rm.score == null ? null : rm.score - bestScore;
 
                   return (
                     <tr
@@ -394,7 +408,7 @@ export default async function CategoryDetailPage({
                             getRankBadge(rm.rank)
                           )}
                         >
-                          {rm.rank}
+                          {rm.rank ?? "—"}
                         </span>
                       </td>
                       <td className="py-3 px-4">
@@ -458,9 +472,11 @@ export default async function CategoryDetailPage({
                               : "text-muted-foreground"
                           )}
                         >
-                          {delta === 0
-                            ? "BEST"
-                            : `${delta.toFixed(1)} pts`}
+                          {delta == null
+                            ? "—"
+                            : delta === 0
+                              ? "BEST"
+                              : `${delta.toFixed(1)} pts`}
                         </span>
                       </td>
                       <td className="text-right py-3 px-5">
@@ -552,10 +568,7 @@ export default async function CategoryDetailPage({
                       const info = rm.info;
                       if (!info) return null;
 
-                      // We don't have per-test per-model scores in the
-                      // category detail data. Use the model's overall
-                      // category score as a proxy.
-                      const score = rm.score ?? 0;
+                      const score = rm.testScores[test.id] ?? null;
 
                       return (
                         <div key={rm.modelId} className="space-y-1">
@@ -585,7 +598,7 @@ export default async function CategoryDetailPage({
                             <div
                               className="h-full rounded-full score-bar"
                               style={{
-                                width: `${score}%`,
+                                width: `${score ?? 0}%`,
                                 backgroundColor: info.color,
                                 opacity: 0.85,
                               }}

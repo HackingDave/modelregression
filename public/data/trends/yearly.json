@@ -5,9 +5,6 @@
       "timestamp": "2026-06-01T00:00:00.000Z",
       "monthLabel": "2026-06",
       "models": {
-        "claude-opus-4-8": 91.8,
-        "gpt-5-5": 87.4,
-        "claude-sonnet-4-6": 86.1,
         "grok": 80.7
       }
     }

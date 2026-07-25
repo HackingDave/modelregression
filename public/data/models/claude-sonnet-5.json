@@ -1,0 +1,18 @@
+{
+  "model": {
+    "id": "claude-sonnet-5",
+    "provider": "claude",
+    "name": "Claude Sonnet 5",
+    "slug": "claude-sonnet-5",
+    "color": "#8B5CF6",
+    "icon": "zap"
+  },
+  "current": {
+    "compositeScore": null,
+    "rank": null,
+    "categories": {}
+  },
+  "history": [],
+  "regressions": [],
+  "outages": []
+}

@@ -24,7 +24,7 @@ export function SynopsisBanner({ synopsis }: SynopsisBannerProps) {
   };
 
   const current = periodData[range];
-  const model = getModel(current.modelId);
+  const model = current.modelId ? getModel(current.modelId) : undefined;
   const TrendIcon =
     current.change > 2
       ? TrendingUp
@@ -77,56 +77,66 @@ export function SynopsisBanner({ synopsis }: SynopsisBannerProps) {
                 className="text-3xl sm:text-4xl font-bold mb-1"
                 style={{ color: model?.color }}
               >
-                {current.name}
+                {current.name ?? "Awaiting benchmark data"}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {range === "day"
-                  ? "Leading today's benchmarks"
-                  : range === "week"
-                    ? "Best average this week"
-                    : "Best average this month"}
+                {current.score == null
+                  ? "The current frontier lineup will appear after its first successful run"
+                  : range === "day"
+                    ? "Leading today's benchmarks"
+                    : range === "week"
+                      ? "Best average this week"
+                      : "Best average this month"}
               </p>
             </div>
 
             {/* Score */}
             <div className="text-right">
-              <div className="flex items-baseline gap-2">
-                <AnimatedCounter
-                  value={current.score}
-                  className="text-5xl sm:text-6xl font-bold text-foreground"
-                />
-                <span className="text-lg text-muted-foreground font-mono">
-                  /100
+              {current.score != null ? (
+                <>
+                  <div className="flex items-baseline gap-2">
+                    <AnimatedCounter
+                      value={current.score}
+                      className="text-5xl sm:text-6xl font-bold text-foreground"
+                    />
+                    <span className="text-lg text-muted-foreground font-mono">
+                      /100
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-end gap-1.5 mt-2">
+                    <TrendIcon
+                      className={cn(
+                        "w-4 h-4",
+                        current.change > 2
+                          ? "text-green-400"
+                          : current.change < -2
+                            ? "text-red-400"
+                            : "text-yellow-400"
+                      )}
+                    />
+                    <span
+                      className={cn(
+                        "text-sm font-mono font-medium",
+                        current.change > 2
+                          ? "text-green-400"
+                          : current.change < -2
+                            ? "text-red-400"
+                            : "text-yellow-400"
+                      )}
+                    >
+                      {current.change > 0 ? "+" : ""}
+                      {current.change.toFixed(1)}%
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      vs prev {range}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <span className="text-5xl font-bold text-muted-foreground">
+                  —
                 </span>
-              </div>
-              <div className="flex items-center justify-end gap-1.5 mt-2">
-                <TrendIcon
-                  className={cn(
-                    "w-4 h-4",
-                    current.change > 2
-                      ? "text-green-400"
-                      : current.change < -2
-                        ? "text-red-400"
-                        : "text-yellow-400"
-                  )}
-                />
-                <span
-                  className={cn(
-                    "text-sm font-mono font-medium",
-                    current.change > 2
-                      ? "text-green-400"
-                      : current.change < -2
-                        ? "text-red-400"
-                        : "text-yellow-400"
-                  )}
-                >
-                  {current.change > 0 ? "+" : ""}
-                  {current.change.toFixed(1)}%
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  vs prev {range}
-                </span>
-              </div>
+              )}
             </div>
           </div>
         </div>

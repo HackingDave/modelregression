@@ -7,14 +7,14 @@ export default function ComparePage() {
   const latest = getLatestRun();
   const trends = getTrends("daily");
 
-  const allScores: Record<string, Record<string, number>> = {};
+  const allScores: Record<string, Record<string, number | null>> = {};
   for (const model of MODELS) {
     allScores[model.id] = {};
     const result = latest.models[model.id];
     if (result) {
       for (const cat of CATEGORIES) {
         allScores[model.id][cat.id] =
-          result.categories[cat.id]?.avgScore ?? 0;
+          result.categories[cat.id]?.avgScore ?? null;
       }
     }
   }

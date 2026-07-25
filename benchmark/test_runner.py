@@ -34,7 +34,7 @@ def test_call_codex_parses_json_output_and_usage(monkeypatch):
     monkeypatch.setattr(runner.time, "monotonic", lambda: next(times))
 
     text, latency_ms, prompt_tokens, completion_tokens, total_tokens, error = runner._call_codex(
-        {"cli": "codex", "cli_model": "gpt-5.5"},
+        {"cli": "codex", "cli_model": runner.config.CODEX_FRONTIER_MODEL},
         "Reply with exactly: ok",
         None,
     )
@@ -155,7 +155,7 @@ def test_read_grok_usage_from_session_uses_prompt_delta(tmp_path, monkeypatch):
 
 def test_call_model_reports_model_specific_timeout(monkeypatch):
     model_config = {
-        "id": "claude-sonnet-4-6",
+        "id": "claude-sonnet-5",
         "cli": "claude",
         "timeout_seconds": 900,
     }
@@ -216,3 +216,57 @@ def test_evaluate_response_raises_when_judge_fails(monkeypatch):
         runner.evaluate_response("fake-judge-test", "model output long enough")
 
     assert exc.value.reason == "judge_call_failed"
+
+
+def test_grok_config_uses_cli_default_model():
+    grok = runner.config.get_model_by_id("grok")
+
+    assert grok["name"] == runner.config.model_display_name(
+        runner.config.GROK_DEFAULT_MODEL
+    )
+    assert grok["cli_model"] == runner.config.GROK_DEFAULT_MODEL
+    assert grok["cli_model"] != "grok-build"
+
+
+def test_main_exits_nonzero_when_benchmark_is_not_clean(monkeypatch):
+    monkeypatch.setattr(runner.sys, "argv", ["runner.py"])
+    monkeypatch.setattr(runner, "run_benchmarks", lambda *_args, **_kwargs: False)
+
+    with pytest.raises(SystemExit) as exc:
+        runner.main()
+
+    assert exc.value.code == 1
+
+
+def test_call_grok_uses_configured_cli_and_model(monkeypatch):
+    captured: dict[str, object] = {}
+    stdout = json.dumps({
+        "text": "ok result",
+        "usage": {"input_tokens": 2, "output_tokens": 3},
+    })
+
+    def fake_run(cli, cmd, **kwargs):
+        captured["cli"] = cli
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return SimpleNamespace(returncode=0, stdout=stdout, stderr="")
+
+    times = iter([20.0, 20.5])
+    monkeypatch.setattr(runner, "_run_cli_with_limit", fake_run)
+    monkeypatch.setattr(runner.time, "monotonic", lambda: next(times))
+
+    text, latency_ms, prompt_tokens, completion_tokens, total_tokens, error = runner._call_grok(
+        {"cli": "grok", "cli_model": runner.config.GROK_DEFAULT_MODEL},
+        "Reply with exactly: ok",
+        None,
+    )
+
+    assert captured["cli"] == "grok"
+    assert captured["cmd"][0] == "grok"
+    assert captured["cmd"][captured["cmd"].index("-m") + 1] == runner.config.GROK_DEFAULT_MODEL
+    assert text == "ok result"
+    assert latency_ms == 500
+    assert prompt_tokens == 2
+    assert completion_tokens == 3
+    assert total_tokens == 5
+    assert error is None

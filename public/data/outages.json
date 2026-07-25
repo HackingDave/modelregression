@@ -1,29 +1,171 @@
 {
-  "current": [
+  "current": [],
+  "history": [
     {
-      "id": "41ae5d74-f733-4a79-a90c-440e1eb15a38",
-      "provider": "claude",
-      "modelId": "claude-sonnet-4-6",
-      "startedAt": "2026-06-30T17:00:07.000Z",
-      "endedAt": null,
+      "id": "6c57fef2-d458-47f4-bd81-206e339d0223",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-18T22:00:10.000Z",
+      "endedAt": "2026-07-25T16:42:30.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
-      "checkCount": 117
+      "checkCount": 333
     },
     {
-      "id": "f6944107-ef33-49ea-a9aa-60db39830c64",
-      "provider": "claude",
-      "modelId": "claude-opus-4-8",
-      "startedAt": "2026-06-30T17:00:04.000Z",
-      "endedAt": null,
+      "id": "fe1aa31d-a779-4d48-9e37-ceed33c6cad8",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-17T03:00:06.000Z",
+      "endedAt": "2026-07-17T03:00:21.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI unavailable",
       "httpStatus": null,
-      "checkCount": 117
-    }
-  ],
-  "history": [
+      "checkCount": 1
+    },
+    {
+      "id": "fb44a5e6-3b88-4b09-99d1-a1ea5bbaba5c",
+      "provider": "grok",
+      "modelId": "grok",
+      "startedAt": "2026-07-14T18:01:10.000Z",
+      "endedAt": "2026-07-14T18:30:12.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Provider request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "b7d36041-3a8c-455b-bc00-c23daafbfef9",
+      "provider": "grok",
+      "modelId": "grok",
+      "startedAt": "2026-07-14T11:31:13.000Z",
+      "endedAt": "2026-07-14T12:00:12.000Z",
+      "errorType": "timeout",
+      "errorMessage": "Provider request timed out",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "4695c70f-fc09-41f3-8c6c-61b79811533e",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-12T18:30:09.000Z",
+      "endedAt": "2026-07-13T23:30:09.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 59
+    },
+    {
+      "id": "42bd0684-569f-4eb6-b232-4ad9fc6e5b23",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-12T03:00:07.000Z",
+      "endedAt": "2026-07-12T03:00:17.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "baa5cd1f-8de9-448e-babd-478d05376869",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-11T03:00:07.000Z",
+      "endedAt": "2026-07-11T03:00:18.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "d64013aa-932e-4a4a-816e-94e2940d13ad",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-10T03:00:06.000Z",
+      "endedAt": "2026-07-10T03:00:19.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "de6c62b6-d84d-47dc-ab1d-4919e08f6702",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-09T19:00:09.000Z",
+      "endedAt": "2026-07-09T19:30:10.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "e46dd2e0-7702-44ea-b140-401961116cf1",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-09T03:00:06.000Z",
+      "endedAt": "2026-07-09T03:00:23.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "0ca670de-b2dd-476d-9441-ed7adb3a29eb",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-08T18:00:18.000Z",
+      "endedAt": "2026-07-09T17:30:12.000Z",
+      "errorType": "error",
+      "errorMessage": "Configured model unavailable",
+      "httpStatus": null,
+      "checkCount": 49
+    },
+    {
+      "id": "00710a25-1a1d-459f-b687-1af113b31ef2",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-08T03:00:06.000Z",
+      "endedAt": "2026-07-08T03:00:17.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "a709fe89-ad16-4747-8570-379d25649e92",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-07T03:00:06.000Z",
+      "endedAt": "2026-07-07T03:00:19.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI unavailable",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "92941e54-b40c-4d66-9e4a-ef6800577931",
+      "provider": "agent",
+      "modelId": "grok",
+      "startedAt": "2026-07-06T06:00:16.000Z",
+      "endedAt": "2026-07-06T06:30:13.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider returned an empty response",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "c9e4a079-1cf5-4164-b51c-cc489421960a",
+      "provider": "codex",
+      "modelId": "gpt-5-5",
+      "startedAt": "2026-07-03T22:30:08.000Z",
+      "endedAt": "2026-07-04T00:00:09.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 3
+    },
     {
       "id": "54149f61-6092-4903-b047-299da216cc21",
       "provider": "agent",
@@ -31,7 +173,7 @@
       "startedAt": "2026-07-02T18:30:15.000Z",
       "endedAt": "2026-07-02T19:00:14.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -42,7 +184,7 @@
       "startedAt": "2026-07-02T01:00:10.000Z",
       "endedAt": "2026-07-02T02:00:11.000Z",
       "errorType": "error",
-      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.142.5\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019f2072-9384-7da0-ba6d-aba558c4da6c\n--------\nuse",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -53,7 +195,7 @@
       "startedAt": "2026-07-01T14:00:14.000Z",
       "endedAt": "2026-07-01T14:30:14.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -64,7 +206,7 @@
       "startedAt": "2026-07-01T12:30:15.000Z",
       "endedAt": "2026-07-01T13:00:15.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -75,7 +217,7 @@
       "startedAt": "2026-07-01T00:30:13.000Z",
       "endedAt": "2026-07-01T01:30:16.000Z",
       "errorType": "error",
-      "errorMessage": "agent exited 1: \u001b[2m2026-07-01T01:00:11.313066Z\u001b[0m \u001b[31mERROR\u001b[0m responses API error \u001b[3mstatus\u001b[0m\u001b[2m=\u001b[0m403 Forbidden \u001b[3merror_message\u001b[0m\u001b[2m=\u001b[0mpersonal-team-blocked:spending-limit: You have run out of credits or need a Grok subscription. Add credits at https://grok.com/?_s=usage or upgrade at https://gro",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -86,7 +228,7 @@
       "startedAt": "2026-06-30T20:00:14.000Z",
       "endedAt": "2026-06-30T20:30:17.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -97,9 +239,31 @@
       "startedAt": "2026-06-30T17:00:14.000Z",
       "endedAt": "2026-06-30T17:30:20.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
+    },
+    {
+      "id": "41ae5d74-f733-4a79-a90c-440e1eb15a38",
+      "provider": "claude",
+      "modelId": "claude-sonnet-4-6",
+      "startedAt": "2026-06-30T17:00:07.000Z",
+      "endedAt": "2026-07-25T16:42:30.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 1226
+    },
+    {
+      "id": "f6944107-ef33-49ea-a9aa-60db39830c64",
+      "provider": "claude",
+      "modelId": "claude-opus-4-8",
+      "startedAt": "2026-06-30T17:00:04.000Z",
+      "endedAt": "2026-07-25T16:42:30.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 1226
     },
     {
       "id": "c76e962c-9fbf-4246-8f6e-81ebcca5de2d",
@@ -108,7 +272,7 @@
       "startedAt": "2026-06-30T09:30:13.000Z",
       "endedAt": "2026-06-30T10:00:14.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -119,7 +283,7 @@
       "startedAt": "2026-06-30T04:31:09.000Z",
       "endedAt": "2026-06-30T05:00:15.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -130,7 +294,7 @@
       "startedAt": "2026-06-29T21:30:13.000Z",
       "endedAt": "2026-06-29T22:00:13.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -141,7 +305,7 @@
       "startedAt": "2026-06-28T06:30:02.000Z",
       "endedAt": "2026-06-28T08:00:04.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -152,7 +316,7 @@
       "startedAt": "2026-06-28T06:00:04.000Z",
       "endedAt": "2026-06-28T07:30:04.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -163,7 +327,7 @@
       "startedAt": "2026-06-27T05:30:03.000Z",
       "endedAt": "2026-06-27T07:00:05.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -174,7 +338,7 @@
       "startedAt": "2026-06-27T05:30:03.000Z",
       "endedAt": "2026-06-27T07:00:03.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -185,7 +349,7 @@
       "startedAt": "2026-06-26T23:00:25.000Z",
       "endedAt": "2026-06-26T23:30:13.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -196,7 +360,7 @@
       "startedAt": "2026-06-26T12:00:16.000Z",
       "endedAt": "2026-06-26T12:30:23.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -207,7 +371,7 @@
       "startedAt": "2026-06-26T00:30:16.000Z",
       "endedAt": "2026-06-26T01:00:15.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -218,7 +382,7 @@
       "startedAt": "2026-06-24T18:00:15.000Z",
       "endedAt": "2026-06-24T18:30:13.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -229,7 +393,7 @@
       "startedAt": "2026-06-24T17:30:10.000Z",
       "endedAt": "2026-06-24T18:00:10.000Z",
       "errorType": "error",
-      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.142.0\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019efaae-a01b-7503-945c-f7afd532f1eb\n--------\nuse",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -240,7 +404,7 @@
       "startedAt": "2026-06-24T14:01:01.000Z",
       "endedAt": "2026-06-24T14:30:09.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -251,7 +415,7 @@
       "startedAt": "2026-06-23T23:00:15.000Z",
       "endedAt": "2026-06-23T23:30:14.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -262,7 +426,7 @@
       "startedAt": "2026-06-23T14:31:03.000Z",
       "endedAt": "2026-06-23T15:01:06.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -273,7 +437,7 @@
       "startedAt": "2026-06-23T14:30:03.000Z",
       "endedAt": "2026-06-23T15:30:04.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -284,7 +448,7 @@
       "startedAt": "2026-06-23T05:00:04.000Z",
       "endedAt": "2026-06-23T08:00:17.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 6
     },
@@ -295,7 +459,7 @@
       "startedAt": "2026-06-23T05:00:03.000Z",
       "endedAt": "2026-06-23T08:00:15.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 6
     },
@@ -306,7 +470,7 @@
       "startedAt": "2026-06-22T08:31:01.000Z",
       "endedAt": "2026-06-22T09:00:04.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -317,7 +481,7 @@
       "startedAt": "2026-06-22T05:00:04.000Z",
       "endedAt": "2026-06-22T07:00:08.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 4
     },
@@ -328,7 +492,7 @@
       "startedAt": "2026-06-22T05:00:03.000Z",
       "endedAt": "2026-06-22T07:00:03.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 4
     },
@@ -339,7 +503,7 @@
       "startedAt": "2026-06-22T01:31:11.000Z",
       "endedAt": "2026-06-22T02:00:14.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -350,7 +514,7 @@
       "startedAt": "2026-06-21T18:00:14.000Z",
       "endedAt": "2026-06-21T18:30:17.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -361,7 +525,7 @@
       "startedAt": "2026-06-21T05:00:03.000Z",
       "endedAt": "2026-06-21T06:00:05.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -372,7 +536,7 @@
       "startedAt": "2026-06-21T05:00:02.000Z",
       "endedAt": "2026-06-21T06:00:03.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -383,7 +547,7 @@
       "startedAt": "2026-06-19T18:00:15.000Z",
       "endedAt": "2026-06-19T18:30:16.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -394,7 +558,7 @@
       "startedAt": "2026-06-18T17:30:08.000Z",
       "endedAt": "2026-06-18T18:30:11.000Z",
       "errorType": "error",
-      "errorMessage": "codex exited 1: Reading prompt from stdin...\nOpenAI Codex v0.140.0\n--------\nworkdir: /home/hackingdave/projects/modelregression/benchmark\nmodel: gpt-5.5\nprovider: openai\napproval: never\nsandbox: read-only\nreasoning effort: xhigh\nreasoning summaries: none\nsession id: 019edbe3-e507-79b1-a432-1ae29040ce75\n--------\nuse",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -405,7 +569,7 @@
       "startedAt": "2026-06-18T05:00:03.000Z",
       "endedAt": "2026-06-18T06:30:06.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -416,7 +580,7 @@
       "startedAt": "2026-06-18T05:00:02.000Z",
       "endedAt": "2026-06-18T06:30:04.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 3
     },
@@ -427,7 +591,7 @@
       "startedAt": "2026-06-17T21:00:17.000Z",
       "endedAt": "2026-06-17T21:30:12.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -438,7 +602,7 @@
       "startedAt": "2026-06-17T08:30:18.000Z",
       "endedAt": "2026-06-17T09:00:21.000Z",
       "errorType": "error",
-      "errorMessage": "Empty response",
+      "errorMessage": "Provider returned an empty response",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -449,7 +613,7 @@
       "startedAt": "2026-06-16T03:00:06.000Z",
       "endedAt": "2026-06-16T03:00:17.000Z",
       "errorType": "error",
-      "errorMessage": "CLI tool 'codex' not found",
+      "errorMessage": "Provider CLI unavailable",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -460,7 +624,7 @@
       "startedAt": "2026-06-15T07:01:01.000Z",
       "endedAt": "2026-06-15T07:30:03.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     },
@@ -471,7 +635,7 @@
       "startedAt": "2026-06-14T05:30:04.000Z",
       "endedAt": "2026-06-14T07:30:06.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 4
     },
@@ -482,7 +646,7 @@
       "startedAt": "2026-06-14T05:30:03.000Z",
       "endedAt": "2026-06-14T07:30:04.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 4
     },
@@ -493,7 +657,7 @@
       "startedAt": "2026-06-11T16:30:03.000Z",
       "endedAt": "2026-06-11T19:00:06.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 5
     },
@@ -504,7 +668,7 @@
       "startedAt": "2026-06-11T16:30:02.000Z",
       "endedAt": "2026-06-11T19:00:04.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 5
     },
@@ -515,7 +679,7 @@
       "startedAt": "2026-06-09T05:00:03.000Z",
       "endedAt": "2026-06-09T06:00:14.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -526,7 +690,7 @@
       "startedAt": "2026-06-09T05:00:02.000Z",
       "endedAt": "2026-06-09T06:00:12.000Z",
       "errorType": "error",
-      "errorMessage": "claude exited 1: unknown error",
+      "errorMessage": "Provider CLI request failed",
       "httpStatus": null,
       "checkCount": 2
     },
@@ -537,26 +701,26 @@
       "startedAt": "2026-06-07T04:01:01.000Z",
       "endedAt": "2026-06-07T04:30:03.000Z",
       "errorType": "timeout",
-      "errorMessage": "Request timed out",
+      "errorMessage": "Provider request timed out",
       "httpStatus": null,
       "checkCount": 1
     }
   ],
   "uptime": {
     "claude": {
-      "7d": 28.4,
-      "30d": 79.2,
-      "90d": 93.1
+      "7d": 100,
+      "30d": 0,
+      "90d": 42.8
     },
     "codex": {
-      "7d": 99.4,
-      "30d": 99.7,
-      "90d": 99.9
+      "7d": 3.2,
+      "30d": 73,
+      "90d": 90.9
     },
-    "agent": {
-      "7d": 96.4,
-      "30d": 98.6,
-      "90d": 99.5
+    "grok": {
+      "7d": 100,
+      "30d": 95.6,
+      "90d": 98.4
     }
   }
 }

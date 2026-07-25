@@ -63,7 +63,7 @@ export function LatestRunTable({ run }: LatestRunTableProps) {
             <Clock className="w-3.5 h-3.5" />
             <span className="font-mono">{formatDateTime(run.completedAt)}</span>
             <span className="px-1.5 py-0.5 rounded bg-muted text-muted-foreground text-[10px] font-mono uppercase">
-              {run.schedule}
+              {run.schedule ?? "pending"}
             </span>
           </div>
         </div>

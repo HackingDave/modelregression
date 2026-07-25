@@ -6,6 +6,7 @@ Reads benchmarks.db and generates the complete set of static JSON data files
 matching the exact structure consumed by the frontend at build time:
 
   - latest.json                            (most recent benchmark run)
+  - model-catalog.json                     (current rolling model catalog)
   - synopsis.json                          (best model per day/week/month)
   - models/{slug}.json                     (per-model detail + history)
   - categories/{slug}.json                 (per-category detail + history)
@@ -39,6 +40,12 @@ logger = logging.getLogger(__name__)
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 TOKEN_EFFICIENCY_CATEGORY_ID = "token-efficiency"
+PROVIDER_NAMES = {
+    "claude": "anthropic",
+    "codex": "openai",
+    "agent": "xai",
+    "grok": "xai",
+}
 
 
 # ---------------------------------------------------------------------------
@@ -114,6 +121,24 @@ def _write_json(path: str, data) -> None:
     logger.debug("Wrote %s", path)
 
 
+def _public_outage_message(error_type: str | None, message: str | None) -> str:
+    """Reduce private CLI diagnostics to a safe, actionable public summary."""
+    normalized = (message or "").lower()
+    if error_type == "timeout" or "timed out" in normalized:
+        return "Provider request timed out"
+    if "oauth" in normalized or "authenticate" in normalized:
+        return "Provider authentication failed"
+    if "not found" in normalized:
+        return "Provider CLI unavailable"
+    if "unknown model" in normalized or "invalid model" in normalized:
+        return "Configured model unavailable"
+    if "rate limit" in normalized or "too many requests" in normalized:
+        return "Provider rate limit reached"
+    if "empty response" in normalized:
+        return "Provider returned an empty response"
+    return "Provider CLI request failed"
+
+
 def _recompute_cross_model_token_efficiency(models_data: dict[str, dict]) -> None:
     """Recompute token-efficiency scores across the composed latest model set."""
     averages = {
@@ -138,6 +163,22 @@ def _recompute_cross_model_token_efficiency(models_data: dict[str, dict]) -> Non
         token_category["avgScore"] = _round_score(
             min(100.0, (best_avg_tokens / avg_tokens) * 100)
         )
+
+
+def export_model_catalog(output_dir: str) -> None:
+    """Export the runtime-resolved model catalog consumed by the frontend."""
+    catalog = [
+        {
+            "id": model["id"],
+            "provider": PROVIDER_NAMES.get(model["cli"], model["cli"]),
+            "name": model["name"],
+            "slug": model["slug"],
+            "color": model["color"],
+            "icon": model.get("icon", "cpu"),
+        }
+        for model in config.MODELS
+    ]
+    _write_json(os.path.join(output_dir, "model-catalog.json"), catalog)
 
 
 def _recompute_cross_model_composites(models_data: dict[str, dict]) -> None:
@@ -185,8 +226,12 @@ def _build_model_views_from_runs(conn, model_runs: dict[str, dict]) -> dict[str,
             continue
         models_data[slug] = _model_current(conn, model_run, model_id)
 
-    _recompute_cross_model_token_efficiency(models_data)
-    _recompute_cross_model_composites(models_data)
+    # Cross-model normalization is only valid once every model in the current
+    # lineup has a result. During a frontier migration, preserve each model's
+    # stored score instead of silently comparing one survivor against itself.
+    if len(models_data) == len(config.MODELS):
+        _recompute_cross_model_token_efficiency(models_data)
+        _recompute_cross_model_composites(models_data)
     return models_data
 
 
@@ -266,7 +311,7 @@ def export_synopsis(conn, output_dir: str) -> None:
             """SELECT m.slug, m.name, mrs.composite_score
                FROM model_run_scores mrs
                JOIN models m ON mrs.model_id = m.id
-               WHERE mrs.run_id = ?
+               WHERE mrs.run_id = ? AND m.is_active = 1
                ORDER BY mrs.composite_score DESC LIMIT 1""",
             (latest["id"],),
         ).fetchone()
@@ -308,6 +353,7 @@ def export_synopsis(conn, output_dir: str) -> None:
                WHERE br.started_at >= ?
                  AND br.started_at < ?
                  AND br.status IN ('completed', 'completed_with_errors')
+                 AND m.is_active = 1
                GROUP BY m.slug
                ORDER BY avg_score DESC LIMIT 1""",
             (cutoff, end),
@@ -590,6 +636,7 @@ def export_categories(conn, output_dir: str) -> None:
             model_run = _get_latest_run_for_model(conn, mid)
             current_tokens = None
             current_avg_tokens = None
+            test_scores = {}
             if model_run:
                 if cid == TOKEN_EFFICIENCY_CATEGORY_ID:
                     if current_view:
@@ -602,6 +649,16 @@ def export_categories(conn, output_dir: str) -> None:
                     ).fetchone()
                     if tk and tk["total"]:
                         current_tokens = tk["total"]
+                    test_rows = conn.execute(
+                        """SELECT test_id, score
+                           FROM test_results
+                           WHERE run_id = ? AND model_id = ? AND category_id = ?""",
+                        (model_run["id"], mid, cid),
+                    ).fetchall()
+                    test_scores = {
+                        _display_test_id(row["test_id"]): _round_score(row["score"])
+                        for row in test_rows
+                    }
 
             # Full history
             history = []
@@ -621,6 +678,7 @@ def export_categories(conn, output_dir: str) -> None:
                 "currentScore": current_score,
                 "totalTokens": current_tokens,
                 "avgTokensPerTest": current_avg_tokens,
+                "testScores": test_scores,
                 "history": history,
             }
 
@@ -670,7 +728,12 @@ def _collect_run_composites(conn, days: int) -> list[tuple[dict, list[dict]]]:
     ]
     result = []
     for run in runs:
-        comps = database.get_model_run_scores_for_run(conn, run["id"])
+        current_model_ids = {model["id"] for model in config.MODELS}
+        comps = [
+            score
+            for score in database.get_model_run_scores_for_run(conn, run["id"])
+            if score["model_id"] in current_model_ids
+        ]
         result.append((run, comps))
     return result
 
@@ -851,7 +914,9 @@ def export_outages(conn, output_dir: str) -> None:
             "startedAt": _iso(o["started_at"]),
             "endedAt": _iso(o.get("ended_at")),
             "errorType": o["error_type"],
-            "errorMessage": o["error_message"],
+            "errorMessage": _public_outage_message(
+                o.get("error_type"), o.get("error_message")
+            ),
             "httpStatus": o["http_status"],
             "checkCount": o["check_count"],
         }
@@ -1039,6 +1104,9 @@ def _generate_empty_stubs(output_dir: str) -> None:
 def export_all(output_dir: str, db_path: str | None = None) -> None:
     """Export every JSON file the website needs."""
     conn = database.get_connection(db_path)
+    os.makedirs(output_dir, exist_ok=True)
+    export_model_catalog(output_dir)
+    logger.info("  model-catalog.json")
 
     # Check for any completed runs
     row = conn.execute(
@@ -1053,8 +1121,6 @@ def export_all(output_dir: str, db_path: str | None = None) -> None:
         return
 
     logger.info("Exporting JSON data to %s ...", output_dir)
-    os.makedirs(output_dir, exist_ok=True)
-
     export_latest(conn, output_dir)
     logger.info("  latest.json")
 

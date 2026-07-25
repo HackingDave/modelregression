@@ -22,8 +22,13 @@ export function ModelOverviewCards({
   return (
     <StaggerContainer className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {MODELS.map((model) => {
-        const result = latest.models[model.id];
-        if (!result) return null;
+        const result = latest.models[model.id] ?? {
+          compositeScore: null,
+          rank: null,
+          totalTokens: null,
+          avgTokensPerTest: null,
+          categories: {},
+        };
         return (
           <StaggerItem key={model.id}>
             <ModelOverviewCard

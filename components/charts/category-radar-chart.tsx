@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   RadarChart,
   Radar,
@@ -15,11 +16,11 @@ import { MODELS } from "@/lib/models";
 interface RadarDataPoint {
   category: string;
   fullMark: number;
-  [modelId: string]: string | number;
+  [modelId: string]: string | number | null;
 }
 
 interface CategoryRadarChartProps {
-  scores: Record<string, Record<string, number>>;
+  scores: Record<string, Record<string, number | null>>;
   modelFilter?: string[];
   height?: number;
 }
@@ -29,13 +30,23 @@ export function CategoryRadarChart({
   modelFilter,
   height = 400,
 }: CategoryRadarChartProps) {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 768px)");
+    const update = () => setIsDesktop(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
   const data: RadarDataPoint[] = CATEGORIES.map((cat) => {
     const point: RadarDataPoint = {
       category: cat.name.replace("& ", "&\n"),
       fullMark: 100,
     };
     for (const modelId of Object.keys(scores)) {
-      point[modelId] = scores[modelId]?.[cat.id] ?? 0;
+      point[modelId] = scores[modelId]?.[cat.id] ?? null;
     }
     return point;
   });
@@ -43,6 +54,8 @@ export function CategoryRadarChart({
   const modelsToShow = modelFilter
     ? MODELS.filter((m) => modelFilter.includes(m.id))
     : MODELS.filter((m) => m.id in scores);
+
+  if (!isDesktop) return null;
 
   return (
     <ResponsiveContainer width="100%" height={height}>

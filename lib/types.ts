@@ -1,4 +1,4 @@
-export type Provider = "anthropic" | "openai" | "xai" | "claude" | "codex" | "agent";
+export type Provider = "anthropic" | "openai" | "xai" | "claude" | "codex" | "agent" | "grok";
 
 export interface ModelInfo {
   id: string;
@@ -48,18 +48,18 @@ export interface ModelRunResult {
 }
 
 export interface LatestRun {
-  runId: string;
-  startedAt: string;
-  completedAt: string;
-  schedule: "daily" | "morning" | "afternoon" | "night";
+  runId: string | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  schedule: "daily" | "morning" | "afternoon" | "night" | null;
   models: Record<string, ModelRunResult>;
 }
 
 export interface Synopsis {
-  day: { modelId: string; name: string; score: number; change: number };
-  week: { modelId: string; name: string; score: number; change: number };
-  month: { modelId: string; name: string; score: number; change: number };
-  updatedAt: string;
+  day: { modelId: string | null; name: string | null; score: number | null; change: number };
+  week: { modelId: string | null; name: string | null; score: number | null; change: number };
+  month: { modelId: string | null; name: string | null; score: number | null; change: number };
+  updatedAt: string | null;
 }
 
 export interface HistoryEntry {
@@ -113,6 +113,7 @@ export interface CategoryDetail {
       currentScore: number | null;
       totalTokens?: number | null;
       avgTokensPerTest?: number | null;
+      testScores?: Record<string, number | null>;
       history: { timestamp: string; score: number | null }[];
     }
   >;

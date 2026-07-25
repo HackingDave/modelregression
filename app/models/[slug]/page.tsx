@@ -97,6 +97,59 @@ export default async function ModelDetailPage({
   const tokenBenchmark =
     current.categories[TOKEN_EFFICIENCY_CATEGORY_ID]?.avgScore ?? null;
 
+  if (current.compositeScore == null && history.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </Link>
+
+        <ScrollReveal>
+          <div className="relative overflow-hidden rounded-xl border border-border/50 glass p-6 md:p-8">
+            <div
+              className="absolute top-0 left-8 right-8 h-px"
+              style={{
+                background: `linear-gradient(90deg, transparent, ${model.color}60, transparent)`,
+              }}
+            />
+            <div className="flex items-center gap-3">
+              <div
+                className="h-3 w-3 rounded-full"
+                style={{ backgroundColor: model.color }}
+              />
+              <span className="rounded-full border border-border/50 bg-muted/60 px-2.5 py-1 text-xs font-mono uppercase tracking-wider text-muted-foreground">
+                {getProviderName(model.provider)}
+              </span>
+            </div>
+            <h1
+              className="mt-4 text-3xl font-extrabold tracking-tight md:text-4xl"
+              style={{ color: model.color }}
+            >
+              {model.name}
+            </h1>
+            <div className="mt-8 flex max-w-2xl items-start gap-3 rounded-xl border border-border/40 bg-background/25 p-5">
+              <Clock className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <div>
+                <h2 className="font-semibold text-foreground">
+                  Awaiting first benchmark run
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-muted-foreground">
+                  This frontier model is in the active benchmark lineup. Scores,
+                  evidence, and trends will appear after its first successful
+                  scheduled run.
+                </p>
+              </div>
+            </div>
+          </div>
+        </ScrollReveal>
+      </div>
+    );
+  }
+
   // ---- Radar chart scores: this model across all categories ----
   const radarScores: Record<string, Record<string, number>> = {
     [model.id]: {},

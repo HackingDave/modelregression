@@ -2,11 +2,19 @@
 Configuration for ModelRegression benchmark engine.
 
 Defines all models, categories, tests, and CLI tool settings.
-Models are tested via installed CLI tools (claude, codex, agent)
+Models are tested via installed CLI tools (claude, codex, agent/grok)
 rather than direct API integration.
 """
 
 import os
+
+from model_resolver import (
+    model_display_name,
+    model_storage_id,
+    resolve_codex_frontier_model,
+    resolve_grok_default_model,
+    resolve_with_override,
+)
 
 # ---------------------------------------------------------------------------
 # Database
@@ -25,54 +33,73 @@ CLI_CONCURRENCY_LIMITS = {
     "claude": 2,
     "codex": 4,
     "agent": 4,
+    "grok": 4,
 }
+
+
+def _model_arg(env_var: str, default: str) -> str:
+    """Read a CLI model argument override, ignoring empty values."""
+    value = os.getenv(env_var, "").strip()
+    return value or default
+
+
+CODEX_FRONTIER_MODEL = resolve_with_override(
+    "MODELREGRESSION_CODEX_MODEL",
+    os.environ,
+    resolve_codex_frontier_model,
+)
+GROK_DEFAULT_MODEL = resolve_with_override(
+    "MODELREGRESSION_GROK_MODEL",
+    os.environ,
+    resolve_grok_default_model,
+)
 
 # ---------------------------------------------------------------------------
 # Model definitions — each model specifies its CLI tool and model argument
 #
-#   cli:        executable name (claude, codex, agent)
+#   cli:        executable name (claude, codex, agent/grok)
 #   cli_model:  value passed to --model / -m flag
 # ---------------------------------------------------------------------------
 MODELS = [
     {
-        "id": "claude-opus-4-8",
+        "id": "claude-opus-5",
         "cli": "claude",
-        "cli_model": "opus",
+        "cli_model": _model_arg("MODELREGRESSION_CLAUDE_OPUS_MODEL", "opus"),
         "timeout_seconds": 900,
         "parallel_tests": 2,
-        "name": "Claude Opus 4.8",
-        "slug": "claude-opus-4-8",
+        "name": "Claude Opus 5",
+        "slug": "claude-opus-5",
         "color": "#D97706",
         "icon": "brain",
         "is_active": True,
     },
     {
-        "id": "claude-sonnet-4-6",
+        "id": "claude-sonnet-5",
         "cli": "claude",
-        "cli_model": "sonnet",
+        "cli_model": _model_arg("MODELREGRESSION_CLAUDE_SONNET_MODEL", "sonnet"),
         "timeout_seconds": 900,
         "parallel_tests": 2,
-        "name": "Claude Sonnet 4.6",
-        "slug": "claude-sonnet-4-6",
+        "name": "Claude Sonnet 5",
+        "slug": "claude-sonnet-5",
         "color": "#8B5CF6",
         "icon": "zap",
         "is_active": True,
     },
     {
-        "id": "gpt-5-5",
+        "id": model_storage_id(CODEX_FRONTIER_MODEL),
         "cli": "codex",
-        "cli_model": "gpt-5.5",
-        "name": "GPT-5.5",
-        "slug": "gpt-5-5",
+        "cli_model": CODEX_FRONTIER_MODEL,
+        "name": model_display_name(CODEX_FRONTIER_MODEL),
+        "slug": model_storage_id(CODEX_FRONTIER_MODEL),
         "color": "#10B981",
         "icon": "sparkles",
         "is_active": True,
     },
     {
         "id": "grok",
-        "cli": "agent",
-        "cli_model": "grok-build",
-        "name": "Grok",
+        "cli": "grok",
+        "cli_model": GROK_DEFAULT_MODEL,
+        "name": model_display_name(GROK_DEFAULT_MODEL),
         "slug": "grok",
         "color": "#EF4444",
         "icon": "flame",

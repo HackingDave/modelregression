@@ -169,12 +169,34 @@ def init_db(db_path: str | None = None) -> sqlite3.Connection:
 
 def seed_models_and_categories(conn: sqlite3.Connection) -> None:
     """Insert or update model and category metadata from config."""
+    # A rolling model change creates a new benchmark identity so historical
+    # results remain attributed to the model that produced them. Retire the
+    # previous identities before upserting the current catalog; otherwise
+    # get_active_models() would keep benchmarking every model ever seen.
+    conn.execute("UPDATE models SET is_active = 0")
     for m in MODELS:
         conn.execute(
             """INSERT OR REPLACE INTO models (id, provider, name, slug, cli_model, color, is_active)
                VALUES (?, ?, ?, ?, ?, ?, ?)""",
             (m["id"], m["cli"], m["name"], m["slug"], m["cli_model"], m["color"], int(m["is_active"])),
         )
+
+    retired_at = _now_iso()
+    conn.execute(
+        """UPDATE outages
+           SET ended_at = ?
+           WHERE ended_at IS NULL
+             AND model_id IN (SELECT id FROM models WHERE is_active = 0)""",
+        (retired_at,),
+    )
+    conn.execute(
+        """UPDATE regressions
+           SET resolved_at = ?,
+               notes = COALESCE(notes, 'Resolved automatically when model was retired')
+           WHERE resolved_at IS NULL
+             AND model_id IN (SELECT id FROM models WHERE is_active = 0)""",
+        (retired_at,),
+    )
     for c in CATEGORIES:
         conn.execute(
             """INSERT OR REPLACE INTO categories (id, name, slug, description, weight, sort_order)

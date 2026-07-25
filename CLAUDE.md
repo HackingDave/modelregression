@@ -43,7 +43,9 @@ Single daily run at 3am ET via `benchmark/run_benchmarks.sh`. Outage monitor eve
 
 ## Models Tested
 
-Claude Opus 4.8, Claude Sonnet 4.6, GPT-5.5, Grok
+Claude Opus 5, Claude Sonnet 5, GPT-5.6 Sol, Grok 4.5. Claude aliases and
+Codex/Grok catalogs resolve at runtime so scheduled benchmarks follow each
+provider's current frontier model.
 
 ## Key Files
 

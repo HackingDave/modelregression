@@ -1,8 +1,8 @@
 {
   "model": {
     "id": "grok",
-    "provider": "agent",
-    "name": "Grok",
+    "provider": "grok",
+    "name": "Grok 4.5",
     "slug": "grok",
     "color": "#EF4444",
     "icon": "flame"
@@ -960,6 +960,34 @@
     }
   ],
   "outages": [
+    {
+      "id": "fb44a5e6-3b88-4b09-99d1-a1ea5bbaba5c",
+      "startedAt": "2026-07-14T18:01:10.000Z",
+      "endedAt": "2026-07-14T18:30:12.000Z",
+      "errorType": "timeout",
+      "httpStatus": null
+    },
+    {
+      "id": "b7d36041-3a8c-455b-bc00-c23daafbfef9",
+      "startedAt": "2026-07-14T11:31:13.000Z",
+      "endedAt": "2026-07-14T12:00:12.000Z",
+      "errorType": "timeout",
+      "httpStatus": null
+    },
+    {
+      "id": "0ca670de-b2dd-476d-9441-ed7adb3a29eb",
+      "startedAt": "2026-07-08T18:00:18.000Z",
+      "endedAt": "2026-07-09T17:30:12.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
+    {
+      "id": "92941e54-b40c-4d66-9e4a-ef6800577931",
+      "startedAt": "2026-07-06T06:00:16.000Z",
+      "endedAt": "2026-07-06T06:30:13.000Z",
+      "errorType": "error",
+      "httpStatus": null
+    },
     {
       "id": "54149f61-6092-4903-b047-299da216cc21",
       "startedAt": "2026-07-02T18:30:15.000Z",

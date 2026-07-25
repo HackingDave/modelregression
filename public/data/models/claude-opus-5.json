@@ -1,0 +1,18 @@
+{
+  "model": {
+    "id": "claude-opus-5",
+    "provider": "claude",
+    "name": "Claude Opus 5",
+    "slug": "claude-opus-5",
+    "color": "#D97706",
+    "icon": "brain"
+  },
+  "current": {
+    "compositeScore": null,
+    "rank": null,
+    "categories": {}
+  },
+  "history": [],
+  "regressions": [],
+  "outages": []
+}
