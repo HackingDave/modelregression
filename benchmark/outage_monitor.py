@@ -11,6 +11,7 @@ import logging
 import os
 import signal
 import subprocess
+import tempfile
 import time
 import traceback
 
@@ -54,20 +55,35 @@ def _check_model(model_cfg: dict) -> tuple[bool, str | None, int | None]:
     cli_model = model_cfg["cli_model"]
 
     try:
-        if cli == "claude":
-            cmd = ["claude", "-p", "--model", cli_model]
-            result = _run_cli(cmd, input=HEALTH_CHECK_PROMPT, timeout=config.HEALTH_CHECK_TIMEOUT)
-        elif cli == "codex":
-            cmd = ["codex", "exec", "-m", cli_model, "--sandbox", "read-only"]
-            result = _run_cli(cmd, input=HEALTH_CHECK_PROMPT, timeout=config.HEALTH_CHECK_TIMEOUT)
-        elif cli == "gemini":
-            cmd = ["gemini", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model]
-            result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
-        elif cli in {"agent", "grok"}:
-            cmd = [cli, "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
-            result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT)
-        else:
-            return (False, f"Unknown CLI tool: {cli}", None)
+        safe_cli = "".join(char if char.isalnum() else "-" for char in cli)
+        with tempfile.TemporaryDirectory(prefix=f"modelregression-health-{safe_cli}-") as cli_cwd:
+            if cli == "claude":
+                cmd = ["claude", "-p", "--model", cli_model]
+                result = _run_cli(
+                    cmd,
+                    input=HEALTH_CHECK_PROMPT,
+                    timeout=config.HEALTH_CHECK_TIMEOUT,
+                    cwd=cli_cwd,
+                )
+            elif cli == "codex":
+                cmd = [
+                    "codex", "exec", "-m", cli_model,
+                    "--sandbox", "read-only", "--skip-git-repo-check",
+                ]
+                result = _run_cli(
+                    cmd,
+                    input=HEALTH_CHECK_PROMPT,
+                    timeout=config.HEALTH_CHECK_TIMEOUT,
+                    cwd=cli_cwd,
+                )
+            elif cli == "gemini":
+                cmd = ["gemini", "-p", HEALTH_CHECK_PROMPT, "-m", cli_model]
+                result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT, cwd=cli_cwd)
+            elif cli in {"agent", "grok"}:
+                cmd = [cli, "-p", HEALTH_CHECK_PROMPT, "-m", cli_model, "--output-format", "plain"]
+                result = _run_cli(cmd, timeout=config.HEALTH_CHECK_TIMEOUT, cwd=cli_cwd)
+            else:
+                return (False, f"Unknown CLI tool: {cli}", None)
 
         if result.returncode != 0:
             stderr = result.stderr.strip()[:300] if result.stderr else "unknown error"

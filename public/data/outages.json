@@ -2,6 +2,28 @@
   "current": [],
   "history": [
     {
+      "id": "1c7cf5c6-bc37-47dc-b25b-18471af621e8",
+      "provider": "claude",
+      "modelId": "claude-sonnet-5",
+      "startedAt": "2026-07-25T17:00:07.000Z",
+      "endedAt": "2026-07-25T17:22:29.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
+      "id": "34ddc7d4-7d7b-4796-9b6a-4a63cfbb62ac",
+      "provider": "claude",
+      "modelId": "claude-opus-5",
+      "startedAt": "2026-07-25T17:00:04.000Z",
+      "endedAt": "2026-07-25T17:22:26.000Z",
+      "errorType": "error",
+      "errorMessage": "Provider CLI request failed",
+      "httpStatus": null,
+      "checkCount": 1
+    },
+    {
       "id": "6c57fef2-d458-47f4-bd81-206e339d0223",
       "provider": "codex",
       "modelId": "gpt-5-5",
@@ -708,7 +730,7 @@
   ],
   "uptime": {
     "claude": {
-      "7d": 100,
+      "7d": 99.6,
       "30d": 0,
       "90d": 42.8
     },

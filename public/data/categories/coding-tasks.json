@@ -26,34 +26,61 @@
   ],
   "models": {
     "claude-opus-5": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "claude-sonnet-5": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "gpt-5-6-sol": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "grok": {
-      "currentScore": 98,
-      "totalTokens": 62320,
+      "currentScore": 88.7,
+      "totalTokens": 16192,
       "avgTokensPerTest": null,
       "testScores": {
-        "ct-1": 97,
-        "ct-2": 100,
+        "ct-1": 78,
+        "ct-2": 91,
         "ct-3": 97
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 88.7
+        }
+      ]
+    },
+    "claude-sonnet-5": {
+      "currentScore": 81.3,
+      "totalTokens": 8348,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "ct-2": 90,
+        "ct-1": 62,
+        "ct-3": 92
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 81.3
+        }
+      ]
+    },
+    "gpt-5-6-sol": {
+      "currentScore": 93.3,
+      "totalTokens": 48195,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "ct-1": 92,
+        "ct-2": 96,
+        "ct-3": 92
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 93.3
+        }
+      ]
+    },
+    "grok": {
+      "currentScore": 92,
+      "totalTokens": 136974,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "ct-1": 92,
+        "ct-3": 92,
+        "ct-2": 92
       },
       "history": [
         {
@@ -171,6 +198,10 @@
         {
           "timestamp": "2026-06-30T03:00:22.000Z",
           "score": 98
+        },
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 92
         }
       ]
     }

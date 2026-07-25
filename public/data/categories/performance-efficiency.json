@@ -26,34 +26,61 @@
   ],
   "models": {
     "claude-opus-5": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "claude-sonnet-5": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "gpt-5-6-sol": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "grok": {
-      "currentScore": 94,
-      "totalTokens": 106527,
+      "currentScore": 94.7,
+      "totalTokens": 54668,
       "avgTokensPerTest": null,
       "testScores": {
-        "pe-2": 98,
-        "pe-3": 84,
-        "pe-1": 100
+        "pe-1": 91,
+        "pe-3": 96,
+        "pe-2": 97
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 94.7
+        }
+      ]
+    },
+    "claude-sonnet-5": {
+      "currentScore": 92,
+      "totalTokens": 40870,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "pe-1": 97,
+        "pe-2": 91,
+        "pe-3": 88
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 92
+        }
+      ]
+    },
+    "gpt-5-6-sol": {
+      "currentScore": 89.3,
+      "totalTokens": 69210,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "pe-2": 88,
+        "pe-1": 92,
+        "pe-3": 88
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 89.3
+        }
+      ]
+    },
+    "grok": {
+      "currentScore": 92.3,
+      "totalTokens": 141162,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "pe-3": 91,
+        "pe-1": 92,
+        "pe-2": 94
       },
       "history": [
         {
@@ -171,6 +198,10 @@
         {
           "timestamp": "2026-06-30T03:00:22.000Z",
           "score": 94
+        },
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 92.3
         }
       ]
     }

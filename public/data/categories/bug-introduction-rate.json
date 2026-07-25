@@ -26,34 +26,61 @@
   ],
   "models": {
     "claude-opus-5": {
-      "currentScore": null,
-      "totalTokens": null,
+      "currentScore": 94,
+      "totalTokens": 23758,
       "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
+      "testScores": {
+        "bi-1": 93,
+        "bi-2": 97,
+        "bi-3": 92
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 94
+        }
+      ]
     },
     "claude-sonnet-5": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "gpt-5-6-sol": {
-      "currentScore": null,
-      "totalTokens": null,
-      "avgTokensPerTest": null,
-      "testScores": {},
-      "history": []
-    },
-    "grok": {
-      "currentScore": 95.7,
-      "totalTokens": 118342,
+      "currentScore": 91.7,
+      "totalTokens": 11605,
       "avgTokensPerTest": null,
       "testScores": {
         "bi-1": 94,
-        "bi-3": 96,
-        "bi-2": 97
+        "bi-2": 90,
+        "bi-3": 91
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 91.7
+        }
+      ]
+    },
+    "gpt-5-6-sol": {
+      "currentScore": 92.3,
+      "totalTokens": 71462,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "bi-1": 95,
+        "bi-2": 90,
+        "bi-3": 92
+      },
+      "history": [
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 92.3
+        }
+      ]
+    },
+    "grok": {
+      "currentScore": 85.7,
+      "totalTokens": 199031,
+      "avgTokensPerTest": null,
+      "testScores": {
+        "bi-2": 91,
+        "bi-1": 78,
+        "bi-3": 88
       },
       "history": [
         {
@@ -171,6 +198,10 @@
         {
           "timestamp": "2026-06-30T03:00:22.000Z",
           "score": 95.7
+        },
+        {
+          "timestamp": "2026-07-25T17:22:33.000Z",
+          "score": 85.7
         }
       ]
     }

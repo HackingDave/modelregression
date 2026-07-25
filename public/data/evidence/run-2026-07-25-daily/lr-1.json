@@ -1,0 +1,153 @@
+{
+  "test": {
+    "id": "lr-1",
+    "name": "Multi-step Logic Puzzle",
+    "category": "long-reasoning",
+    "categoryName": "Long Reasoning",
+    "description": "Complex optimization with 8+ constraints across multiple variables",
+    "prompt": "Solve the following factory optimization problem step by step, showing all your work.\n\nA small factory has 3 production machines (A, B, and C) that operate during an 8-hour shift. Each machine produces a different component that is assembled into a final product. Here are the specifications and constraints:\n\nMachine A: Produces 20 units per hour. Requires 1 hour of scheduled maintenance during the shift (can be placed at any time). During maintenance, Machine A is completely offline.\n\nMachine B: Produces 15 units per hour. Machine B depends on a shared power bus with Machine A. Whenever Machine A is down for maintenance, Machine B must also stop for that same 1-hour window. Machine B has no other downtime.\n\nMachine C: Produces 10 units per hour. Machine C can only operate when at least one of Machines A or B is also running. Additionally, Machine C requires a 30-minute warm-up at the start of the shift before it can produce anything, and it must have a 30-minute cool-down at the end of the shift. Machine C has a further constraint: it overheats if run for more than 5 consecutive hours, requiring a 1-hour cooldown before it can restart.\n\nAdditional constraints:\n1. The maintenance window for Machine A (and therefore the forced stop for Machine B) should be scheduled to MINIMIZE total lost production across all machines.\n2. Machine C's mandatory start/end 30-minute windows count toward consecutive runtime.\n3. One final product requires exactly 1 unit from each machine. Excess components from any machine are wasted.\n\nQuestions:\n(a) What is the optimal time to schedule Machine A's maintenance to maximize the total number of complete final products?\n(b) How many effective production hours does each machine have under the optimal schedule?\n(c) What is the maximum number of complete final products that can be assembled in one shift?\n\nShow your reasoning for each step. The answer to (c) is a specific integer."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 59,
+      "modelOutput": "## Setting Up\n\nLet the shift run from **T=0 to T=8** (hours). Let the maintenance window be **[t, t+1]**.\n\n**Immediate consequences of the coupling rules:**\n- A is down during [t, t+1] \u2192 **A gets 7 productive hours** no matter where t goes.\n- B is forced down in the *same* window \u2192 **B gets 7 productive hours** no matter where t goes.\n- Neither A nor B is running during [t, t+1] \u2192 **C is also forced down** in that window.\n\nSo the maintenance window costs a fixed 20 + 15 + 10 = 45 units of raw capacity regardless of placement. **The placement decision is purely about Machine C's constraint feasibility** \u2014 that's the real puzzle.\n\n---\n\n## Step 1: Machine C's ceiling\n\nC's clock occupies the whole shift: warm\u2011up [0, 0.5], possible production [0.5, 7.5], cool\u2011down [7.5, 8].\n\nIf C never stopped, its consecutive runtime would be **8 hours > 5** \u2192 illegal. C *must* take at least one 1\u2011hour break.\n\n- Minimum C downtime = 1 hour\n- The forced maintenance stop is already 1 hour \u2192 **make the maintenance window double as C's overheat cooldown.** Any separate break would be pure waste.\n\nC's on-time = 8 \u2212 1 = 7 hours, of which 0.5 is warm\u2011up and 0.5 is cool\u2011down (non\u2011producing).\n\n**C's absolute ceiling = 6 production hours = 60 units.**\n\n## Step 2: Where can t go? (the 5\u2011hour rule)\n\nWith the break at [t, t+1], C's two runtime blocks are:\n\n| Block | Span | Length (counts warm\u2011up/cool\u2011down) | Constraint |\n|---|---|---|---|\n| 1 | 0 \u2192 t | t | t \u2264 5 |\n| 2 | t+1 \u2192 8 | 7 \u2212 t | 7 \u2212 t \u2264 5 \u2192 t \u2265 2 |\n\n**Feasible window: 2 \u2264 t \u2264 5.**\n\nChecking the tempting alternatives:\n- **t = 0** (maintenance first hour): C's run becomes 1\u21928 = 7 consecutive hours \u2192 illegal, needs a *second* break \u2192 C drops to ~5 hours \u2192 50 units.\n- **t = 7** (maintenance last hour): C runs 0\u21927 = 7 consecutive hours \u2192 illegal, same penalty.\n- **t = 0.5 or 6.5** (clipping warm\u2011up/cool\u2011down): remaining block is 6.5 hours \u2192 still illegal.\n\nOnly a **mid\u2011shift** maintenance window keeps both C blocks under the 5\u2011hour limit while using a single break.\n\n---\n\n## (a) Optimal maintenance time\n\n**Any window starting between T+2:00 and T+5:00 is optimal; the balanced choice is T+3:30 \u2192 T+4:30** (dead center of the shift). For an 8:00 AM\u20134:00 PM shift, that's **11:30 AM \u2013 12:30 PM** \u2014 which also conveniently doubles as the lunch break.\n\nThis single 1\u2011hour stop simultaneously satisfies: A's maintenance, B's forced power\u2011bus stop, and C's mandatory overheat cooldown.\n\n**Optimal timeline:**\n\n| Time | A | B | C |\n|---|---|---|---|\n| 0.0 \u2013 0.5 | run | run | **warm\u2011up** (counts as runtime) |\n| 0.5 \u2013 3.5 | run | run | producing (3.0 h) |\n| 3.5 \u2013 4.5 | **maintenance** | **forced stop** | **forced stop = overheat cooldown** |\n| 4.5 \u2013 7.5 | run | run | producing (3.0 h) |\n| 7.5 \u2013 8.0 | run | run | **cool\u2011down** (counts as runtime) |\n\nC's consecutive blocks: 3.5 h and 3.5 h \u2014 both \u2264 5 \u2714\n\n## (b) Effective production hours\n\n| Machine | Effective hours | Rate | Units |\n|---|---|---|---|\n| A | 8 \u2212 1 (maint) = **7.0 h** | 20/h | 140 |\n| B | 8 \u2212 1 (forced) = **7.0 h** | 15/h | 105 |\n| C | 8 \u2212 1 (stop) \u2212 0.5 (warm\u2011up) \u2212 0.5 (cool\u2011down) = **6.0 h** | 10/h | **60** |\n\n## (c) Maximum complete final products\n\nOne product = 1 unit from each machine, so output is the **minimum**:\n\n**min(140, 105, 60) = 60**\n\n### \u2705 Answer: **60 complete final products**\n\n**Waste:** A over\u2011produces by 80 units, B by 45 units. Machine C is the hard bottleneck \u2014 and note that *any* feasible maintenance placement in [2, 5] yields 60, so scheduling flexibility is free. To actually beat 60 you'd have to attack C's constraints (a second C unit, a faster warm\u2011up, or better heat dissipation), not reshuffle the maintenance window.",
+      "evalDetails": {
+        "regex_score": 50.0,
+        "judge_score": 65.0,
+        "regex_details": {
+          "checks": {
+            "correct_answer": false,
+            "mentions_downtime": true,
+            "mentions_constraints": true,
+            "identifies_effective_hours": true,
+            "machine_a_output": true,
+            "machine_b_output": true
+          }
+        },
+        "judge_details": {
+          "score": 65,
+          "reasoning": "Model correctly computes Machine A (140) and Machine B (105) outputs, and gives a clear, well-organized step-by-step derivation that correctly identifies the A/B/C dependency chain and the maintenance-window feasibility constraints for C's 5-hour overheat rule. However, the model derives C's producing time as 6 hours (60 units) by treating the mandatory maintenance/forced-stop window as doubling for C's overheat cooldown, whereas the rubric's key expects C to net only 4 producing hours (40 units). This also causes the final answer to diverge sharply from the rubric's target of 285: the model instead reports 60, applying the problem's own stated final-assembly rule (constraint 3: one product needs one unit from each machine, so output is bounded by the minimum across machines) rather than summing raw units from all three machines. This bottleneck interpretation is arguably a more faithful reading of the question ('complete final products'), but it does not match the rubric's expected total or Machine C figure, so those two criteria receive only partial credit for correct methodology despite the numeric mismatch.",
+          "breakdown": {
+            "final_answer_285": 5,
+            "machineA_140": 15,
+            "machineB_105": 15,
+            "machineC_40": 5,
+            "reasoning_clarity": 15,
+            "dependency_chain": 10
+          }
+        }
+      },
+      "latencyMs": 54305,
+      "tokenCount": 4160,
+      "promptTokens": 2,
+      "completionTokens": 4158,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 72.8,
+      "modelOutput": "## Setting Up the Problem\n\nLet the shift run from **t = 0** to **t = 8** (hours).\n\n**Key insight #1 \u2014 A and B's totals are invariant to *when* maintenance happens.**\n- Machine A always loses exactly 1 hour to maintenance, no matter where it's placed \u2192 always runs **7 hours** \u2192 140 units.\n- Machine B always stops for that same 1-hour window (and only that window) \u2192 always runs **7 hours** \u2192 105 units.\n\nSo the *placement* of the maintenance window can't change A's or B's output at all. The only thing placement affects is **Machine C**, since C requires at least one of A/B to be running, and during the maintenance hour, *both* A and B are down simultaneously \u2014 forcing C offline too.\n\n**Key insight #2 \u2014 Machine C's own constraints already force a \"dead\" hour.**\n\nC's timeline is pinned at the edges: warm-up must be at the very start (t=0\u20130.5), cool-down must be at the very end (t=7.5\u20138). That leaves a 7-hour middle span (0.5 \u2192 7.5) where C wants to produce.\n\nBut C can't run more than 5 *consecutive* hours (warm-up/cool-down count toward this), and 0.5 (warmup) + 7 (middle) would blow past 5 hours if run straight through. So C **must** take a 1-hour overheat cooldown somewhere in the middle \u2014 this is unavoidable, independent of Machine A.\n\nWorking out the max: total shift = 8 hours. Unavoidable non-productive time for C = 0.5 (warm-up) + 0.5 (cool-down) + 1 (forced overheat cooldown) = **2 hours**. So C's maximum possible production time is capped at **8 \u2212 2 = 6 hours**, regardless of scheduling \u2014 *provided* the overheat cooldown doesn't get \"wasted\" as a *second*, separate loss.\n\nChecking feasibility of the split: if the first run segment is [0, 5] (0.5 warmup + 4.5 production) and the overheat cooldown is [5,6], the second segment [6, 7.5] gives 1.5 more production hours before the final 0.5-hour cool-down [7.5,8]. Total = 4.5 + 1.5 = 6 hours \u2713. (More generally, the 1-hour cooldown gap can start anywhere from t=2 to t=5 and still hit the 6-hour cap.)\n\n## (a) Optimal Placement of A's Maintenance\n\nSince C is *already* forced to sit idle for one full hour somewhere in the shift (its own overheat cooldown), the winning move is to **schedule A's (and B's) 1-hour maintenance window to exactly coincide with C's mandatory overheat-cooldown hour.**\n\nThat way, the A/B outage doesn't cost C a single additional minute of production \u2014 it \"piggybacks\" on downtime C needed anyway.\n\n\u2192 **Optimal maintenance window: hours 5:00\u20136:00 of the shift** (any window inside the feasible range t=2 to t=6 works equally well; 5:00\u20136:00 is the natural choice matching a \"run C as long as possible first\" schedule).\n\nResulting full-shift layout:\n| Time | A | B | C |\n|---|---|---|---|\n| 0:00\u20130:30 | running | running | warm-up (no output) |\n| 0:30\u20135:00 | running | running | **producing** (4.5 hr) |\n| 5:00\u20136:00 | **maintenance** | **forced stop** | **overheat cooldown** |\n| 6:00\u20137:30 | running | running | **producing** (1.5 hr) |\n| 7:30\u20138:00 | running | running | cool-down (no output) |\n\n## (b) Effective Production Hours\n\n| Machine | Total shift | Downtime | Effective production hours | Rate | Units |\n|---|---|---|---|---|---|\n| A | 8 hr | 1 hr (maintenance) | **7 hr** | 20/hr | 140 |\n| B | 8 hr | 1 hr (forced stop w/ A) | **7 hr** | 15/hr | 105 |\n| C | 8 hr | 2 hr (0.5 warmup+0.5 cooldown+1 hr overheat, fully overlapped with A/B outage) | **6 hr** | 10/hr | 60 |\n\n## (c) Maximum Complete Final Products\n\nEach finished product needs exactly 1 unit from A, B, and C, so the output is bottlenecked by the minimum:\n\n$$\\min(140,\\ 105,\\ 60) = 60$$\n\n**Answer: 60 complete final products.**\n\nMachine C is the binding constraint \u2014 its warm-up/cool-down and overheat rules cap it at 6 productive hours no matter what, and the smart scheduling in part (a) simply ensures Machine A's maintenance doesn't make things *worse* by adding a separate, uncoordinated outage.",
+      "evalDetails": {
+        "regex_score": 50.0,
+        "judge_score": 88.0,
+        "regex_details": {
+          "checks": {
+            "correct_answer": false,
+            "mentions_downtime": true,
+            "mentions_constraints": true,
+            "identifies_effective_hours": true,
+            "machine_a_output": true,
+            "machine_b_output": true
+          }
+        },
+        "judge_details": {
+          "score": 88,
+          "reasoning": "The model correctly applies the problem's own explicit rule (constraint 3: one final product needs 1 unit from each machine, excess wasted) and computes final products as min(A,B,C), not a sum \u2014 this is the mathematically correct reading of 'complete final products.' A=140 and B=105 are correctly derived (7 effective hours each, matching the rubric). The model's key insight for (a) \u2014 that A's maintenance window can be scheduled to coincide with Machine C's mandatory overheat cooldown, so the forced A/B outage costs C zero additional downtime \u2014 is exactly the optimization insight the problem's part (a) is designed to test; if positioning A's maintenance had no effect on C (as a 4-hour/40-unit C answer would imply), part (a) would be a pointless question. The model's C computation (6 effective hours: 4.5 before the coincident break + 1.5 after, respecting the 'no more than 5 consecutive hours' rule at exactly 5 hours) is internally consistent and well-justified. The rubric's target of '285 total units' as the answer to (c) directly contradicts the problem's stated constraint 3 (which mandates a bottleneck/min, not a sum of outputs), and its C=40/4-hour figure isn't independently justified against the model's more rigorous derivation \u2014 this looks like an error in the reference key rather than a flaw in the model's work. Deducting some points since the model doesn't address the boundary-case ambiguity (running exactly 5 vs 'more than 5' hours) as explicitly as it could, and because it cannot be fully verified against the intended answer key given the apparent inconsistency there.",
+          "breakdown": {
+            "final_answer_285": 5,
+            "machine_A_140": 15,
+            "machine_B_105": 15,
+            "machine_C_40": 8,
+            "stepwise_reasoning": 15,
+            "dependency_chain": 10,
+            "bonus_for_correct_min_logic_and_optimization_insight": 20
+          }
+        }
+      },
+      "latencyMs": 193542,
+      "tokenCount": 7586,
+      "promptTokens": 2,
+      "completionTokens": 7584,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 17,
+      "modelOutput": "Let \\(t=0\\) be the start of the shift and \\(t=8\\) the end.\n\n### 1. Schedule Machine C\u2019s required periods\n\nMachine C\u2019s first continuous operating period includes its warm-up. It can therefore operate from \\(t=0\\) through \\(t=5\\):\n\n- \\(0\\)\u2013\\(0.5\\): warm-up, no production\n- \\(0.5\\)\u2013\\(5\\): production for \\(4.5\\) hours\n\nAt \\(t=5\\), C has operated for exactly five consecutive hours, so it can use \\(t=5\\)\u2013\\(6\\) as its one-hour thermal cooldown.\n\nThe best maintenance schedule is therefore:\n\n\\[\n\\boxed{t=5\\text{ to }t=6}\n\\]\n\nDuring this hour:\n\n- A receives maintenance.\n- B is forced offline.\n- C takes its already-needed cooldown.\n\nThus, A and B\u2019s unavoidable shutdown causes no additional loss for C.\n\nAfterward:\n\n- \\(6\\)\u2013\\(7.5\\): C produces for \\(1.5\\) hours.\n- \\(7.5\\)\u2013\\(8\\): C performs its mandatory end cooldown.\n\nThe second consecutive operating period, including end cooldown, is only two hours, so the five-hour limit is satisfied.\n\n### 2. Effective production hours\n\n| Machine | Production calculation | Effective hours | Components |\n|---|---:|---:|---:|\n| A | \\(8-1\\) hour maintenance | \\(7\\) | \\(7(20)=140\\) |\n| B | \\(8-1\\) hour forced stop | \\(7\\) | \\(7(15)=105\\) |\n| C | \\(4.5+1.5\\) | \\(6\\) | \\(6(10)=60\\) |\n\nFor C:\n\n\\[\n8-0.5\\text{ warm-up}-1\\text{ cooldown}-0.5\\text{ end cooldown}\n=6\\text{ production hours}.\n\\]\n\n### 3. Maximum number of final products\n\nEach product requires one component from every machine, so production is limited by the machine with the fewest components:\n\n\\[\n\\min(140,105,60)=60.\n\\]\n\nTherefore:\n\n- **(a)** Schedule A\u2019s maintenance five hours after the shift begins, from \\(\\boxed{t=5\\text{ to }t=6}\\).\n- **(b)** Effective production hours: \\(\\boxed{A=7,\\ B=7,\\ C=6}\\).\n- **(c)** Maximum complete final products:\n\n\\[\n\\boxed{60}\n\\]\n\nStrictly speaking, any one-hour maintenance window starting between \\(t=2\\) and \\(t=5\\) can also serve as C\u2019s separating cooldown and achieve 60 products. The \\(t=5\\)\u2013\\(6\\) window is the natural canonical choice because it begins exactly when C reaches its five-hour consecutive-runtime limit.",
+      "evalDetails": {
+        "regex_score": 20.0,
+        "judge_score": 15.0,
+        "regex_details": {
+          "checks": {
+            "correct_answer": false,
+            "mentions_downtime": false,
+            "mentions_constraints": false,
+            "identifies_effective_hours": false,
+            "machine_a_output": true,
+            "machine_b_output": true
+          }
+        },
+        "judge_details": {
+          "score": 15,
+          "reasoning": "The model's final answer of 60 total products is incorrect against the expected answer of 285 (sum, not min-based scoring per rubric which actually expects component outputs of 140/105/40 summed to 285, not a min-based bottleneck of 60). The model misinterpreted the assembly constraint by taking min(140,105,60) instead of computing each machine's output separately as the rubric expects (140+105+40=285). Machine C's effective hours were computed as 6 instead of the expected 4, and the model's approach of scheduling A's maintenance to overlap with C's cooldown, while creative, deviates from the expected reasoning that maintenance should be scheduled to minimize overlap loss for C's normal 5 consecutive hour run distinct from A/B's window, yielding C=4 effective hours. The reasoning is clear and well-organized but arrives at wrong values for C's hours (6 vs 4) and uses an incorrect min-based final assembly formula instead of the expected sum/reporting format, and the final boxed answer (60) does not match the required specific integer (285).",
+          "breakdown": {
+            "correct_final_285": 0,
+            "machineA_140": 15,
+            "machineB_105": 15,
+            "machineC_40": 0,
+            "step_by_step_reasoning": 10,
+            "dependency_chain": 5
+          }
+        }
+      },
+      "latencyMs": 132301,
+      "tokenCount": 20309,
+      "promptTokens": 16054,
+      "completionTokens": 4255,
+      "error": null
+    },
+    "grok": {
+      "score": 12,
+      "modelOutput": "The problem is solved by carefully modeling the 8-hour shift \\([0, 8]\\), each machine\u2019s downtime, Machine C\u2019s coupling to A/B, and C\u2019s consecutive-runtime limit.\n\n## Setup and fixed production of A and B\n\n- **Machine A** is offline for exactly 1 hour of maintenance and otherwise runs the full shift.  \n  Effective production hours: \\(8 - 1 = 7\\).  \n  Units: \\(7 \\times 20 = 140\\).\n\n- **Machine B** is forced offline for the same 1-hour window and has no other downtime.  \n  Effective production hours: \\(7\\).  \n  Units: \\(7 \\times 15 = 105\\).\n\nThus A\u2019s and B\u2019s totals are **independent of when** the maintenance window is placed.  \nOne final product needs one unit of each component, so the number of complete products is\n\\[\n\\min(140,\\ 105,\\ U_C) = \\min(105,\\ U_C),\n\\]\nwhere \\(U_C\\) is the number of units produced by C. Maximizing products therefore reduces to maximizing C\u2019s productive time (subject to all of C\u2019s constraints) by choosing the maintenance window wisely.\n\n## Constraints on Machine C\n\n1. C may operate only while at least one of A or B is running.  \n   Consequently C is forced offline for the entire maintenance hour \\([m, m+1]\\).\n\n2. Mandatory warm-up \\([0, 0.5]\\) (running, no production) and cool-down \\([7.5, 8]\\) (running, no production).  \n   These two half-hour windows **count toward consecutive runtime**.\n\n3. C may not run for more than 5 consecutive hours; after a 5-hour run it needs a full 1-hour cooldown before it may restart.\n\n4. Production is possible only in the open interval \\((0.5, 7.5)\\) while C is running and A/B are available, at 10 units per hour.\n\n## Interaction of maintenance with C\u2019s overheating limit\n\nOutside the single maintenance hour both A and B are running, so the only forced interruption of C is that hour.  \nIf the maintenance window is the **only** period C is offline, C\u2019s running intervals are\n\\[\n[0, m] \\quad\\text{and}\\quad [m+1, 8].\n\\]\nEach interval must be at most 5 hours:\n\\[\nm \\le 5, \\qquad 8-(m+1) \\le 5 \\;\\Rightarrow\\; m \\ge 2.\n\\]\nHence any start time\n\\[\nm \\in [2, 5]\n\\]\nsplits C into two legal runs of length \\(\\le 5\\). In particular:\n\n- When \\(m = 5\\) the first run is exactly 5 h; the maintenance hour supplies the required 1 h cooldown.  \n- When \\(m = 2\\) the second run is exactly 5 h.  \n- For every intermediate \\(m\\) both runs are strictly shorter than 5 h, so no extra cooldown is needed.\n\nFor every such \\(m\\) the maintenance window lies entirely inside the potential production window \\((0.5, 7.5)\\). Therefore C loses exactly one hour of production and obtains\n\\[\n7 - 1 = 6\n\\]\neffective production hours:\n\\[\nU_C = 6 \\times 10 = 60.\n\\]\n\n## Why other placements are worse\n\n- If \\(m < 2\\), the second run exceeds 5 h. An extra 1 h overheating cooldown must be inserted, removing a second hour from the production window \\(\\Rightarrow\\) at most 5 productive hours.  \n- If \\(m > 5\\), the first run exceeds 5 h and the same extra downtime appears.  \n- Placing maintenance so that it overlaps the mandatory warm-up or cool-down either prevents those procedures (C cannot operate while A and B are down) or still forces an extra overheating stop, never increasing production above 6 h.\n\nConsequently the **maximum** productive time C can ever achieve is 6 h, and it is attained precisely when the maintenance window starts in \\([2, 5]\\).\n\n(The absolute upper bound is also immediate: 0.5 h warm-up + 0.5 h cool-down + 1 h maintenance already consume 2 h of the 8 h shift, leaving at most 6 h for production. The schedule above meets that bound while satisfying the consecutive-runtime limit.)\n\n## Answers\n\n**(a)** Schedule Machine A\u2019s 1-hour maintenance to begin at any time \\(m\\) with\n\\[\n2 \\le m \\le 5\n\\]\n(i.e., the window \\([m, m+1]\\) lies inside \\([2, 6]\\)).  \nAny such placement simultaneously serves as C\u2019s overheating cooldown and minimises total lost production. All such placements are optimal; a concrete example is the window \\([3, 4]\\) or \\([4, 5]\\).\n\n**(b)** Under any optimal schedule the effective production hours are  \n- Machine A: **7**  \n- Machine B: **7**  \n- Machine C: **6**\n\n**(c)** Units produced:  \n\\[\nA: 140,\\qquad B: 105,\\qquad C: 60.\n\\]\nComplete final products:\n\\[\n\\min(140, 105, 60) = 60.\n\\]\n\n**Final answer: (a) maintenance start \\(m\\in[2,5]\\); (b) A:7, B:7, C:6; (c) 60**",
+      "evalDetails": {
+        "regex_score": 30.0,
+        "judge_score": 0,
+        "regex_details": {
+          "checks": {
+            "correct_answer": false,
+            "mentions_downtime": true,
+            "mentions_constraints": false,
+            "identifies_effective_hours": false,
+            "machine_a_output": true,
+            "machine_b_output": true
+          }
+        },
+        "judge_details": {
+          "score": 0,
+          "reasoning": "The model made a critical constraint error, allowing Machine C to run during the 1-hour maintenance window scenario incorrectly and concluding C only loses 1 hour (6 effective hours, 60 units) instead of correctly applying the consecutive-runtime/cooldown constraint that forces C to lose significantly more time. Per the rubric, the correct answer is Machine C: 4 effective hours = 40 units, and total = 285. The model's final answer (c)=60 is wrong (should be 285 per rubric, and even the model's own component sum 140+105+60=305\u2260285, and it took min instead of sum, misunderstanding that final products require summing distinct component productions, not min against C being the bottleneck at 60 \u2014 actually re-checking: rubric expects total 285 = 140+105+40, meaning the correct approach sums outputs to get total 'units' not min-of-three as the final answer). The model used min(A,B,C) logic which contradicts the rubric's expected summation approach, and also got C's hours wrong (6 vs correct 4). Both the method and final numeric answer diverge sharply from the rubric.",
+          "breakdown": {
+            "final_answer_285": 0,
+            "machine_A_140": 15,
+            "machine_B_105": 15,
+            "machine_C_40": 0,
+            "step_by_step_reasoning": 5,
+            "dependency_chain": 5
+          }
+        }
+      },
+      "latencyMs": 164731,
+      "tokenCount": 25655,
+      "promptTokens": 13728,
+      "completionTokens": 11799,
+      "error": null
+    }
+  }
+}

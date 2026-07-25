@@ -1,21 +1,21 @@
 {
   "day": {
-    "modelId": "grok",
-    "name": "Grok 4.5",
-    "score": 85.7,
-    "change": 1.8
-  },
-  "week": {
-    "modelId": "grok",
-    "name": "Grok 4.5",
-    "score": 86.2,
-    "change": -1.0
-  },
-  "month": {
-    "modelId": "grok",
-    "name": "Grok 4.5",
-    "score": 80.7,
+    "modelId": "claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "score": 89,
     "change": 0
   },
-  "updatedAt": "2026-06-30T04:50:41.000Z"
+  "week": {
+    "modelId": "claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "score": 89,
+    "change": 0
+  },
+  "month": {
+    "modelId": "claude-sonnet-5",
+    "name": "Claude Sonnet 5",
+    "score": 89,
+    "change": 0
+  },
+  "updatedAt": "2026-07-25T18:46:31.000Z"
 }

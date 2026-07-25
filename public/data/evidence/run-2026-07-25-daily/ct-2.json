@@ -1,0 +1,121 @@
+{
+  "test": {
+    "id": "ct-2",
+    "name": "REST API Design",
+    "category": "coding-tasks",
+    "categoryName": "Coding Tasks",
+    "description": "Design and implement a paginated REST API with filtering",
+    "prompt": "Write a Flask REST API endpoint `POST /api/transform` that accepts a JSON body and performs text transformations. The complete implementation should be a single runnable Python file.\n\nRequest body format:\n```json\n{\n    \"text\": \"Hello World\",\n    \"operation\": \"uppercase\"\n}\n```\n\nSupported operations and their expected responses:\n1. `\"uppercase\"` \u2014 Returns `{\"result\": \"HELLO WORLD\", \"operation\": \"uppercase\", \"original_length\": 11}`\n2. `\"reverse\"` \u2014 Returns `{\"result\": \"dlroW olleH\", \"operation\": \"reverse\", \"original_length\": 11}`\n3. `\"count_words\"` \u2014 Returns `{\"result\": 2, \"operation\": \"count_words\", \"original_length\": 11}`\n\nRequirements:\n- Return HTTP 400 with `{\"error\": \"<descriptive message>\"}` if:\n  - The request body is not valid JSON\n  - The `\"text\"` field is missing or not a string\n  - The `\"operation\"` field is missing or not one of the three supported operations\n- Return HTTP 200 with the result for valid requests.\n- Set Content-Type to application/json on all responses.\n- Include proper type hints and a docstring for the route handler.\n- Use `request.get_json(silent=True)` to gracefully handle non-JSON bodies.\n- Include a `if __name__ == '__main__':` block that runs the app in debug mode on port 5000.\n\nProvide the complete, runnable code including all necessary imports."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 91,
+      "modelOutput": "```python\n#!/usr/bin/env python3\n\"\"\"Flask REST API exposing a single text-transformation endpoint.\"\"\"\n\nfrom __future__ import annotations\n\nfrom typing import Any, Callable, Dict, Tuple, Union\n\nfrom flask import Flask, Response, jsonify, request\n\napp = Flask(__name__)\n\n# Map of supported operation names to the callable that produces the result.\nOPERATIONS: Dict[str, Callable[[str], Union[str, int]]] = {\n    \"uppercase\": lambda text: text.upper(),\n    \"reverse\": lambda text: text[::-1],\n    \"count_words\": lambda text: len(text.split()),\n}\n\n\ndef error(message: str, status: int = 400) -> Tuple[Response, int]:\n    \"\"\"Build a JSON error response with the given message and status code.\"\"\"\n    return jsonify({\"error\": message}), status\n\n\n@app.route(\"/api/transform\", methods=[\"POST\"])\ndef transform() -> Tuple[Response, int]:\n    \"\"\"Transform a text string according to the requested operation.\n\n    Expects a JSON body of the form::\n\n        {\"text\": \"Hello World\", \"operation\": \"uppercase\"}\n\n    Supported operations are ``uppercase``, ``reverse`` and ``count_words``.\n\n    Returns:\n        A ``(response, status_code)`` tuple. On success the status is 200 and the\n        JSON payload contains ``result``, ``operation`` and ``original_length``.\n        On any validation failure the status is 400 and the payload contains a\n        single ``error`` key describing the problem.\n    \"\"\"\n    payload: Any = request.get_json(silent=True)\n\n    if payload is None:\n        return error(\"Request body must be valid JSON\")\n    if not isinstance(payload, dict):\n        return error(\"Request body must be a JSON object\")\n\n    if \"text\" not in payload:\n        return error(\"Missing required field: 'text'\")\n    text: Any = payload[\"text\"]\n    if not isinstance(text, str):\n        return error(\"Field 'text' must be a string\")\n\n    if \"operation\" not in payload:\n        return error(\"Missing required field: 'operation'\")\n    operation: Any = payload[\"operation\"]\n    if not isinstance(operation, str) or operation not in OPERATIONS:\n        supported = \", \".join(sorted(OPERATIONS))\n        return error(f\"Field 'operation' must be one of: {supported}\")\n\n    result: Union[str, int] = OPERATIONS[operation](text)\n\n    return (\n        jsonify(\n            {\n                \"result\": result,\n                \"operation\": operation,\n                \"original_length\": len(text),\n            }\n        ),\n        200,\n    )\n\n\nif __name__ == \"__main__\":\n    app.run(debug=True, port=5000)\n```\n\nNotes on the details:\n\n- **`get_json(silent=True)`** returns `None` for malformed/non-JSON bodies instead of raising a 400 HTML error page, so every failure path returns your JSON shape. A literal `null` body also lands here, which is the desired outcome anyway.\n- **`isinstance(payload, dict)` check** guards against valid-but-wrong JSON like `[1, 2]` or `\"hi\"`, where `payload[\"text\"]` would raise a `TypeError`.\n- **Booleans and `text`**: `isinstance(True, str)` is `False`, so `{\"text\": true}` is correctly rejected.\n- **`jsonify`** sets `Content-Type: application/json` automatically on both success and error responses.\n- **`count_words`** uses `str.split()` with no argument, which collapses runs of arbitrary whitespace and ignores leading/trailing whitespace \u2014 `\"  a   b  \"` counts as 2.\n\nRun with `pip install flask && python app.py`, then:\n\n```bash\ncurl -X POST http://localhost:5000/api/transform \\\n  -H 'Content-Type: application/json' \\\n  -d '{\"text\": \"Hello World\", \"operation\": \"reverse\"}'\n```",
+      "evalDetails": {
+        "score": 91,
+        "reasoning": "The implementation correctly uses Flask with POST route, request.get_json(silent=True), and correctly implements all three transformations (uppercase, reverse, count_words matches Python's str.split() default which handles whitespace correctly, giving 2 for 'Hello World'). jsonify sets Content-Type application/json on both success and error paths. Error handling covers non-JSON body, missing/non-dict payload, missing/non-string text, and missing/invalid operation, all returning 400 with descriptive error messages. Status codes are correct (200/400). Type hints and docstrings are present and thorough, including a detailed docstring on the route handler as required. The `__main__` block runs with debug=True on port 5000. Code is well-organized using a dict dispatch pattern rather than if/elif chains, which is clean and appropriately simple. Minor deviations: uses a lambda-based OPERATIONS dict abstraction which is a reasonable design choice not explicitly required but doesn't hurt readability; the extra explanatory notes after the code (though not part of the file) are helpful but slightly verbose relative to the ask for 'complete, runnable code.' No correctness issues found in transformations or error handling logic.",
+        "breakdown": {
+          "flask_usage": 10,
+          "json_parsing": 10,
+          "uppercase": 10,
+          "reverse": 10,
+          "count_words": 10,
+          "content_type": 10,
+          "missing_text_error": 10,
+          "invalid_operation_error": 10,
+          "non_json_error": 5,
+          "http_status_codes": 5,
+          "type_hints_docstrings": 5,
+          "code_organization": 5
+        }
+      },
+      "latencyMs": 66634,
+      "tokenCount": 1570,
+      "promptTokens": 2,
+      "completionTokens": 1568,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 90,
+      "modelOutput": "Here's a complete, runnable single-file Flask implementation:\n\n```python\n#!/usr/bin/env python3\n\"\"\"\nA minimal Flask REST API exposing a text transformation endpoint.\n\nRun with:\n    python app.py\n\"\"\"\nfrom __future__ import annotations\n\nfrom typing import Any\n\nfrom flask import Flask, Response, jsonify, request\n\napp = Flask(__name__)\n\nSUPPORTED_OPERATIONS = (\"uppercase\", \"reverse\", \"count_words\")\n\n\ndef _json_error(message: str, status_code: int = 400) -> Response:\n    \"\"\"Build a JSON error response with the given message and status code.\"\"\"\n    response = jsonify({\"error\": message})\n    response.status_code = status_code\n    response.headers[\"Content-Type\"] = \"application/json\"\n    return response\n\n\n@app.route(\"/api/transform\", methods=[\"POST\"])\ndef transform() -> Response:\n    \"\"\"Perform a text transformation on the given input.\n\n    Expects a JSON body of the form:\n        {\"text\": \"Hello World\", \"operation\": \"uppercase\"}\n\n    Supported operations:\n        - \"uppercase\": converts text to uppercase.\n        - \"reverse\": reverses the text.\n        - \"count_words\": counts the number of whitespace-separated words.\n\n    Returns:\n        A JSON response containing the transformation result, the operation\n        performed, and the length of the original text, or a JSON error\n        response with HTTP 400 if the request is malformed.\n    \"\"\"\n    body: Any = request.get_json(silent=True)\n\n    if body is None or not isinstance(body, dict):\n        return _json_error(\"Request body must be valid JSON.\")\n\n    text = body.get(\"text\")\n    if text is None or not isinstance(text, str):\n        return _json_error(\"Field 'text' is required and must be a string.\")\n\n    operation = body.get(\"operation\")\n    if operation is None or not isinstance(operation, str) or operation not in SUPPORTED_OPERATIONS:\n        return _json_error(\n            f\"Field 'operation' is required and must be one of: {', '.join(SUPPORTED_OPERATIONS)}.\"\n        )\n\n    result: Any\n    if operation == \"uppercase\":\n        result = text.upper()\n    elif operation == \"reverse\":\n        result = text[::-1]\n    else:  # operation == \"count_words\"\n        result = len(text.split())\n\n    response = jsonify(\n        {\n            \"result\": result,\n            \"operation\": operation,\n            \"original_length\": len(text),\n        }\n    )\n    response.status_code = 200\n    response.headers[\"Content-Type\"] = \"application/json\"\n    return response\n\n\nif __name__ == \"__main__\":\n    app.run(debug=True, port=5000)\n```\n\nA few implementation notes:\n\n- `request.get_json(silent=True)` returns `None` on unparseable/non-JSON bodies instead of raising, which is why the first check (`body is None or not isinstance(body, dict)`) catches both \"not valid JSON\" and \"valid JSON but not an object\" cases.\n- `count_words` uses `text.split()` (no arguments), which splits on any whitespace and ignores leading/trailing/duplicate whitespace \u2014 so `\"Hello World\"` \u2192 `2`.\n- Every response path (success and error) explicitly sets `Content-Type: application/json` via Flask's `jsonify`, which sets it by default, plus an explicit assignment for clarity/guarantee.\n\nTo test it once running:\n\n```bash\ncurl -X POST http://localhost:5000/api/transform \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"text\": \"Hello World\", \"operation\": \"uppercase\"}'\n```",
+      "evalDetails": {
+        "score": 90,
+        "reasoning": "The Flask endpoint correctly implements POST routing, request.get_json(silent=True) parsing, all three transformations (uppercase, reverse, count_words verified against examples: 'Hello World' -> 'HELLO WORLD'/2/reversed, all correct), proper 400 errors with descriptive messages for non-JSON body, missing/invalid text, and missing/invalid operation, 200 on success, Content-Type application/json set via jsonify plus explicit header assignment, full type hints (Response, Any), a thorough docstring on the route handler, an __main__ block with debug=True and port=5000, and all necessary imports. Code is clean and well-organized with a small helper for error responses. Minor nitpicks: the explicit response.headers['Content-Type'] assignment after jsonify is redundant (jsonify already sets it), and body.get('operation') is null-checked before the 'not isinstance' check which is slightly redundant but harmless. No functional bugs found.",
+        "breakdown": {
+          "flask_usage": 10,
+          "json_parsing": 10,
+          "uppercase": 10,
+          "reverse": 10,
+          "count_words": 10,
+          "response_format": 10,
+          "missing_text_error": 10,
+          "missing_operation_error": 10,
+          "non_json_error": 5,
+          "status_codes": 5,
+          "type_hints_docstrings": 5,
+          "code_organization": 4
+        }
+      },
+      "latencyMs": 59732,
+      "tokenCount": 1287,
+      "promptTokens": 2,
+      "completionTokens": 1285,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 96,
+      "modelOutput": "```python\nfrom typing import Any\n\nfrom flask import Flask, Response, jsonify, request\n\napp = Flask(__name__)\n\nSUPPORTED_OPERATIONS = {\"uppercase\", \"reverse\", \"count_words\"}\n\n\n@app.post(\"/api/transform\")\ndef transform_text() -> tuple[Response, int]:\n    \"\"\"Validate a JSON request and perform the requested text transformation.\"\"\"\n    body: Any = request.get_json(silent=True)\n\n    if body is None:\n        return jsonify(error=\"Request body must contain valid JSON\"), 400\n\n    if not isinstance(body, dict):\n        return jsonify(error=\"Request body must be a JSON object\"), 400\n\n    text = body.get(\"text\")\n    if not isinstance(text, str):\n        return jsonify(error=\"The 'text' field is required and must be a string\"), 400\n\n    operation = body.get(\"operation\")\n    if not isinstance(operation, str) or operation not in SUPPORTED_OPERATIONS:\n        return (\n            jsonify(\n                error=(\n                    \"The 'operation' field is required and must be one of: \"\n                    \"uppercase, reverse, count_words\"\n                )\n            ),\n            400,\n        )\n\n    if operation == \"uppercase\":\n        result: str | int = text.upper()\n    elif operation == \"reverse\":\n        result = text[::-1]\n    else:\n        result = len(text.split())\n\n    return (\n        jsonify(\n            result=result,\n            operation=operation,\n            original_length=len(text),\n        ),\n        200,\n    )\n\n\nif __name__ == \"__main__\":\n    app.run(debug=True, port=5000)\n```",
+      "evalDetails": {
+        "score": 96,
+        "reasoning": "Correctly uses @app.post for POST routing, parses JSON with get_json(silent=True), and implements all three transformations correctly (uppercase, reverse, count_words all verified accurate). Returns jsonify() responses which automatically set Content-Type to application/json. Handles all required error cases: non-JSON body (body is None), missing/non-string text, and missing/invalid operation, all returning 400 with descriptive error messages. Also adds a bonus check for non-dict JSON bodies. Uses proper 200/400 status codes. Includes type hints (tuple[Response, int], Any, str | int) and a docstring. Code is clean, well-organized, and appropriately concise. The __main__ block runs with debug=True and port=5000 as required. Minor deviations: uses @app.post shorthand instead of explicit @app.route(methods=['POST']) (functionally equivalent and idiomatic modern Flask), and doesn't explicitly set Content-Type header (but jsonify handles this automatically, satisfying the requirement). No functional errors found.",
+        "breakdown": {
+          "flask_post_route": 10,
+          "json_parsing": 10,
+          "uppercase": 10,
+          "reverse": 10,
+          "count_words": 10,
+          "json_response_content_type": 10,
+          "error_missing_text": 10,
+          "error_invalid_operation": 10,
+          "error_non_json": 5,
+          "http_status_codes": 5,
+          "type_hints_docstrings": 5,
+          "code_organization": 5,
+          "wrong_output_deduction": 0
+        }
+      },
+      "latencyMs": 14147,
+      "tokenCount": 14147,
+      "promptTokens": 13600,
+      "completionTokens": 547,
+      "error": null
+    },
+    "grok": {
+      "score": 92,
+      "modelOutput": "Creating a single-file Flask app with the `POST /api/transform` endpoint and the validation rules you specified.Verifying the endpoint with a quick smoke test:Complete implementation is in `transform_api.py`. All cases above pass.\n\n```python\n#!/usr/bin/env python3\n\"\"\"Flask REST API for text transformations.\"\"\"\n\nfrom __future__ import annotations\n\nfrom typing import Any\n\nfrom flask import Flask, Response, jsonify, request\n\napp = Flask(__name__)\n\nSUPPORTED_OPERATIONS = frozenset({\"uppercase\", \"reverse\", \"count_words\"})\n\n\n@app.route(\"/api/transform\", methods=[\"POST\"])\ndef transform() -> tuple[Response, int]:\n    \"\"\"Transform text according to the requested operation.\n\n    Expects a JSON body with ``text`` (str) and ``operation`` (one of\n    ``uppercase``, ``reverse``, ``count_words``). Returns 200 with the\n    transformation result, or 400 with an error message on invalid input.\n    \"\"\"\n    data: dict[str, Any] | None = request.get_json(silent=True)\n    if data is None:\n        return jsonify({\"error\": \"Request body must be valid JSON\"}), 400\n\n    if \"text\" not in data:\n        return jsonify({\"error\": \"Missing required field: 'text'\"}), 400\n    text = data[\"text\"]\n    if not isinstance(text, str):\n        return jsonify({\"error\": \"Field 'text' must be a string\"}), 400\n\n    if \"operation\" not in data:\n        return jsonify({\"error\": \"Missing required field: 'operation'\"}), 400\n    operation = data[\"operation\"]\n    if not isinstance(operation, str) or operation not in SUPPORTED_OPERATIONS:\n        return jsonify(\n            {\n                \"error\": (\n                    \"Field 'operation' must be one of: \"\n                    \"uppercase, reverse, count_words\"\n                )\n            }\n        ), 400\n\n    original_length = len(text)\n\n    if operation == \"uppercase\":\n        result: str | int = text.upper()\n    elif operation == \"reverse\":\n        result = text[::-1]\n    else:  # count_words\n        result = len(text.split())\n\n    return (\n        jsonify(\n            {\n                \"result\": result,\n                \"operation\": operation,\n                \"original_length\": original_length,\n            }\n        ),\n        200,\n    )\n\n\nif __name__ == \"__main__\":\n    app.run(debug=True, port=5000)\n```\n\n**Run it**\n```bash\npip install flask\npython transform_api.py\n```\n\n**Example**\n```bash\ncurl -X POST http://127.0.0.1:5000/api/transform \\\n  -H \"Content-Type: application/json\" \\\n  -d '{\"text\": \"Hello World\", \"operation\": \"uppercase\"}'\n```\n\n**Behavior**\n| Case | Status | Response |\n|------|--------|----------|\n| Valid ops (`uppercase` / `reverse` / `count_words`) | 200 | `result`, `operation`, `original_length` |\n| Invalid / missing JSON | 400 | `{\"error\": \"...\"}` |\n| Missing or non-string `text` | 400 | `{\"error\": \"...\"}` |\n| Missing / unsupported `operation` | 400 | `{\"error\": \"...\"}` |\n\nAll responses use `Content-Type: application/json` via Flask\u2019s `jsonify`.",
+      "evalDetails": {
+        "score": 92,
+        "reasoning": "Correctly implements Flask POST route with proper JSON parsing via request.get_json(silent=True), all three transformations are correct (uppercase, reverse via slicing, count_words via split()), returns jsonify with 200/400 status codes appropriately, includes type hints and a proper docstring, handles missing/invalid JSON, missing/non-string text, and missing/unsupported operation with descriptive 400 errors. Content-Type is application/json via jsonify. Includes the required __main__ block with debug=True, port=5000. Code is clean and well-organized as a single file. Minor deduction: the operation validation error message doesn't clearly distinguish 'missing' vs 'invalid' but still returns a descriptive message; also checks 'text' before 'operation' which is a reasonable but unstated ordering choice, not a defect. No functional bugs found.",
+        "breakdown": {
+          "flask_usage": 10,
+          "json_parsing": 10,
+          "uppercase": 10,
+          "reverse": 10,
+          "count_words": 10,
+          "json_response_content_type": 10,
+          "missing_text_error": 10,
+          "missing_invalid_operation_error": 10,
+          "non_json_body_error": 5,
+          "http_status_codes": 5,
+          "type_hints_docstrings": 5,
+          "code_organization": 5
+        }
+      },
+      "latencyMs": 19236,
+      "tokenCount": 44823,
+      "promptTokens": 14942,
+      "completionTokens": 1721,
+      "error": null
+    }
+  }
+}

@@ -18,3 +18,12 @@ def test_favicon_svg_uses_brand_palette():
     assert "#22c55e" in svg_text
     assert "#3b82f6" in svg_text
     assert "#06b6d4" in svg_text
+
+
+def test_mobile_navigation_closes_on_escape_and_restores_button_focus():
+    navbar_text = (REPO_ROOT / "components" / "shared" / "navbar.tsx").read_text()
+
+    assert 'event.key !== "Escape"' in navbar_text
+    assert 'document.addEventListener("keydown", closeOnEscape)' in navbar_text
+    assert 'document.removeEventListener("keydown", closeOnEscape)' in navbar_text
+    assert "mobileMenuButtonRef.current?.focus()" in navbar_text

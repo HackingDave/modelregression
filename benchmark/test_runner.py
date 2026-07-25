@@ -11,6 +11,7 @@ if str(BENCHMARK_DIR) not in sys.path:
     sys.path.insert(0, str(BENCHMARK_DIR))
 
 import runner
+import outage_monitor
 
 
 def test_call_codex_parses_json_output_and_usage(monkeypatch):
@@ -40,6 +41,9 @@ def test_call_codex_parses_json_output_and_usage(monkeypatch):
     )
 
     assert "--json" in captured["cmd"]
+    assert "--skip-git-repo-check" in captured["cmd"]
+    assert captured["kwargs"]["cwd"] != str(BENCHMARK_DIR)
+    assert not Path(captured["kwargs"]["cwd"]).exists()
     assert text == "ok"
     assert latency_ms == 250
     assert prompt_tokens == 11072
@@ -179,6 +183,29 @@ def test_call_model_reports_model_specific_timeout(monkeypatch):
     assert error == "CLI call timed out"
 
 
+def test_outage_health_check_uses_isolated_workdir(monkeypatch):
+    captured: dict[str, object] = {}
+
+    def fake_run(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["cwd"] = kwargs["cwd"]
+        assert Path(kwargs["cwd"]).is_dir()
+        return SimpleNamespace(returncode=0, stdout="OK", stderr="")
+
+    monkeypatch.setattr(outage_monitor, "_run_cli", fake_run)
+
+    healthy, error, status = outage_monitor._check_model({
+        "cli": "codex",
+        "cli_model": runner.config.CODEX_FRONTIER_MODEL,
+    })
+
+    assert healthy is True
+    assert error is None
+    assert status is None
+    assert "--skip-git-repo-check" in captured["cmd"]
+    assert not Path(captured["cwd"]).exists()
+
+
 def test_model_parallel_tests_uses_model_override():
     assert runner._model_parallel_tests({"parallel_tests": 2}) == 2
     assert runner._model_parallel_tests({"parallel_tests": 0}) == runner.config.PARALLEL_TESTS
@@ -236,6 +263,33 @@ def test_main_exits_nonzero_when_benchmark_is_not_clean(monkeypatch):
         runner.main()
 
     assert exc.value.code == 1
+
+
+def test_judge_retries_transient_cli_failure(monkeypatch):
+    attempts = iter([
+        SimpleNamespace(returncode=1, stdout="", stderr=""),
+        SimpleNamespace(returncode=0, stdout='{"score": 95}', stderr=""),
+    ])
+    calls = 0
+
+    def fake_run(*_args, **_kwargs):
+        nonlocal calls
+        calls += 1
+        return next(attempts), "/tmp/modelregression-test"
+
+    monkeypatch.setattr(runner, "_run_cli_isolated", fake_run)
+    monkeypatch.setattr(runner.time, "sleep", lambda _seconds: None)
+
+    assert runner._judge_fn("score this") == '{"score": 95}'
+    assert calls == 2
+
+
+def test_codex_config_allows_long_agentic_tasks():
+    codex = next(
+        model for model in runner.config.MODELS if model["cli"] == "codex"
+    )
+
+    assert codex["timeout_seconds"] >= 1200
 
 
 def test_call_grok_uses_configured_cli_and_model(monkeypatch):

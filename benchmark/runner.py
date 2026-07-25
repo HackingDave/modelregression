@@ -13,6 +13,7 @@ import signal
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import traceback
@@ -103,6 +104,20 @@ def _run_cli_with_limit(cli: str, cmd, timeout, input=None, **kwargs):
         return _run_cli(cmd, timeout=timeout, input=input, **kwargs)
 
 
+def _run_cli_isolated(cli: str, cmd, timeout, input=None):
+    """Run an agentic CLI outside the repository and return its temporary cwd."""
+    safe_cli = "".join(char if char.isalnum() else "-" for char in cli)
+    with tempfile.TemporaryDirectory(prefix=f"modelregression-{safe_cli}-") as cli_cwd:
+        result = _run_cli_with_limit(
+            cli,
+            cmd,
+            timeout=timeout,
+            input=input,
+            cwd=cli_cwd,
+        )
+        return result, cli_cwd
+
+
 def _call_once(
     model_config: dict,
     prompt: str,
@@ -187,7 +202,7 @@ def _call_claude(
         cmd.extend(["--system-prompt", system_prompt])
 
     start = time.monotonic()
-    result = _run_cli_with_limit(
+    result, _cli_cwd = _run_cli_isolated(
         model_config["cli"],
         cmd,
         input=prompt,
@@ -234,11 +249,12 @@ def _call_codex(
         "codex", "exec",
         "-m", model_config["cli_model"],
         "--sandbox", "read-only",
+        "--skip-git-repo-check",
         "--json",
     ]
 
     start = time.monotonic()
-    result = _run_cli_with_limit(
+    result, _cli_cwd = _run_cli_isolated(
         model_config["cli"],
         cmd,
         input=full_prompt,
@@ -458,7 +474,7 @@ def _call_grok(
             cmd.extend(["--system-prompt", system_prompt])
 
         start = time.monotonic()
-        result = _run_cli_with_limit(
+        result, cli_cwd = _run_cli_isolated(
             model_config["cli"],
             cmd,
             timeout=_model_timeout_seconds(model_config),
@@ -494,7 +510,7 @@ def _call_grok(
             pass
 
         if total_tokens is None and session_id:
-            total_tokens = _read_grok_usage_from_session(session_id, request_id, os.getcwd())
+            total_tokens = _read_grok_usage_from_session(session_id, request_id, cli_cwd)
 
         if not text.strip():
             return (None, elapsed, prompt_tokens, completion_tokens, total_tokens, f"Empty response from {model_config['cli']}")
@@ -559,21 +575,37 @@ def _judge_preflight() -> tuple[bool, str | None]:
 def _judge_fn(prompt: str) -> str | None:
     """LLM judge callback — uses Claude (via CLI) to evaluate model outputs."""
     cmd = ["claude", "-p", "--model", "sonnet"]
-    try:
-        result = _run_cli_with_limit(
-            "claude",
-            cmd,
-            input=prompt,
-            timeout=config.CLI_TIMEOUT,
-        )
-        if result.returncode != 0:
+    for attempt in range(1 + config.MAX_RETRIES):
+        try:
+            result, _cli_cwd = _run_cli_isolated(
+                "claude",
+                cmd,
+                input=prompt,
+                timeout=config.CLI_TIMEOUT,
+            )
+            if result.returncode == 0 and result.stdout.strip():
+                return result.stdout.strip()
+
             stderr = result.stderr.strip()[:500] if result.stderr else "no stderr"
-            logger.warning("Judge returned exit code %d: %s", result.returncode, stderr)
-            return None
-        return result.stdout.strip() or None
-    except Exception as e:
-        logger.warning("Judge call failed: %s", e)
-        return None
+            logger.warning(
+                "Judge attempt %d/%d returned exit code %d: %s",
+                attempt + 1,
+                1 + config.MAX_RETRIES,
+                result.returncode,
+                stderr,
+            )
+        except Exception as e:
+            logger.warning(
+                "Judge attempt %d/%d failed: %s",
+                attempt + 1,
+                1 + config.MAX_RETRIES,
+                e,
+            )
+
+        if attempt < config.MAX_RETRIES:
+            time.sleep(min(2 ** attempt, 5))
+
+    return None
 
 
 def evaluate_response(test_id: str, model_output: str) -> tuple[float, dict]:
@@ -731,10 +763,59 @@ def _run_model_tests(
     return (total, passed, errors)
 
 
-def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
+def _validate_complete_results(
+    conn,
+    run_id: str,
+    active_models: list[dict],
+    active_tests: list[dict],
+) -> list[str]:
+    """Ensure every expected model/test pair has exactly one valid result."""
+    expected = {
+        (model["id"], test["id"])
+        for model in active_models
+        for test in active_tests
+    }
+    rows = conn.execute(
+        """SELECT model_id, test_id, score, error
+           FROM test_results
+           WHERE run_id = ?""",
+        (run_id,),
+    ).fetchall()
+    actual: dict[tuple[str, str], list] = {}
+    for row in rows:
+        key = (row["model_id"], row["test_id"])
+        if key in expected:
+            actual.setdefault(key, []).append(row)
+
+    problems = []
+    for model_id, test_id in sorted(expected):
+        results = actual.get((model_id, test_id), [])
+        valid = [
+            row
+            for row in results
+            if row["score"] is not None and row["error"] is None
+        ]
+        if len(results) != 1 or len(valid) != 1:
+            problems.append(
+                f"{model_id}/{test_id}: expected one successful result, "
+                f"found {len(results)} total and {len(valid)} successful"
+            )
+    return problems
+
+
+def run_benchmarks(
+    schedule: str,
+    model_filter: str | None = None,
+    resume_run_id: str | None = None,
+) -> bool:
     """Execute a benchmark run and return whether it completed without errors."""
-    logger.info("Starting benchmark run (schedule=%s, parallel=%d, model=%s)",
-                schedule, config.PARALLEL_TESTS, model_filter or "all")
+    logger.info(
+        "Starting benchmark run (schedule=%s, parallel=%d, model=%s, resume=%s)",
+        schedule,
+        config.PARALLEL_TESTS,
+        model_filter or "all",
+        resume_run_id or "no",
+    )
 
     conn = db.init_db()
     db.seed_models_and_categories(conn)
@@ -745,8 +826,16 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
         if not is_up:
             logger.warning("Model %s failed pre-flight check", model_id)
 
-    run_id = db.create_run(conn, schedule)
-    logger.info("Created benchmark run: %s", run_id)
+    if resume_run_id:
+        if not db.reopen_run(conn, resume_run_id):
+            logger.error("Benchmark run %s does not exist", resume_run_id)
+            conn.close()
+            return False
+        run_id = resume_run_id
+        logger.info("Resuming benchmark run: %s", run_id)
+    else:
+        run_id = db.create_run(conn, schedule)
+        logger.info("Created benchmark run: %s", run_id)
 
     active_models = db.get_active_models(conn)
     active_tests = db.get_active_tests(conn)
@@ -776,6 +865,7 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
         # Run all models in parallel — each uses a different CLI tool
         with ThreadPoolExecutor(max_workers=len(active_models)) as model_pool:
             model_futures = {}
+            preserved_tests = 0
             for model_row in active_models:
                 model_id = model_row["id"]
                 model_cfg = config.get_model_by_id(model_id)
@@ -790,7 +880,34 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
                     all_errors.append(f"{model_id}: skipped due to confirmed outage")
                     continue
 
-                future = model_pool.submit(_run_model_tests, model_cfg, active_tests, run_id, conn)
+                model_tests = active_tests
+                if resume_run_id:
+                    preserved_ids = db.get_single_success_test_ids(
+                        conn, run_id, model_id
+                    )
+                    model_tests = [
+                        test for test in active_tests if test["id"] not in preserved_ids
+                    ]
+                    db.delete_test_results_for_tests(
+                        conn,
+                        run_id,
+                        model_id,
+                        [test["id"] for test in model_tests],
+                    )
+                    preserved_tests += len(active_tests) - len(model_tests)
+                    logger.info(
+                        "  %s resume: preserving %d successful result(s), retrying %d",
+                        model_id,
+                        len(active_tests) - len(model_tests),
+                        len(model_tests),
+                    )
+
+                if not model_tests:
+                    continue
+
+                future = model_pool.submit(
+                    _run_model_tests, model_cfg, model_tests, run_id, conn
+                )
                 model_futures[future] = model_cfg["name"]
 
             for future in as_completed(model_futures):
@@ -804,15 +921,17 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
                     logger.error("Model %s crashed: %s", name, e)
                     all_errors.append(f"{name}: {e}")
 
-        evaluation_errors = [
-            err for err in all_errors
-            if "evaluation_failed:" in err
-        ]
-        if evaluation_errors:
+            total_tests += preserved_tests
+            passed_tests += preserved_tests
+
+        all_errors.extend(
+            _validate_complete_results(conn, run_id, active_models, active_tests)
+        )
+        if all_errors:
             error_log = "\n".join(all_errors)
             logger.error(
-                "Benchmark run has %d evaluation failure(s); marking run failed to avoid bogus scores",
-                len(evaluation_errors),
+                "Benchmark run has %d error(s); marking run failed to avoid incomplete scores",
+                len(all_errors),
             )
             db.fail_run(conn, run_id, error_log)
             return False
@@ -826,8 +945,7 @@ def run_benchmarks(schedule: str, model_filter: str | None = None) -> bool:
         logger.info("Running regression detection...")
         detect_regressions(conn, run_id)
 
-        error_log = "\n".join(all_errors) if all_errors else None
-        db.complete_run(conn, run_id, total_tests, passed_tests, error_log)
+        db.complete_run(conn, run_id, total_tests, passed_tests)
 
         logger.info(
             "Benchmark run complete: %d/%d tests passed (%d errors)",
@@ -860,6 +978,11 @@ def main() -> None:
         help="Run only a specific model by ID (e.g., grok, claude-opus-5)",
     )
     parser.add_argument(
+        "--resume-run",
+        default=None,
+        help="Resume a stopped run, preserving its single successful model/test results",
+    )
+    parser.add_argument(
         "--verbose", "-v",
         action="store_true",
         help="Enable debug logging",
@@ -874,7 +997,11 @@ def main() -> None:
     )
 
     try:
-        if not run_benchmarks(args.schedule, model_filter=args.model):
+        if not run_benchmarks(
+            args.schedule,
+            model_filter=args.model,
+            resume_run_id=args.resume_run,
+        ):
             logger.critical("Benchmark run did not complete cleanly")
             sys.exit(1)
     except Exception as e:

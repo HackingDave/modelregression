@@ -89,6 +89,10 @@ MODELS = [
         "id": model_storage_id(CODEX_FRONTIER_MODEL),
         "cli": "codex",
         "cli_model": CODEX_FRONTIER_MODEL,
+        # Complex agentic prompts can legitimately run longer than the global
+        # ten-minute CLI limit. Two thoroughness tests crossed that boundary
+        # during the first GPT-5.6 Sol production run.
+        "timeout_seconds": 1200,
         "name": model_display_name(CODEX_FRONTIER_MODEL),
         "slug": model_storage_id(CODEX_FRONTIER_MODEL),
         "color": "#10B981",

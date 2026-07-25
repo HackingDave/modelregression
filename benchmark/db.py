@@ -249,6 +249,68 @@ def fail_run(conn: sqlite3.Connection, run_id: str, error_log: str) -> None:
     conn.commit()
 
 
+def reopen_run(conn: sqlite3.Connection, run_id: str) -> bool:
+    """Reopen a stopped run and clear any derived data before resuming it."""
+    row = conn.execute(
+        "SELECT status FROM benchmark_runs WHERE id = ?",
+        (run_id,),
+    ).fetchone()
+    if not row or row["status"] == "completed":
+        return False
+
+    conn.execute("DELETE FROM run_scores WHERE run_id = ?", (run_id,))
+    conn.execute("DELETE FROM model_run_scores WHERE run_id = ?", (run_id,))
+    conn.execute("DELETE FROM regressions WHERE run_id = ?", (run_id,))
+    conn.execute(
+        """UPDATE benchmark_runs
+           SET completed_at = NULL,
+               status = 'running',
+               total_tests = 0,
+               passed_tests = 0,
+               error_log = NULL
+           WHERE id = ?""",
+        (run_id,),
+    )
+    conn.commit()
+    return True
+
+
+def get_single_success_test_ids(
+    conn: sqlite3.Connection,
+    run_id: str,
+    model_id: str,
+) -> set[str]:
+    """Return tests with exactly one successful result that can be preserved."""
+    rows = conn.execute(
+        """SELECT test_id
+           FROM test_results
+           WHERE run_id = ? AND model_id = ?
+           GROUP BY test_id
+           HAVING COUNT(*) = 1
+              AND SUM(CASE WHEN score IS NOT NULL AND error IS NULL THEN 1 ELSE 0 END) = 1""",
+        (run_id, model_id),
+    ).fetchall()
+    return {row["test_id"] for row in rows}
+
+
+def delete_test_results_for_tests(
+    conn: sqlite3.Connection,
+    run_id: str,
+    model_id: str,
+    test_ids: list[str],
+) -> None:
+    """Remove incomplete/failed results immediately before retrying their tests."""
+    if not test_ids:
+        return
+    placeholders = ",".join("?" for _ in test_ids)
+    conn.execute(
+        f"""DELETE FROM test_results
+            WHERE run_id = ? AND model_id = ? AND test_id IN ({placeholders})""",
+        (run_id, model_id, *test_ids),
+    )
+    conn.commit()
+
+
 # ---- Test results ----------------------------------------------------------
 
 def save_test_result(
