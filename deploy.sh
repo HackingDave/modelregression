@@ -5,6 +5,7 @@
 # ============================================
 
 set -u
+umask 077
 
 if [ -f ".deploy.env" ]; then
     source .deploy.env
@@ -28,21 +29,28 @@ if [ -z "$SERVER_IP" ]; then
     exit 1
 fi
 
-SSH_OPTS="-p $SERVER_PORT -o StrictHostKeyChecking=no"
+SSH_OPTS=(
+    -p "$SERVER_PORT"
+    -o StrictHostKeyChecking=accept-new
+    -o ConnectTimeout=10
+    -o ServerAliveInterval=15
+    -o ServerAliveCountMax=4
+)
 if [ -n "$SERVER_PASS" ]; then
     if ! command -v sshpass >/dev/null 2>&1; then
         echo -e "${RED}sshpass is required for password auth.${NC}"
         exit 1
     fi
+    export SSHPASS="$SERVER_PASS"
     ssh_cmd() {
-        sshpass -p "$SERVER_PASS" ssh $SSH_OPTS "$SERVER_USER@$SERVER_IP" "$1"
+        sshpass -e ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "$1"
     }
-    RSYNC_SSH="sshpass -p $SERVER_PASS ssh $SSH_OPTS"
+    RSYNC_SSH="sshpass -e ssh -p $SERVER_PORT -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 else
     ssh_cmd() {
-        ssh $SSH_OPTS "$SERVER_USER@$SERVER_IP" "$1"
+        ssh "${SSH_OPTS[@]}" "$SERVER_USER@$SERVER_IP" "$1"
     }
-    RSYNC_SSH="ssh $SSH_OPTS"
+    RSYNC_SSH="ssh -p $SERVER_PORT -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
 fi
 
 REMOTE_PARENT="$(dirname "$REMOTE_PATH")"
@@ -100,7 +108,7 @@ echo -e "${GREEN}Files synced successfully${NC}"
 
 # Install dependencies on server
 echo -e "${YELLOW}Installing dependencies...${NC}"
-ssh_cmd "set -e; cd '$REMOTE_RELEASE_PATH' && npm install --legacy-peer-deps"
+ssh_cmd "set -e; cd '$REMOTE_RELEASE_PATH' && npm ci --legacy-peer-deps"
 if [ $? -ne 0 ]; then
     echo -e "${RED}Dependency install failed.${NC}"
     ssh_cmd "rm -rf '$REMOTE_RELEASE_PATH'"
