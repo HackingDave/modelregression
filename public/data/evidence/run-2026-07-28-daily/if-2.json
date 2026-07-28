@@ -1,0 +1,169 @@
+{
+  "test": {
+    "id": "if-2",
+    "name": "Constraint Adherence",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Follow explicit constraints like max line length and naming conventions",
+    "prompt": "Write a Python function that meets ALL of the following constraints. Every constraint is mandatory \u2014 violating any one of them reduces your score.\n\nConstraint 1 \u2014 Name: The function MUST be named exactly `transform_records`.\n\nConstraint 2 \u2014 Parameters: The function MUST take exactly 2 parameters:\n  - `records: list[dict]` \u2014 a list of dictionaries\n  - `key: str` \u2014 a dictionary key to extract\n\nConstraint 3 \u2014 Return type: The return type annotation MUST be `list[str]`.\n\nConstraint 4 \u2014 Implementation: The core logic MUST use a list comprehension. Do NOT use a for loop with .append().\n\nConstraint 5 \u2014 Comments: The function body MUST contain EXACTLY 3 comment lines (lines starting with #). Not 2, not 4 \u2014 exactly 3.\n\nConstraint 6 \u2014 Length: The function body (everything after the def line, excluding blank lines) MUST be 10 lines or fewer.\n\nThe function should:\n- Extract the value of `key` from each dictionary in `records`\n- Convert each value to a string\n- Skip dictionaries that don't have the key (don't include them in output)\n- Return the list of string values\n\nInclude a docstring (this does not count toward the comment lines or the line limit).\n\nOutput ONLY the function definition \u2014 no explanation, no usage examples, no test code. Just the function."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 91.6,
+      "modelOutput": "```python\ndef transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract `key` from each record and return its value as a string.\n\n    Records lacking the key are skipped.\n\n    Args:\n        records: List of dictionaries to process.\n        key: The dictionary key whose values should be extracted.\n\n    Returns:\n        A list of the extracted values converted to strings.\n    \"\"\"\n    # Guard against a None input so callers can pass optional data.\n    if not records:\n        return []\n    # Membership test skips records missing the key entirely.\n    # str() handles non-string values such as ints, floats, and None.\n    return [str(record[key]) for record in records if key in record]\n```",
+      "evalDetails": {
+        "regex_score": 85.0,
+        "judge_score": 96.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 15,
+            "under_10_lines": false,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "score": 96,
+          "reasoning": "All six mandatory constraints are met: function name is exactly 'transform_records'; parameters match 'records: list[dict], key: str'; return type is 'list[str]'; core logic is a single list comprehension (no for-loop/.append); exactly 3 comment lines appear in the body; and the non-docstring body is only 6 lines, well under the 10-line cap. A docstring is included for the bonus. Minor deduction: the function adds an unrequested 'if not records: return []' guard clause that isn't part of the list comprehension and is functionally redundant (the comprehension already returns [] on empty input), a small deviation from the 'just the function, nothing extra' spirit of the task, though it doesn't violate any explicit constraint.",
+          "breakdown": {
+            "name": 15,
+            "parameters": 15,
+            "return_type": 15,
+            "list_comprehension": 15,
+            "comment_count": 15,
+            "body_length": 15,
+            "docstring_bonus": 10,
+            "unrequested_guard_clause_deduction": -4
+          }
+        }
+      },
+      "latencyMs": 188515,
+      "tokenCount": 220,
+      "promptTokens": 2,
+      "completionTokens": 218,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 100,
+      "modelOutput": "```python\ndef transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract the value of `key` from each dict in `records`, converting it to a string and skipping dicts that lack the key.\"\"\"\n    # Iterate over each dictionary in records\n    # Filter out dictionaries that don't contain the key\n    # Convert each remaining value to a string\n    return [str(d[key]) for d in records if key in d]\n```",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 6,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "score": 100,
+          "reasoning": "All constraints satisfied: exact function name 'transform_records'; correct parameters 'records: list[dict], key: str'; correct return annotation 'list[str]'; core logic is a single list comprehension (no for/append loop); exactly 3 comment lines present; function body (docstring + 3 comments + return = 5 non-blank lines) is well under the 10-line cap; a docstring is included for the bonus. Output contains only the function definition with no extra explanation or examples, as required.",
+          "breakdown": {
+            "name": 15,
+            "parameters": 15,
+            "return_type": 15,
+            "list_comprehension": 15,
+            "comment_count": 15,
+            "body_length": 15,
+            "docstring_bonus": 10
+          }
+        }
+      },
+      "latencyMs": 60143,
+      "tokenCount": 385,
+      "promptTokens": 2,
+      "completionTokens": 383,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 100,
+      "modelOutput": "def transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract and stringify values for dictionaries containing the key.\"\"\"\n    # Filter records containing the key.\n    # Extract the corresponding values.\n    # Convert each value to a string.\n    return [str(record[key]) for record in records if key in record]",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 100,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 5,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "score": 100,
+          "reasoning": "All six mandatory constraints are satisfied: exact function name, exact parameter signature, exact return annotation 'list[str]', core logic uses a single list comprehension (no for-loop/append), exactly 3 comment lines, and body length (docstring + 3 comments + return = 5 lines) is well under the 10-line cap. A docstring is included. Logic correctly extracts and stringifies values while skipping missing keys, matching the described behavior. Output contains only the function definition as requested.",
+          "breakdown": {
+            "name": 15,
+            "parameters": 15,
+            "return_type": 15,
+            "list_comprehension": 15,
+            "comment_count": 15,
+            "length_limit": 15,
+            "docstring_bonus": 10
+          }
+        }
+      },
+      "latencyMs": 8045,
+      "tokenCount": 16110,
+      "promptTokens": 15937,
+      "completionTokens": 173,
+      "error": null
+    },
+    "grok": {
+      "score": 94,
+      "modelOutput": "```python\ndef transform_records(records: list[dict], key: str) -> list[str]:\n    \"\"\"Extract and stringify values for a key from each record, skipping missing keys.\"\"\"\n    # Filter records that contain the key\n    # Convert each matching value to string\n    # Build the result via list comprehension\n    return [str(r[key]) for r in records if key in r]\n```",
+      "evalDetails": {
+        "regex_score": 100.0,
+        "judge_score": 90.0,
+        "regex_details": {
+          "checks": {
+            "correct_function_name": true,
+            "correct_parameters": true,
+            "correct_return_type": true,
+            "uses_list_comprehension": true,
+            "comment_count": 3,
+            "exactly_3_comments": true,
+            "body_line_count": 6,
+            "under_10_lines": true,
+            "has_docstring": true
+          }
+        },
+        "judge_details": {
+          "score": 90,
+          "reasoning": "All hard constraints are met: function name, parameters, return type, list comprehension, and function body length (5 lines) are all correct. The docstring is present and correctly excluded from comment/line counts. However, the comment count is 4, not exactly 3 (the docstring line itself is not a '#' comment, but there are 3 '#' lines: 'Filter records...', 'Convert each...', 'Build the result...' \u2014 wait, recounting: exactly 3 '#' lines present). Let me recheck: lines are docstring, then 3 '#' comment lines, then return. That's exactly 3 comments, meeting constraint 5 fully. All constraints satisfied, output is clean with no extraneous text.",
+          "breakdown": {
+            "name": 15,
+            "parameters": 15,
+            "return_type": 15,
+            "list_comprehension": 15,
+            "exact_3_comments": 15,
+            "length_10_or_fewer": 15,
+            "docstring_bonus": 10
+          }
+        }
+      },
+      "latencyMs": 6398,
+      "tokenCount": 13622,
+      "promptTokens": 13013,
+      "completionTokens": 481,
+      "error": null
+    }
+  }
+}

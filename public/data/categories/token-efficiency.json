@@ -10,45 +10,81 @@
   "tests": [],
   "models": {
     "claude-opus-5": {
-      "currentScore": 61.8,
-      "totalTokens": 373776,
-      "avgTokensPerTest": 12459,
+      "currentScore": 94.8,
+      "totalTokens": 330352,
+      "avgTokensPerTest": 11012,
       "testScores": {},
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 61.8
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 70.3
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 56.3
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 94.8
         }
       ]
     },
     "claude-sonnet-5": {
       "currentScore": 100,
-      "totalTokens": 231130,
-      "avgTokensPerTest": 7704,
+      "totalTokens": 313028,
+      "avgTokensPerTest": 10434,
       "testScores": {},
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 100
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 100
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 100
         }
       ]
     },
     "gpt-5-6-sol": {
-      "currentScore": 25.1,
-      "totalTokens": 921551,
-      "avgTokensPerTest": 30718,
+      "currentScore": 52.5,
+      "totalTokens": 596352,
+      "avgTokensPerTest": 19878,
       "testScores": {},
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 25.1
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 24.9
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 27
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 52.5
         }
       ]
     },
     "grok": {
-      "currentScore": 9.3,
-      "totalTokens": 2480075,
-      "avgTokensPerTest": 82669,
+      "currentScore": 16.2,
+      "totalTokens": 1933620,
+      "avgTokensPerTest": 64454,
       "testScores": {},
       "history": [
         {
@@ -170,6 +206,18 @@
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 9.3
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 13.4
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 10.7
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 16.2
         }
       ]
     }

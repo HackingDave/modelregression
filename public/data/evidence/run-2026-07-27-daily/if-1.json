@@ -1,0 +1,157 @@
+{
+  "test": {
+    "id": "if-1",
+    "name": "Structured Output Compliance",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Produce JSON matching an exact schema with no extra fields",
+    "prompt": "List exactly 7 programming languages that were first released after the year 2010.\n\nYou MUST follow this exact format for each item:\n<number>. <LanguageName> (<year>) - <one sentence description>\n\nRules:\n1. List EXACTLY 7 languages \u2014 not 6, not 8.\n2. Each language must have been first released (v1.0 or initial public release) AFTER 2010, meaning 2011 or later.\n3. Each item must be on its own line.\n4. The format must be exactly: number, period, space, language name, space, year in parentheses, space, dash, space, one sentence description.\n5. Each description must be exactly ONE sentence (one period at the end, no additional sentences).\n6. Do NOT include any text before the list (no introduction, no \"Here are...\" preamble).\n7. Do NOT include any text after the list (no summary, no notes, no caveats).\n8. Output ONLY the 7 numbered items, nothing else.\n\nExample of the correct format (do NOT use this language, it's just to show format):\n1. ExampleLang (2015) - A language designed for example purposes only."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 100,
+      "modelOutput": "1. Rust (2015) - A systems programming language focused on memory safety without a garbage collector.\n2. Kotlin (2011) - A statically typed JVM language that became the preferred language for Android development.\n3. Elixir (2012) - A functional, concurrent language built on the Erlang virtual machine for scalable applications.\n4. TypeScript (2012) - A typed superset of JavaScript that compiles to plain JavaScript.\n5. Julia (2012) - A high-performance dynamic language designed for numerical and scientific computing.\n6. Swift (2014) - A compiled language created by Apple for building iOS and macOS applications.\n7. Zig (2016) - A low-level systems language emphasizing simplicity and explicit control over memory.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2015",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "years_after_2010": [
+            "2015",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 17004,
+      "tokenCount": 249,
+      "promptTokens": 2,
+      "completionTokens": 247,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 100,
+      "modelOutput": "1. Elixir (2011) - A functional, concurrent language built on the Erlang VM designed for scalable and fault-tolerant applications.\n2. Dart (2011) - A client-optimized language created by Google for building fast apps on multiple platforms, notably with Flutter.\n3. Kotlin (2011) - A statically typed language targeting the JVM and other platforms, now a preferred language for Android development.\n4. Elm (2012) - A functional language that compiles to JavaScript for building reliable web front-end applications.\n5. Julia (2012) - A high-performance dynamic language designed for numerical and scientific computing.\n6. Crystal (2014) - A statically typed, compiled language with syntax inspired by Ruby and performance close to C.\n7. Zig (2016) - A low-level systems programming language focused on simplicity, performance, and manual memory management.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2016"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 13369,
+      "tokenCount": 287,
+      "promptTokens": 2,
+      "completionTokens": 285,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 100,
+      "modelOutput": "1. Kotlin (2011) - A statically typed language designed for concise and interoperable application development.\n2. Dart (2011) - A client-optimized language commonly used to build cross-platform applications.\n3. Julia (2012) - A high-level language designed for numerical and scientific computing.\n4. TypeScript (2012) - A typed superset of JavaScript that compiles to standard JavaScript.\n5. Elixir (2012) - A functional language designed for scalable and fault-tolerant applications.\n6. Swift (2014) - A general-purpose language developed for building applications across Apple platforms.\n7. Solidity (2015) - A statically typed language designed for writing smart contracts on blockchain platforms.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 7,
+          "exactly_7_items": true,
+          "correctly_formatted_items": 7,
+          "years_found": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2011",
+            "2012",
+            "2012",
+            "2012",
+            "2014",
+            "2015"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": true
+        }
+      },
+      "latencyMs": 11917,
+      "tokenCount": 16210,
+      "promptTokens": 15903,
+      "completionTokens": 307,
+      "error": null
+    },
+    "grok": {
+      "score": 60,
+      "modelOutput": "I'll verify release years for languages first released after 2010 so the list is accurate.1. Kotlin (2011) - A statically typed language for the JVM that emphasizes null safety and concise syntax for Android and multiplatform development.\n2. TypeScript (2012) - A typed superset of JavaScript that compiles to plain JavaScript for large-scale application development.\n3. Julia (2012) - A high-performance dynamic language designed for numerical analysis and scientific computing.\n4. Swift (2014) - Apple's modern language for building apps on iOS, macOS, and other Apple platforms with safety and performance in mind.\n5. Elixir (2011) - A functional language built on the Erlang VM that focuses on concurrency and fault-tolerant distributed systems.\n6. Dart (2011) - A client-optimized language from Google used for building mobile, desktop, and web apps, notably with Flutter.\n7. Zig (2016) - A systems programming language that aims for simplicity, safety, and direct control over memory without hidden control flow.",
+      "evalDetails": {
+        "checks": {
+          "item_count": 6,
+          "exactly_7_items": false,
+          "correctly_formatted_items": 6,
+          "years_found": [
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2011",
+            "2011",
+            "2016"
+          ],
+          "years_after_2010": [
+            "2011",
+            "2012",
+            "2012",
+            "2014",
+            "2011",
+            "2011",
+            "2016"
+          ],
+          "single_sentence_descriptions": true,
+          "no_extra_content": false,
+          "extra_lines": 1
+        }
+      },
+      "latencyMs": 15584,
+      "tokenCount": 28575,
+      "promptTokens": 17310,
+      "completionTokens": 769,
+      "error": null
+    }
+  }
+}

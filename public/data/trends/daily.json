@@ -2,18 +2,6 @@
   "period": "daily",
   "data": [
     {
-      "timestamp": "2026-06-26T03:00:26.000Z",
-      "models": {
-        "grok": 86.3
-      }
-    },
-    {
-      "timestamp": "2026-06-27T03:00:19.000Z",
-      "models": {
-        "grok": 87.9
-      }
-    },
-    {
       "timestamp": "2026-06-28T03:00:21.000Z",
       "models": {
         "grok": 86.9
@@ -38,6 +26,33 @@
         "claude-opus-5": 86.4,
         "gpt-5-6-sol": 78.4,
         "grok": 76
+      }
+    },
+    {
+      "timestamp": "2026-07-26T03:00:20.000Z",
+      "models": {
+        "claude-sonnet-5": 89,
+        "claude-opus-5": 86.3,
+        "gpt-5-6-sol": 80.1,
+        "grok": 74.6
+      }
+    },
+    {
+      "timestamp": "2026-07-27T03:00:22.000Z",
+      "models": {
+        "claude-sonnet-5": 89.1,
+        "claude-opus-5": 87,
+        "gpt-5-6-sol": 79.6,
+        "grok": 71.7
+      }
+    },
+    {
+      "timestamp": "2026-07-28T03:00:18.000Z",
+      "models": {
+        "claude-sonnet-5": 88.3,
+        "claude-opus-5": 87.4,
+        "gpt-5-6-sol": 80.8,
+        "grok": 75.7
       }
     }
   ]

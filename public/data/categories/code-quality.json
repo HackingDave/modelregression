@@ -26,61 +26,97 @@
   ],
   "models": {
     "claude-opus-5": {
-      "currentScore": 90.7,
-      "totalTokens": 73041,
+      "currentScore": 91,
+      "totalTokens": 61193,
       "avgTokensPerTest": null,
       "testScores": {
+        "cq-1": 92,
         "cq-2": 91,
-        "cq-1": 90,
-        "cq-3": 91
+        "cq-3": 90
       },
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 90.7
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 88
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 90.7
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 91
         }
       ]
     },
     "claude-sonnet-5": {
-      "currentScore": 93.3,
-      "totalTokens": 75161,
+      "currentScore": 90.3,
+      "totalTokens": 118197,
       "avgTokensPerTest": null,
       "testScores": {
-        "cq-1": 96,
-        "cq-2": 92,
-        "cq-3": 92
+        "cq-1": 91,
+        "cq-3": 92,
+        "cq-2": 88
       },
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 93.3
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 90.7
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 89.3
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 90.3
         }
       ]
     },
     "gpt-5-6-sol": {
-      "currentScore": 90,
-      "totalTokens": 103238,
+      "currentScore": 85.7,
+      "totalTokens": 62950,
       "avgTokensPerTest": null,
       "testScores": {
-        "cq-1": 92,
-        "cq-3": 88,
-        "cq-2": 90
+        "cq-1": 91,
+        "cq-2": 88,
+        "cq-3": 78
       },
       "history": [
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 90
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 89.3
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 90.7
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 85.7
         }
       ]
     },
     "grok": {
-      "currentScore": 90,
-      "totalTokens": 489144,
+      "currentScore": 72.7,
+      "totalTokens": 341599,
       "avgTokensPerTest": null,
       "testScores": {
-        "cq-1": 96,
-        "cq-3": 96,
-        "cq-2": 78
+        "cq-1": 50,
+        "cq-3": 85,
+        "cq-2": 83
       },
       "history": [
         {
@@ -202,6 +238,18 @@
         {
           "timestamp": "2026-07-25T17:22:33.000Z",
           "score": 90
+        },
+        {
+          "timestamp": "2026-07-26T03:00:20.000Z",
+          "score": 83
+        },
+        {
+          "timestamp": "2026-07-27T03:00:22.000Z",
+          "score": 65.7
+        },
+        {
+          "timestamp": "2026-07-28T03:00:18.000Z",
+          "score": 72.7
         }
       ]
     }

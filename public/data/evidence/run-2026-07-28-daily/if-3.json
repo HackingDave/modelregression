@@ -1,0 +1,120 @@
+{
+  "test": {
+    "id": "if-3",
+    "name": "Multi-step Instruction Chain",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Execute a 6-step instruction sequence without skipping or reordering",
+    "prompt": "Explain how a hash table works to a computer science student.\n\nYou must follow ALL of these rules:\n1. Do NOT use the word \"bucket\" anywhere in your explanation.\n2. Do NOT use the word \"collision\" anywhere in your explanation.\n3. Do NOT use the hyphenated term \"key-value\" anywhere in your explanation.\n4. Do NOT use bullet points, dashes as list markers, asterisks as list markers, or numbered lists. Write in paragraph form ONLY.\n5. Your explanation must be UNDER 200 words total.\n6. Despite these restrictions, your explanation must be accurate, clear, and cover: how data is stored, how the hash function maps data to positions, and how retrieval works.\n\nWrite your explanation as flowing prose paragraphs. Do not start with \"Sure,\" or \"Here's an explanation\" or any preamble \u2014 begin directly with the explanation content."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 90,
+      "modelOutput": "A hash table stores data by pairing each unique identifier with an associated value, keeping these pairs inside an underlying array. The power of the structure comes from computing an array index directly from the identifier rather than searching for it.\n\nWhen you insert a pair, the table runs the identifier through a hash function, which deterministically converts arbitrary data (a string, a number, an object) into an integer. That integer is then reduced modulo the array's length, producing a valid index. A good hash function scatters identifiers uniformly across the available slots, so the results look random even though the process is entirely repeatable.\n\nBecause the index space is finite and the set of possible identifiers is not, two different identifiers can map to the same slot. Implementations resolve this either by storing a linked list at each slot, or by probing forward to the next open position according to a fixed rule.\n\nRetrieval mirrors insertion. The table hashes the identifier again, jumps straight to the computed index, then compares stored identifiers there until it finds an exact match or exhausts the candidates. Since hashing takes constant time and the number of stored entries per slot stays small, lookup, insertion, and deletion all run in expected constant time.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 209,
+          "under_200_words": false,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup",
+            "map"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 340048,
+      "tokenCount": 375,
+      "promptTokens": 4,
+      "completionTokens": 371,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 90,
+      "modelOutput": "A hash table stores data by pairing each item with a key, then feeding that key through a hash function, which converts it into a number. That number is reduced (typically with a modulo operation against the table's size) to select an index in an underlying array, and the associated value is stored at that index. This gives near-instant access because you never have to scan the array linearly; the function tells you almost exactly where to look.\n\nRetrieval works the same way in reverse: to find a value, you hash its key again, compute the same index, and check that array slot directly. Since the hash function is deterministic, the same key always produces the same index, so lookups, insertions, and deletions can all happen in constant time on average.\n\nA good hash function spreads keys evenly across the array to minimize crowded slots, since two different keys can sometimes map to the same index. Real implementations handle that scenario using techniques like chaining (storing multiple entries at one slot in a small list) or probing (searching nearby slots). Overall, hash tables trade some memory and careful function design for extremely fast average-case access compared to arrays or linked lists.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 201,
+          "under_200_words": false,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "map"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 67494,
+      "tokenCount": 340,
+      "promptTokens": 2,
+      "completionTokens": 338,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 100,
+      "modelOutput": "A hash table stores entries as pairs consisting of a key and its associated value inside an array. A hash function processes each key and produces a number, which is converted into a valid array position, often using the remainder after division by the array\u2019s length.\n\nTo retrieve a value, the table applies the same hash function to the requested key, computes the same position, and examines the entry there. Different keys can sometimes map to one position. Implementations handle this by keeping multiple entries at that position or by searching nearby positions until the matching key is found. Because hashing usually leads directly to a small search area, insertion, lookup, and deletion take constant time on average. In the worst case, however, many keys may map to the same area, making these operations slower.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 135,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "function",
+            "lookup",
+            "map"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 7840,
+      "tokenCount": 16034,
+      "promptTokens": 15838,
+      "completionTokens": 196,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "A hash table is an array backed structure that stores data so each piece can be found quickly from an associated identifier. To place an entry, a hash function transforms the identifier into a numeric index within the array bounds. The entry is then written at that array position, recording both the identifier and its related payload so the mapping remains verifiable later.\n\nWhen two different identifiers yield the same index, the table still keeps every entry reachable by attaching extra records at that position or by searching nearby free positions according to a fixed probe rule.\n\nRetrieval applies the identical hash function to the identifier, produces the same index, and examines the entry or entries stored there until it finds the matching identifier and returns the corresponding payload. Average case access stays near constant time because the hash spreads identifiers across the array, while the array size and load factor keep most lookups short.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 155,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 15737,
+      "tokenCount": 14020,
+      "promptTokens": 12904,
+      "completionTokens": 988,
+      "error": null
+    }
+  }
+}

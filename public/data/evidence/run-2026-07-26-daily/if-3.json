@@ -1,0 +1,121 @@
+{
+  "test": {
+    "id": "if-3",
+    "name": "Multi-step Instruction Chain",
+    "category": "instruction-following",
+    "categoryName": "Instruction Following",
+    "description": "Execute a 6-step instruction sequence without skipping or reordering",
+    "prompt": "Explain how a hash table works to a computer science student.\n\nYou must follow ALL of these rules:\n1. Do NOT use the word \"bucket\" anywhere in your explanation.\n2. Do NOT use the word \"collision\" anywhere in your explanation.\n3. Do NOT use the hyphenated term \"key-value\" anywhere in your explanation.\n4. Do NOT use bullet points, dashes as list markers, asterisks as list markers, or numbered lists. Write in paragraph form ONLY.\n5. Your explanation must be UNDER 200 words total.\n6. Despite these restrictions, your explanation must be accurate, clear, and cover: how data is stored, how the hash function maps data to positions, and how retrieval works.\n\nWrite your explanation as flowing prose paragraphs. Do not start with \"Sure,\" or \"Here's an explanation\" or any preamble \u2014 begin directly with the explanation content."
+  },
+  "results": {
+    "claude-opus-5": {
+      "score": 75,
+      "modelOutput": "A hash table stores data as pairs of identifiers and associated values, kept inside an underlying array. Each entry's identifier, called the key, is fed into a hash function, which converts it into an integer. That integer is then reduced modulo the array's length to yield a valid index, so the key deterministically names one slot in the array. Storing an entry means computing that index and placing the value there; because the computation is direct arithmetic rather than a search, insertion takes constant time on average.\n\nTwo distinct keys can sometimes map to the same index, since the space of possible keys is far larger than the array. Implementations resolve this either by storing a linked list at each slot holding every entry that landed there, or by probing forward to the next free slot according to a fixed rule.\n\nRetrieval reverses the process. Given a key, the table applies the same hash function and modulo reduction, arriving at the same index it used when storing. It then inspects that slot, comparing the stored key against the requested one to confirm a genuine match, following the chain or probe sequence if necessary. When the array is sufficiently large relative to the number of entries, these chains stay short and lookup runs in constant expected time, degrading to linear time in the worst case.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 224,
+          "under_200_words": false,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup",
+            "map"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 217871,
+      "tokenCount": 381,
+      "promptTokens": 2,
+      "completionTokens": 379,
+      "error": null
+    },
+    "claude-sonnet-5": {
+      "score": 90,
+      "modelOutput": "Every element stored in a hash table has some identifying field, and that field is fed through a hash function, which converts it into a number. That number is then reduced, usually with a modulo operation against the size of the underlying array, so it points to a valid index within the table. The element is placed at that index, which means storage happens in roughly constant time because no searching is required to decide where something goes.\n\nRetrieval works the same way in reverse: given the identifying field again, the table runs it through the exact same hash function, arrives at the same index, and looks directly at that spot in the array. Because the location is computed rather than searched for, lookup is also close to constant time on average, regardless of how many elements the table holds.\n\nA good hash function spreads values evenly across the array so entries aren't clustered in a few spots, which keeps performance predictable. When two different inputs happen to map to the same index, the table needs a strategy for storing both, such as chaining a small list at that index or probing to a nearby open slot, so no data is lost or overwritten.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 204,
+          "under_200_words": false,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup",
+            "map"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 55946,
+      "tokenCount": 318,
+      "promptTokens": 2,
+      "completionTokens": 316,
+      "error": null
+    },
+    "gpt-5-6-sol": {
+      "score": 100,
+      "modelOutput": "A hash table stores entries that associate keys with values in an underlying array. A hash function transforms each key into a number, which is reduced to a valid array index. The entry is then placed at or near that position.\n\nDifferent keys can produce the same index. An implementation handles this by storing several entries together at that position or by searching nearby positions until an available one is found.\n\nTo retrieve a value, the table applies the same hash function to the requested key, computes the expected index, and follows the same placement rule used during insertion. It compares stored keys with the requested key until it finds a match or determines that the key is absent. With a well designed hash function and enough array space, insertion and retrieval usually take constant time on average.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 138,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 15210,
+      "tokenCount": 16153,
+      "promptTokens": 15840,
+      "completionTokens": 313,
+      "error": null
+    },
+    "grok": {
+      "score": 100,
+      "modelOutput": "A hash table stores data in a contiguous array of slots. Each entry consists of a key and its associated data. When you insert an item, a hash function processes the key and produces an integer index that selects a position within the array. That index is typically reduced modulo the array length so it falls within bounds. The entry is then written into the chosen slot.\n\nTo retrieve data, the same hash function is applied to the search key, yielding the same index. The table then looks at the entry stored at that position and returns the associated data if the key matches. Because the hash function maps a key directly to an array index, both insertion and lookup take constant time on average when the mapping spreads keys evenly across the available positions.",
+      "evalDetails": {
+        "checks": {
+          "word_count": 135,
+          "under_200_words": true,
+          "forbidden_words_found": [],
+          "no_forbidden_words": true,
+          "no_bullet_points": true,
+          "relevant_terms_found": [
+            "hash",
+            "table",
+            "array",
+            "index",
+            "function",
+            "lookup"
+          ],
+          "relevant_content": true
+        }
+      },
+      "latencyMs": 12500,
+      "tokenCount": 13920,
+      "promptTokens": 12904,
+      "completionTokens": 888,
+      "error": null
+    }
+  }
+}
